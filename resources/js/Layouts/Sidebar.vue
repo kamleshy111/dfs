@@ -10,15 +10,12 @@ import { Link } from '@inertiajs/vue3';
 const showingNavigationDropdown = ref(false);
 </script>
 <template>
-  <AuthenticatedLayout>
       <!-- Sidebar -->
       <nav class="d-none d-md-block sidebar">
           <div class="sidebar-sticky">
               <h5 class="sidebar-heading"><span><i class="bi bi-car-front-fill logo"></i></span>Driver Fatigue
               </h5>
               <ul class="nav flex-column">
-                  <!-- <li class="nav-item"><a class="nav-link active" href="dasboard.html"><i
-                              class="bi bi-grid-fill mr-3"></i>Dashboard</a></li> -->
                   <li class="nav-item">
                     <NavLink
                       :href="route('dashboard')"
@@ -63,12 +60,20 @@ const showingNavigationDropdown = ref(false);
                               class="bi bi-file-earmark-text-fill mr-3"></i>Manage Documents</a></li>
                   <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-star-fill mr-3"></i>Review &
                           Rating</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-box-arrow-left mr-3"></i>Log
-                          Out</a></li>
+                  <li class="nav-item">
+                    <ResponsiveNavLink
+                      :href="route('logout')"
+                      method="post"
+                      as="button"
+                      class="nav-link"
+                    >
+                      <i class="bi bi-box-arrow-left mr-3"></i>
+                      Log Out
+                    </ResponsiveNavLink>
+                  </li>
               </ul>
           </div>
       </nav>
-    </AuthenticatedLayout>
   </template>
   
   <script>
