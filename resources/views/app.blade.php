@@ -11,6 +11,9 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+        
         <!-- Scripts -->
         @routes
         @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
@@ -277,10 +280,10 @@ a.page-link {
     font-size: 18px;
 }
         .login-btn {
-    background-color: var(--light-color);
+    background-color: var(--light-color) !important;
     color: white;
-    font-weight: 800;
-    font-size: 20px;
+    font-size: 20px !important;
+    font-weight: 700 !important;
 }
 .h5 {
     font-size: 25px;
@@ -479,11 +482,57 @@ p.text-muted.expiry {
     font-weight: 600;
     font-size: 20px;
 }
+.login-box form {
+    background: transparent;
+    padding: 0;
+    box-shadow: none;
+    border-radius: 0;
+}
+.form-label {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: #888;
+    transition: 0.2s ease-in-out;
+    pointer-events: none;
+    background-color: #f9f9f9;
+    padding: 0 5px;
+}
+
+.form-control:focus{
+    border-color: #313F43;
+}
+.focus\:border-indigo-500:focus {
+    --tw-border-opacity: 1;
+    border-color: #313F43 !important;
+}
+.form-control:focus + .form-label,
+.form-control:not(:placeholder-shown) + .form-label {
+    top: -2px;
+    font-size: 14px;
+    color: #313F43;
+}
+.form-control {
+    font-size: 16px;
+    height: 60px;
+}
+.form-label {
+    font-size: 16px;
+}
+.slider-content h4 {
+    margin-top: 40px !important;
+}
 </style>
     </head>
     <body class="font-sans antialiased">
         @inertia
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>
