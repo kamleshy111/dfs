@@ -27,7 +27,7 @@ const showingNavigationDropdown = ref(false);
                     </NavLink>
                   </li>
 
-                  <li class="nav-item"><a class="nav-link" href="all-customers.html"><i class="bi bi-person-fill mr-3"></i>All Clients</a></li>
+                  <li class="nav-item"><a class="nav-link" :href="route('clients')"><i class="bi bi-person-fill mr-3"></i>All Clients</a></li>
                   <li class="nav-item">
                       <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="alldevice.html" aria-expanded="false">
                           <i class="bi bi-sd-card-fill mr-3"></i><span>All Device</span><i
@@ -36,18 +36,8 @@ const showingNavigationDropdown = ref(false);
                       <ul id="forms-nav" class="nav-content collapse list-unstyled" data-bs-parent="#sidebar-nav"
                           style="">
                           <li>
-                              <a href="#" class="nav-link">
-                                  <i class="bi bi-upload mr-3"></i><span>Content Upload</span>
-                              </a>
-                          </li>
-                          <li>
-                              <a href="#" class="nav-link">
-                                  <i class="bi bi-file-earmark-bar-graph-fill mr-3"></i><span>Content Management</span>
-                              </a>
-                          </li>
-                          <li>
-                              <a href="#" class="nav-link">
-                                  <i class="bi bi-gear-fill mr-3"></i><span>Category & Tags</span>
+                              <a :href="route('devices')" class="nav-link">
+                                  <i class="bi bi-upload mr-3"></i><span>Device</span>
                               </a>
                           </li>
                       </ul>

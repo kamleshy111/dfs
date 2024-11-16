@@ -39,14 +39,6 @@ class ProfileController extends Controller
 
         return Redirect::route('profile.edit');
     }
-
-    public function gethome()
-    {
-
-        return Inertia::render('Profile/Home',[
-            'user' => Auth::user(),
-        ]);
-    }
     
     /**
      * Delete the user's account.

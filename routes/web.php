@@ -5,6 +5,13 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+use App\Http\Controllers\Admin\ClientsController;
+use App\Http\Controllers\Admin\DeviceController;
+use App\Http\Controllers\Admin\ManageDocumentsController;
+use App\Http\Controllers\Admin\PaymentsController;
+use App\Http\Controllers\Admin\ReviewRatingController;
+use App\Http\Controllers\Admin\VehicleTypeController;
+
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -22,9 +29,36 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    //Clients Routes
+    Route::group(['prefix' => 'clients'], function() {
+        Route::get('/', [ClientsController::class, 'index'])->name('clients');
+    });
 
-    // Route::get('/home', [ProfileController::class, 'gethome'])->name('home');
-    Route::get('/home', [ProfileController::class, 'gethome'])->name('profile.home');
+    //Device Routes
+    Route::group(['prefix' => 'devices'], function() {
+        Route::get('/', [DeviceController::class, 'index'])->name('devices');
+    });
+
+    //Payments Routes
+    Route::group(['prefix' => 'payments'], function() {
+        Route::get('/', [PaymentsController::class, 'index'])->name('payments');
+    });
+
+    //ManageDocument Routes
+    Route::group(['prefix' => 'manage-documents'], function() {
+        Route::get('/', [ManageDocumentsController::class, 'index'])->name('manage-documents');
+    });
+
+    //ReviewRating Routes
+    Route::group(['prefix' => 'review-rating'], function() {
+        Route::get('/', [ReviewRatingController::class, 'index'])->name('review-rating');
+    });
+
+    //VehicleType Routes
+    Route::group(['prefix' => 'vehicle-type'], function() {
+        Route::get('/', [VehicleTypeController::class, 'index'])->name('vehicle-type');
+    });
 });
 
 require __DIR__.'/auth.php';
