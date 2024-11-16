@@ -4,8 +4,8 @@
         <h2>Add New Device</h2>
     </div>
     <div class="d-flex align-items-center w-50 justify-content-end">
-        <div class="position-relative mr-4">
-            <input type="text" class="form-control mr-3" placeholder="Search here..."
+        <div class="position-relative mr-4 search-desktop">
+            <input type="text" class="form-control mr-3 search-header" placeholder="Search here..."
                 style="max-width: 300px;">
             <span class="search-icon-header"><i class="bi bi-search"></i></span>
         </div>
@@ -14,6 +14,9 @@
             <img src="https://via.placeholder.com/40" alt="Profile" class="rounded"
                 style="cursor: pointer;">
         </div>
+
+       <button class="toggle-btn">☰</button>
+
     </div>
 </header>
 

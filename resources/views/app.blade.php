@@ -32,15 +32,18 @@ body{
 body {
     background-color: #f5f5f5;
 }
-
+.collapse {
+    visibility: unset !important;
+}
 .header {
-    width: 80%;
+    width: 82%;
     margin: 0 0 0 auto;
-    padding-right: 20px;
+    padding-right: 30px;
 }
 .right-box{
-    width: 81%;
+    width: 83%;
     margin: 0 0 0 auto;
+    padding-right: 20px;
 }
 
 .sidebar {
@@ -50,7 +53,7 @@ body {
     min-height: 100vh;
 }
 .siderbar {
-    position: absolute;
+    position: fixed;
     left: 0;
     top: 0;
 }
@@ -65,11 +68,13 @@ body {
 
 .nav {
     margin-top: 25px;
+    margin-left: 5px;
 }
 
 .nav .nav-link {
     color: #000000e3;
     font-size: 15px;
+    padding: 0.5rem !important;
 }
 
 .form-control::placeholder {
@@ -104,7 +109,7 @@ body {
 
 .search-icon-header {
     position: absolute;
-    top: 9px;
+    top: 14px;
     right: 10px;
 }
 
@@ -114,10 +119,14 @@ body {
 }
 
 .icon-profile .bi {
-    border: 1px solid #ced4da;
+    border: 1px solid #6b7280;
     padding: 0px 10px;
     border-radius: 4px;
     background: #fff;
+    height: 52px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 header h2 {
@@ -523,6 +532,79 @@ p.text-muted.expiry {
 }
 .slider-content h4 {
     margin-top: 40px !important;
+}
+.search-header {
+    border-radius: 6px !important;
+    height: 52px;
+    font-size: 14px !important;
+}
+.table button {
+    margin: 0 5px;
+}
+.search-mobile{
+    display: none;
+}
+.toggle-btn {
+    background-color: #4d60ce;
+    color: white;
+    border: none;
+    padding: 5px 20px;
+    font-size: 24px;
+    cursor: pointer;
+    margin-left: 15px;
+    border-radius: 5px;
+    display: none;
+}
+svg.h-20.w-20.fill-current.text-gray-500 {
+    display: none;
+}
+
+
+
+@media (max-width: 768px) {
+    .toggle-btn{
+        display: block;
+    }
+    .header {
+    width: 100%;
+    margin: 0 15px;
+}
+.search-desktop {
+    display: none;
+}
+.right-box {
+    width: 100%;
+    margin: 0 15px;
+    padding-right: 0px;
+}
+.dashboard-card {
+    width: 100%;
+    overflow-y: scroll;
+}
+.right-box .dashboard-card{
+    margin-top: 10px;
+}
+.table .thead-light th {
+    font-size: 10px;
+}
+.table tr td {
+    font-size: 10px;
+}
+.box-chart-main{
+    display: block !important;
+}
+.box-chart-main .ms-3{
+    margin-top: 20px;
+}
+.login-container{
+    width: 100% !important;
+}
+.login-btn {
+    margin: 0 !important;
+}
+.info-box {
+    margin-bottom: 20px;
+}
 }
 </style>
     </head>
