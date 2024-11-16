@@ -5,7 +5,7 @@
 
     <AuthenticatedLayout>
  
-    <div class="container my-5">
+    <div class="container my-3">
             <!-- Summary Cards -->
         <div class="row">
             <div class="col-md-3">
@@ -76,8 +76,8 @@
             </div>
         </div>
         <div class="dashboard-card mt-4">
+             <h5 class=""><i class="bi bi-bar-chart-line-fill mr-2"></i>Sale This Year</h5>
             <table class="table table-hover table-bordered mt-3">
-                <h5 class=""><i class="bi bi-bar-chart-line-fill mr-2"></i>Sale This Year</h5>
                 <thead class="thead-light">
                     <tr>
                         <th scope="col">S No</th>
@@ -96,7 +96,7 @@
                         <td>Jhon Rohan</td>
                         <td>+91 987065403210</td>
                         <td>19 Jan 2023 at 06:36 PM</td>
-                        <td>
+                        <td class="edite-box">
                             <button class="btn btn-light action-btn"><i class="bi bi-eye-fill"></i></button>
                             <button class="btn btn-warning text-white action-btn"><i
                                     class="bi bi-pencil-fill"></i></button>
