@@ -38,48 +38,48 @@ const form = useForm({
             @submit.prevent="form.patch(route('profile.update'))"
             class="mt-6 space-y-6"
         >
-            <div>
-                <InputLabel for="name" value="Name" />
+            <div class="relative">
 
                 <TextInput
                     id="name"
                     type="text"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full form-control"
                     v-model="form.name"
                     required
                     autofocus
                     autocomplete="name"
                 />
+                <InputLabel for="name" value="Name" class="form-label" />
 
                 <InputError class="mt-2" :message="form.errors.name" />
             </div>
 
-            <div>
-                <InputLabel for="phone" value="Phone" />
+            <div class="relative">
 
                 <TextInput
                     id="phone"
                     type="text"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full form-control"
                     v-model="form.phone"
                     autofocus
                     autocomplete="phone"
                 />
+                <InputLabel for="phone" value="Phone" class="form-label" />
 
                 <InputError class="mt-2" :message="form.errors.phone" />
             </div>
 
-            <div>
-                <InputLabel for="email" value="Email" />
+            <div class="relative">
 
                 <TextInput
                     id="email"
                     type="email"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full form-control"
                     v-model="form.email"
                     required
                     autocomplete="username"
                 />
+                <InputLabel for="email" value="Email" class="form-label" />
 
                 <InputError class="mt-2" :message="form.errors.email" />
             </div>
