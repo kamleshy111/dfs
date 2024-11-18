@@ -1,20 +1,16 @@
 <script setup>
 import { ref } from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
-import Dropdown from '@/Components/Dropdown.vue';
-import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/vue3';
-
 const showingNavigationDropdown = ref(false);
 </script>
 <template>
       <!-- Sidebar -->
       <nav class="d-none d-md-block sidebar">
           <div class="sidebar-sticky">
-              <h5 class="sidebar-heading"><span><i class="bi bi-car-front-fill logo"></i></span>Driver Fatigue
-              </h5>
+              <application-logo></application-logo>
               <ul class="nav flex-column">
                   <li class="nav-item">
                     <NavLink
@@ -27,11 +23,30 @@ const showingNavigationDropdown = ref(false);
                     </NavLink>
                   </li>
 
-                  <li class="nav-item"><a class="nav-link" :href="route('clients')"><i class="bi bi-person-fill mr-3"></i>All Clients</a></li>
                   <li class="nav-item">
-                      <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="alldevice.html" aria-expanded="false">
-                          <i class="bi bi-sd-card-fill mr-3"></i><span>All Device</span><i
-                              class="bi bi-chevron-down chevron-icon ml-3"></i>
+                      <NavLink
+                          :href="route('clients')"
+                          :active="route().current('clients')"
+                          class="nav-link"
+                      >
+                          <i class="bi bi-person-fill mr-3"></i>All Clients
+                      </NavLink>
+                  </li>
+                  <li class="nav-item">
+                      <NavLink
+                          :href="route('add-devices')"
+                          :active="route().current('add-devices')"
+                          class="nav-link"
+                      >
+                          <i class="bi bi-sd-card-fill mr-3"></i>All Device
+                      </NavLink>
+                  </li>
+
+                  <!--<li class="nav-item">
+                      <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" aria-expanded="false">
+                          <i class="bi bi-sd-card-fill mr-3"></i>
+                          <span>All Device</span>
+                          <i class="bi bi-chevron-down chevron-icon ml-3"></i>
                       </a>
                       <ul id="forms-nav" class="nav-content collapse list-unstyled" data-bs-parent="#sidebar-nav"
                           style="">
@@ -41,7 +56,8 @@ const showingNavigationDropdown = ref(false);
                               </a>
                           </li>
                       </ul>
-                  </li>
+                  </li>-->
+
                   <li class="nav-item"><a class="nav-link" href="#"><i
                               class="bi bi-credit-card-fill mr-3"></i>Payments</a></li>
                   <li class="nav-item"><a class="nav-link" href="#"><i
@@ -65,14 +81,3 @@ const showingNavigationDropdown = ref(false);
           </div>
       </nav>
   </template>
-  
-  <script>
-  import { Link as InertiaLink } from '@inertiajs/vue3';
-  
-  export default {
-    components: {
-      InertiaLink,
-    },
-  };
-  </script>
-  

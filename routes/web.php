@@ -35,7 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
+
     //Clients Routes
     Route::group(['prefix' => 'clients'], function() {
         Route::get('/', [ClientsController::class, 'index'])->name('clients');
@@ -44,6 +44,8 @@ Route::middleware('auth')->group(function () {
     //Device Routes
     Route::group(['prefix' => 'devices'], function() {
         Route::get('/', [DeviceController::class, 'index'])->name('devices');
+        Route::get('/add', [DeviceController::class, 'add'])->name('add-devices');
+        Route::get('/edit', [DeviceController::class, 'edit'])->name('edit-devices');
     });
 
     //Payments Routes
