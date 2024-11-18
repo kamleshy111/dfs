@@ -2,7 +2,6 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
 </script>
-
 <template>
   <Head title="home" />
 
@@ -64,11 +63,3 @@ import { Head } from "@inertiajs/vue3";
     </div>
   </AuthenticatedLayout>
 </template>
-
-<script>
-export default {
-  props: {
-    user: Object, // Define the user prop to receive the data
-  },
-};
-</script>
