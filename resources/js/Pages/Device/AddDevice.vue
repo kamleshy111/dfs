@@ -18,7 +18,7 @@ import { Head } from "@inertiajs/vue3";
                 id="deviceId"
                 placeholder=""
               />
-              <label for="deviceId" class="form-label">Device ID</label>
+              <label for="deviceId" class="form-label">Device dffgdgd ID</label>
             </div>
             <div class="form-group col-md-6">
               <input
@@ -50,7 +50,7 @@ import { Head } from "@inertiajs/vue3";
               <label for="purchaseDate" class="form-label">Purchase Date</label>
             </div>
           </div>
-          <div class="col-md-2 col-12 p-0 mt-4">
+          <div class="col-md-2 col-12 p-0 mt-4 mb-4">
             <button
               type="submit"
               class="btn btn-custom btn-block text-white"
