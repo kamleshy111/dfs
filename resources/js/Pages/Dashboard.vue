@@ -66,7 +66,7 @@
                             <canvas id="driverStatusChart" width="200px" height="200px"></canvas>
                         </div>
                         <div class="ms-3">
-                            <p><strong>Active Devices : 51</strong></p>
+                            <p class="active-device">Active Devices : 51</p>
                             <p>Today : 4</p>
                             <p>This Month : 20</p>
                             <p>This Year : 50</p>
