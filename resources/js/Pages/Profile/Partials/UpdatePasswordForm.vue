@@ -47,17 +47,18 @@ const updatePassword = () => {
         </header>
 
         <form @submit.prevent="updatePassword" class="mt-6 space-y-6">
-            <div>
-                <InputLabel for="current_password" value="Current Password" />
+            <div class="relative">
 
                 <TextInput
                     id="current_password"
                     ref="currentPasswordInput"
                     v-model="form.current_password"
                     type="password"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full form-control"
                     autocomplete="current-password"
                 />
+
+                <InputLabel for="current_password" value="Current Password" class="form-label" />
 
                 <InputError
                     :message="form.errors.current_password"
@@ -65,34 +66,33 @@ const updatePassword = () => {
                 />
             </div>
 
-            <div>
-                <InputLabel for="password" value="New Password" />
+            <div class="relative">
 
                 <TextInput
                     id="password"
                     ref="passwordInput"
                     v-model="form.password"
                     type="password"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full form-control"
                     autocomplete="new-password"
                 />
+
+                 <InputLabel for="password" value="New Password" class="form-label" />
 
                 <InputError :message="form.errors.password" class="mt-2" />
             </div>
 
-            <div>
-                <InputLabel
-                    for="password_confirmation"
-                    value="Confirm Password"
-                />
+            <div class="relative">
 
                 <TextInput
                     id="password_confirmation"
                     v-model="form.password_confirmation"
                     type="password"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full form-control"
                     autocomplete="new-password"
                 />
+
+                <InputLabel for="password_confirmation" value="Confirm Password" class="form-label" />
 
                 <InputError
                     :message="form.errors.password_confirmation"

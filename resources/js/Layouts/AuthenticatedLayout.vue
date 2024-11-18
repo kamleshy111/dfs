@@ -17,24 +17,25 @@ const showingNavigationDropdown = ref(false);
             <div class="header">
                     <Header />
                 </div>
-            <div class="flex">
+            <div class="flex responsive-profile">
                
                 <div class="siderbar">
                     <Sidebar />
                 </div>
 
-                <!-- Page Heading -->
-                <header
-                    class="bg-white shadow"
-                    v-if="$slots.header"
-                >
-                    <div class="mx-auto max-w-7xl py-6 ">
-                        <slot name="header" />
-                    </div>
-                </header>
 
                 <!-- Page Content -->
                 <main class="right-box">
+                    <!-- Page Heading -->
+                <header
+                    class="text-center w-100"
+                    v-if="$slots.header"
+                >
+                    <div class="text-center ">
+                        <slot name="header" />
+                    </div>
+                </header>
+                
                     <slot />
                 </main>
             </div>

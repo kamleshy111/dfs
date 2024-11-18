@@ -23,7 +23,7 @@ import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
           <button class="dropdown-toggle" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="bi bi-bell" style="font-size: 1.5rem"></i>
           </button>
-          <ul class="dropdown-menu" aria-labelledby="notificationDropdown">
+          <ul class="dropdown-menu notification-dropdown" aria-labelledby="notificationDropdown">
             <li>
               <a class="dropdown-item" href="#">New comment on your post</a>
             </li>
@@ -38,7 +38,7 @@ import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
             <li><a class="dropdown-item" href="#">New message received</a></li>
           </ul>
         </div>
-        <div class="dropdown">
+        <div class="dropdown img-header">
           <img
             src="https://via.placeholder.com/40"
             alt="Profile"
@@ -57,8 +57,9 @@ import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
               transform: translate(0px, 42px);
             "
           >
-            <li>
+            <li class="nav-link d-flex px-0 justify-content-between align-items-center mb-2">
               <a class="dropdown-item" :href="route('profile.edit')">Profile</a>
+              <i class="bi bi-person dropdown-icon"></i>
             </li>
             <li class="nav-item">
               <ResponsiveNavLink
