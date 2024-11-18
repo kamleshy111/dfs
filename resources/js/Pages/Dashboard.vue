@@ -76,7 +76,7 @@
             </div>
         </div>
         <div class="dashboard-card mt-4">
-             <h5 class=""><i class="bi bi-bar-chart-line-fill mr-2"></i>Sale This Year</h5>
+             <h5 class=""><i class="bi bi-truck-front-fill mr-3"></i>Recent Customer</h5>
             <table class="table table-hover table-bordered mt-3">
                 <thead class="thead-light">
                     <tr>

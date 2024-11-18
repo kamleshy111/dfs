@@ -50,7 +50,7 @@ import { Head } from "@inertiajs/vue3";
               <label for="purchaseDate" class="form-label">Purchase Date</label>
             </div>
           </div>
-          <div class="col-md-2 col-12 p-0 mt-4 mb-4">
+          <div class="col-md-2 col-12 p-0 mt-4">
             <button
               type="submit"
               class="btn btn-custom btn-block text-white"
