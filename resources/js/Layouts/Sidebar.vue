@@ -34,8 +34,8 @@ const showingNavigationDropdown = ref(false);
                   </li>
                   <li class="nav-item">
                       <NavLink
-                          :href="route('add-devices')"
-                          :active="route().current('add-devices')"
+                          :href="route('devices')"
+                          :active="route().current('devices')"
                           class="nav-link"
                       >
                           <i class="bi bi-sd-card-fill mr-3"></i>All Device

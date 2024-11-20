@@ -39,13 +39,21 @@ Route::middleware('auth')->group(function () {
     //Clients Routes
     Route::group(['prefix' => 'clients'], function() {
         Route::get('/', [ClientsController::class, 'index'])->name('clients');
+        Route::get('/create', [ClientsController::class, 'create'])->name('clients.create');
+        Route::post('/store',[ClientsController::class, 'store'])->name('clients.store');
+        Route::get('/{id}/view', [ClientsController::class, 'view'])->name('clients.view');
+        Route::get('/{id}/edit',[ClientsController::class, 'edit'])->name('clients.edit');
+        Route::post('/update/{id}', [ClientsController::class, 'update'])->name('clients.update');
+        
+        Route::post('/destroy', [ClientsController::class, 'destroy'])->name('clients.destroy');
+
     });
 
     //Device Routes
     Route::group(['prefix' => 'devices'], function() {
         Route::get('/', [DeviceController::class, 'index'])->name('devices');
-        Route::get('/add', [DeviceController::class, 'add'])->name('add-devices');
-        Route::get('/edit', [DeviceController::class, 'edit'])->name('edit-devices');
+        Route::get('/create', [DeviceController::class, 'create'])->name('devices.create');
+        Route::post('/store',[DeviceController::class, 'store'])->name('devices.store');
     });
 
     //Payments Routes
