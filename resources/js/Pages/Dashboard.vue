@@ -80,8 +80,7 @@
             <table class="table table-hover table-bordered mt-3">
                 <thead class="thead-light">
                     <tr>
-                        <th scope="col">S No</th>
-                        <th scope="col">Booking ID</th>
+                        
                         <th scope="col">Name</th>
                         <th scope="col">Mobile Number</th>
                         <th scope="col">Date & Time</th>
@@ -90,83 +89,19 @@
                 </thead>
                 <tbody>
                     <!-- Example row, repeat for each customer -->
-                    <tr>
-                        <td>01</td>
-                        <td>#002589</td>
-                        <td>Jhon Rohan</td>
-                        <td>+91 987065403210</td>
-                        <td>19 Jan 2023 at 06:36 PM</td>
+                    <tr v-for="customer in customers" :key="customer.id">
+                        
+                        <td>{{ customer.first_name }} {{ customer.last_name }}</td>
+                         <td>{{ customer.phone }}</td>
+                         <td>{{ formatDate(customer.created_at) }}</td>
                         <td class="edite-box">
-                            <button class="btn btn-light action-btn"><i class="bi bi-eye-fill"></i></button>
-                            <button class="btn btn-warning text-white action-btn"><i
+                            <button class="btn btn-light action-btn" @click="viewCustomer(customer.id)"> <i class="bi bi-eye-fill"></i></button>
+                            <button class="btn btn-warning text-white action-btn" @click="editCustomer(customer.id)"><i
                                     class="bi bi-pencil-fill"></i></button>
                             <button class="btn btn-danger action-btn"><i
                                     class="bi bi-trash-fill"></i></button>
                         </td>
                     </tr>
-
-                    <tr>
-                        <td>02</td>
-                        <td>#002589</td>
-                        <td>Jhon Rohan</td>
-                        <td>+91 987065403210</td>
-                        <td>19 Jan 2023 at 06:36 PM</td>
-                        <td>
-                            <button class="btn btn-light action-btn"><i class="bi bi-eye-fill"></i></button>
-                            <button class="btn btn-warning text-white action-btn"><i
-                                    class="bi bi-pencil-fill"></i></button>
-                            <button class="btn btn-danger action-btn"><i
-                                    class="bi bi-trash-fill"></i></button>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>03</td>
-                        <td>#002589</td>
-                        <td>Jhon Rohan</td>
-                        <td>+91 987065403210</td>
-                        <td>19 Jan 2023 at 06:36 PM</td>
-                        <td>
-                            <button class="btn btn-light action-btn"><i class="bi bi-eye-fill"></i></button>
-                            <button class="btn btn-warning text-white action-btn"><i
-                                    class="bi bi-pencil-fill"></i></button>
-                            <button class="btn btn-danger action-btn"><i
-                                    class="bi bi-trash-fill"></i></button>
-                        </td>
-                    </tr>
-
-
-                    <tr>
-                        <td>04</td>
-                        <td>#002589</td>
-                        <td>Jhon Rohan</td>
-                        <td>+91 987065403210</td>
-                        <td>19 Jan 2023 at 06:36 PM</td>
-                        <td>
-                            <button class="btn btn-light action-btn"><i class="bi bi-eye-fill"></i></button>
-                            <button class="btn btn-warning text-white action-btn"><i
-                                    class="bi bi-pencil-fill"></i></button>
-                            <button class="btn btn-danger action-btn"><i
-                                    class="bi bi-trash-fill"></i></button>
-                        </td>
-                    </tr>
-
-
-                    <tr>
-                        <td>05</td>
-                        <td>#002589</td>
-                        <td>Jhon Rohan</td>
-                        <td>+91 987065403210</td>
-                        <td>19 Jan 2023 at 06:36 PM</td>
-                        <td>
-                            <button class="btn btn-light action-btn"><i class="bi bi-eye-fill"></i></button>
-                            <button class="btn btn-warning text-white action-btn"><i
-                                    class="bi bi-pencil-fill"></i></button>
-                            <button class="btn btn-danger action-btn"><i
-                                    class="bi bi-trash-fill"></i></button>
-                        </td>
-                    </tr>
-
                     <!-- Repeat the above row as needed -->
                 </tbody>
             </table>
@@ -179,6 +114,9 @@
 import { ref, onMounted } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
+import axios from 'axios';
+
+const customers = ref([]);
 
     const salesData = ref({
         labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
@@ -201,6 +139,33 @@ import { Head } from '@inertiajs/vue3';
         }],
     });
 
+    // Format date method
+    function formatDate(value) {
+        if (!value) return '';
+        
+        // Create a new Date object from the ISO 8601 string
+        const date = new Date(value);
+        
+        // Define the format options
+        const dateOptions = {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        };
+        const timeOptions = {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        };
+
+        // Format the date and time separately and combine them
+        const formattedDate = date.toLocaleDateString('en-GB', dateOptions);
+        const formattedTime = date.toLocaleTimeString('en-GB', timeOptions);
+
+        // Return the formatted string in the desired format
+        return `${formattedDate} at ${formattedTime}`;
+    }
+
     onMounted(() => {
         const salesCtx = document.getElementById('salesChart').getContext('2d');
         new Chart(salesCtx, {
@@ -221,5 +186,25 @@ import { Head } from '@inertiajs/vue3';
                 plugins: { legend: { display: false } },
             },
         });
+
+        axios.get('/api/dashboard')
+        .then(response => {
+            // Customer Details the fetched data in the customers array
+            customers.value = response.data.customers;
+
+            // Log the customers to the console
+            console.log(customers.value);
+        })
+        .catch(error => {
+            console.error("There was an error fetching the customers:", error);
+        });
     });
+
+    function viewCustomer(id) {
+        window.location.href = `/clients/${id}/view`;
+    }
+
+    function editCustomer(id) {
+        window.location.href = `/clients/${id}/edit`; 
+    }
 </script>
