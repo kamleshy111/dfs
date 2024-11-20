@@ -595,18 +595,17 @@ p.active-device {
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    max-width: 600px;
-    margin: auto;
+    margin: 0 auto;
 }
 .profile-image {
     width: 120px;
     height: 120px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid #6c63ff;
+    border: 2px solid var(--light-color);
+    margin: 0 auto;
 }
 .profile-details {
-    text-align: center;
     margin-top: 20px;
 }
 .btn-save {
@@ -631,7 +630,82 @@ p.active-device {
     list-style-type: disc !important;
     padding-left: 20px !important;
 }
+.multiselect {
+    position: relative;
+    border: 0;
+    padding: 0;
+    margin: 0;
+}
+.multiselect {
+    display: block;
+    position: relative;
+}
+.multiselect__content-wrapper {
+    position: absolute;
+    display: block;
+    background: #d2d2d2;
+    width: 100%;
+    max-height: 240px;
+    overflow: auto;
+    border: 1px solid #e8e8e8;
+    border-top: none;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    z-index: 50;
+    -webkit-overflow-scrolling: touch;
+    box-shadow: 2px 2px 12px #fff;
+}
+.multiselect__tags {
+    min-height: unset !important;
+    display: block;
+    padding: 16px 10px !important;
+    border-radius: unset !important;
+    border: unset !important;
+    background: unset !important;
+    font-size: unset !important;
+}
+.multiselect__select {
+    top: 10px !important;
+}
+.multiselect.form-control {
+    font-size: 16px;
+    height: 60px;
+    border-radius: 5px;
+    color: #000000de;
+    border: 1px solid #d1d5db!important;
+    box-shadow: 0 .125rem .25rem rgba(var(--bs-body-color-rgb),.075)!important;
+}
+
+
+.input-group-prepend {
+    margin-left: 150px;
+}
+
+.form-quantity {
+    border: 1px solid #d1d5db;
+    border-radius: 5px;
+}
+.save-btn-custom {
+    padding: 20px 15px !important;
+    height: unset !important;
+    background-color: var(--light-color);
+}
+.back-section {
+    margin-bottom: 30px;
+}
+.back-btn-custom {
+    background: var(--light-color);
+    padding: 10px;
+    border-radius: 4px;
+    color: #fff;
+}
+
     @media (max-width: 768px) {
+
+        .responsive-btn {
+            font-size: 12px;
+        }
+
         .img-header {
             width: 40px;
             margin-left: 20px;
