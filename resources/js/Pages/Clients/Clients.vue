@@ -20,17 +20,7 @@ const deleteCustomer = async (id) => {
 </script>
 
 <template>
-    <Head :title="pageTitle" />
-    <AuthenticatedLayout>
-        <div class="container my-3">
-          <div class="form-container shadow">
-            <div class="table-container">
-              <div class="d-flex justify-content-between align-items-center">
-                <h4><i class="bi bi-people-fill mr-2"></i>All Customers</h4>
-                <button class="btn btn-primary btn-custom">
-                  <i class="bi bi-plus-circle-fill mr-2"></i>Add New Customer
-                </button>
-              </div>
+    <Head :title="clients" />
 
   <AuthenticatedLayout>
     <div class="container my-3">
