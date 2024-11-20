@@ -13,8 +13,11 @@ const props = defineProps({
   <Head title="Client Profile" />
 
   <AuthenticatedLayout>
-    <div class="container py-5">
-        <div class="profile-card">
+
+    <div class="back-section"><button type="button" class="back-btn-custom"><i class="bi bi-caret-left"></i> Back</button></div>
+
+    <div class="py-3">
+        <div class="profile-card col-md-6 col-12">
             <div class="text-center">
                 <!-- Use the customer's first name for the profile image (or use a placeholder if not available) -->
                 <img 
@@ -23,23 +26,24 @@ const props = defineProps({
                   class="profile-image"
                 />
             </div>
-            <div class="profile-details mt-3">
-                <!-- Display customer details dynamically from the 'customers' prop -->
-                <h4>Name: {{ props.customers.first_name }} {{ props.customers.last_name }}</h4>
-                <p>Email: {{ props.customers.email }}</p>
-                <p>Quantity: {{ props.customers.quantity }}</p>
-                <p>Mobile: {{ props.customers.phone }}</p>
-
-                <p>Devices:</p>
-                <ul>
+            <div class="profile-details mt-3 row">
+                <div class="col-md-6 col-12">
+                <h4 class="mt-2">Name: {{ props.customers.first_name }} {{ props.customers.last_name }}</h4>
+                <p class="mt-2">Email: {{ props.customers.email }}</p>
+                <p class="mt-2">Quantity: {{ props.customers.quantity }}</p>
+                <p class="mt-2">Mobile: {{ props.customers.phone }}</p>
+                </div>
+            <div class="col-md-6 col-12">
+                <p class="mt-2">Devices:</p>
+                <ul class="mt-2">
                     <!-- Loop through the devices and display their device IDs -->
                     <li v-for="device in props.customers.devices" :key="device.id">
                         <p>Device ID: {{ device.device_id }}</p>
-                        <p>Order ID: {{ device.order_id }}</p>
                         <p>Company Name: {{ device.company_name }}</p><br>
                     </li>
                 </ul>
-                <p>Address: {{ props.customers.address }}</p>
+                <p class="mt-2">Address: {{ props.customers.address }}</p>
+            </div>
             </div>
         </div>
     </div>
