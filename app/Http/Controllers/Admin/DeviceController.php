@@ -15,10 +15,12 @@ class DeviceController extends Controller
         ]);
     }
 
-    public function add(){
-        return Inertia::render('Device/AddDevice',[
-            'user' => Auth::user(),
-        ]);
+    public function create(){
+        return Inertia::render('Device/Create');
+    }
+
+    public function store(){
+        
     }
 
     public function edit(){
