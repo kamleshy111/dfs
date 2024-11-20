@@ -7,9 +7,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use App\Models\Customer;
 use App\Models\Device;
 use App\Models\CustomerDevice;
+use App\Models\User;
 
 class ClientsController extends Controller
 {
@@ -53,8 +55,19 @@ class ClientsController extends Controller
                 $filePath = $request->file('file')->store('uploads', 'public'); // Store file in public storage
             }
     
+            $password = rand(10000000, 99999999);
+
+           $user = User::create([
+                        'name' => $validatedData["first_name"] . ' ' . $validatedData["last_name"],
+                        'email' => $validatedData["email"],
+                        'password' => Hash::make($password),
+                        'role' => 'user',
+                    ]);
+
+
             // Create a new Customer
             $customer = new Customer;
+            $customer->user_id = $user->id;
             $customer->first_name = $validatedData["first_name"];
             $customer->last_name = $validatedData["last_name"];
             $customer->email = $validatedData["email"];
