@@ -45,7 +45,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/{id}/edit',[ClientsController::class, 'edit'])->name('clients.edit');
         Route::post('/update/{id}', [ClientsController::class, 'update'])->name('clients.update');
         
-        Route::post('/destroy', [ClientsController::class, 'destroy'])->name('clients.destroy');
+        Route::delete('/destroy/{id}', [ClientsController::class, 'destroy'])->name('clients.destroy');
 
     });
 
@@ -54,6 +54,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [DeviceController::class, 'index'])->name('devices');
         Route::get('/create', [DeviceController::class, 'create'])->name('devices.create');
         Route::post('/store',[DeviceController::class, 'store'])->name('devices.store');
+        Route::get('/{id}/view', [DeviceController::class, 'view'])->name('devices.view');
+        Route::get('/{id}/edit',[DeviceController::class, 'edit'])->name('devices.edit');
+        Route::post('/update/{id}', [DeviceController::class, 'update'])->name('devices.update');
     });
 
     //Payments Routes
@@ -74,6 +77,13 @@ Route::middleware('auth')->group(function () {
     //VehicleType Routes
     Route::group(['prefix' => 'vehicle-type'], function() {
         Route::get('/', [VehicleTypeController::class, 'index'])->name('vehicle-type');
+
+
+        Route::get('/create', [VehicleTypeController::class, 'create'])->name('vehicle-type.create');
+        // Route::post('/store',[DeviceController::class, 'store'])->name('devices.store');
+        // Route::get('/{id}/view', [DeviceController::class, 'view'])->name('devices.view');
+        // Route::get('/{id}/edit',[DeviceController::class, 'edit'])->name('devices.edit');
+        // Route::post('/update/{id}', [DeviceController::class, 'update'])->name('devices.update');
     });
 });
 

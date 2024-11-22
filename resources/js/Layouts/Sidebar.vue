@@ -53,15 +53,22 @@ const showingNavigationDropdown = ref(false);
                           <li>
                               <a :href="route('devices')" class="nav-link">
                                   <i class="bi bi-upload mr-3"></i><span>Device</span>
-                              </a>
+                              </a>vehicle-type
                           </li>
                       </ul>
                   </li>-->
 
                   <li class="nav-item"><a class="nav-link" href="#"><i
                               class="bi bi-credit-card-fill mr-3"></i>Payments</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#"><i
-                              class="bi bi-truck-front-fill mr-3"></i>Vehicle Type</a></li>
+                   <li class="nav-item">
+                      <NavLink
+                          :href="route('vehicle-type')"
+                          :active="route().current('vehicle-type')"
+                          class="nav-link"
+                      >
+                          <i class="bi bi-truck-front-fill mr-3"></i>Vehicle Type
+                      </NavLink>
+                  </li>
                   <li class="nav-item"><a class="nav-link" href="#"><i
                               class="bi bi-file-earmark-text-fill mr-3"></i>Manage Documents</a></li>
                   <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-star-fill mr-3"></i>Review &

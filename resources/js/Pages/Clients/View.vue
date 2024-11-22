@@ -7,6 +7,11 @@ import { Head } from "@inertiajs/vue3";
 const props = defineProps({
   customers: Object,
 });
+
+// go to back
+const goBack = () => {
+  window.location.href = "/clients"; // Redirect to the desired Laravel route
+};
 </script>
 
 <template>
@@ -14,7 +19,7 @@ const props = defineProps({
 
   <AuthenticatedLayout>
 
-    <div class="back-section"><button type="button" class="back-btn-custom"><i class="bi bi-caret-left"></i> Back</button></div>
+    <div class="back-section"><button type="button" class="back-btn-custom" @click="goBack"><i class="bi bi-caret-left"></i> Back</button></div>
 
     <div class="py-3">
         <div class="profile-card col-md-6 col-12">
