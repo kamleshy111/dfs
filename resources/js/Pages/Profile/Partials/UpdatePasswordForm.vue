@@ -56,6 +56,7 @@ const updatePassword = () => {
                     type="password"
                     class="mt-1 block w-full form-control"
                     autocomplete="current-password"
+                    placeholder=""
                 />
 
                 <InputLabel for="current_password" value="Current Password" class="form-label" />
@@ -75,6 +76,7 @@ const updatePassword = () => {
                     type="password"
                     class="mt-1 block w-full form-control"
                     autocomplete="new-password"
+                    placeholder=""
                 />
 
                  <InputLabel for="password" value="New Password" class="form-label" />
@@ -90,6 +92,7 @@ const updatePassword = () => {
                     type="password"
                     class="mt-1 block w-full form-control"
                     autocomplete="new-password"
+                    placeholder=""
                 />
 
                 <InputLabel for="password_confirmation" value="Confirm Password" class="form-label" />

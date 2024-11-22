@@ -48,6 +48,7 @@ const form = useForm({
                     required
                     autofocus
                     autocomplete="name"
+                    placeholder=""
                 />
                 <InputLabel for="name" value="Name" class="form-label" />
 
@@ -63,6 +64,7 @@ const form = useForm({
                     v-model="form.phone"
                     autofocus
                     autocomplete="phone"
+                    placeholder=""
                 />
                 <InputLabel for="phone" value="Phone" class="form-label" />
 
@@ -78,6 +80,7 @@ const form = useForm({
                     v-model="form.email"
                     required
                     autocomplete="username"
+                    placeholder=""
                 />
                 <InputLabel for="email" value="Email" class="form-label" />
 
