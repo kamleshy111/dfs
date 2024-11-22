@@ -63,6 +63,11 @@ const decrementQuantity = () => {
   if (form.quantity > 1) form.quantity--;
 };
 
+// go to back
+const goBack = () => {
+  window.location.href = "/clients"; // Redirect to the desired Laravel route
+};
+
 // Submit the form
 const submit = () => {
   const formData = new FormData();
@@ -79,7 +84,7 @@ const submit = () => {
   <AuthenticatedLayout>
   
    <div class="back-section">
-     <button type="button" class="back-btn-custom"> <i class="bi bi-caret-left"></i> Back</button>
+     <button type="button" class="back-btn-custom" @click="goBack"> <i class="bi bi-caret-left"></i> Back</button>
    </div>
 
     <!-- Form -->

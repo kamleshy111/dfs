@@ -39,9 +39,9 @@ class ClientsController extends Controller
             'email' => 'required|email|max:255',
             'phone' => 'required|string|max:15',
             'address' => 'required|max:500',
-            'device_id' => 'required|array', // Ensure device_id is an array
-            'quantity' => 'required|integer|min:1',
-            'file' => 'required',
+            'device_id' => 'array', // Ensure device_id is an array
+            'quantity' => 'integer|min:1',
+            'file' => 'file',
         ]);
     
         /*------- Start DB Transaction --------*/
@@ -158,9 +158,9 @@ class ClientsController extends Controller
             'email' => 'required|email|max:255',
             'phone' => 'required|string|max:15',
             'address' => 'required|max:500',
-            'device_id' => 'required|array', // Ensure device_id is an array
-            'quantity' => 'required|integer|min:1',
-            'file' => 'required',
+            'device_id' => 'array', // Ensure device_id is an array
+            'quantity' => 'integer|min:1',
+            'file' => 'file',
         ]);
 
         /*------- Start DB Transaction --------*/
@@ -202,7 +202,7 @@ class ClientsController extends Controller
             DB::commit();
     
             // Redirect with success message
-            return redirect()->route('clients')->with('success', 'Client added successfully.');
+            return redirect()->route('clients')->with('success', 'Client updated successfully.');
         } catch (\Exception $e) {
             /*-------- Rollback Database Entry --------*/
             DB::rollback();
@@ -212,17 +212,17 @@ class ClientsController extends Controller
 
 
 
-    public function destroy($id) {
-
+    public function destroy($id)
+    {
         try {
-            Customer::where('id',$id)->delete();
-
-            CustomerDevice::where('customer_id', $id)->delete();
-
-            return redirect()->back()->with('success', 'Customer and related devices deleted successfully.');
+            $customer = Customer::findOrFail($id);
+            $customer->delete();
+    
+            return redirect()->route('clients.index')->with('success', 'Customer deleted successfully.');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Failed to delete the customer: ' . $e->getMessage());
+            return back()->withErrors(['error' => 'An error occurred while deleting the customer.']);
         }
     }
+    
     
 }

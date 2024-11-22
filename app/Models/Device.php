@@ -6,6 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Device extends Model
 {
-    protected $fillable = ['device_id','company_name','date_time'];
+    protected $fillable = ['device_id','order_id','company_name','date_time'];
 
 }

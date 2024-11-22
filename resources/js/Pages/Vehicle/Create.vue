@@ -1,21 +1,16 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-
-import GuestLayout from "@/Layouts/GuestLayout.vue";
-import InputError from "@/Components/InputError.vue";
-import InputLabel from "@/Components/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import TextInput from "@/Components/TextInput.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 
 const form = useForm({
-  deviceId: "",
   companyName: "",
-  orderId: "",
-  purchaseDate: "",
+  model: "",
+  fuelType: "",
+  chassisNumber: "",
+  color: "",
 });
 
-// Submit the form
 const submit = () => {
   form.post(route("devices.store"), {
     onSuccess: () => {
@@ -39,27 +34,31 @@ const submit = () => {
         <form @submit.prevent="submit">
           <div class="form-row">
             <div class="form-group col-md-6">
-              <input type="text" v-model="form.deviceId" class="form-control" id="deviceId" placeholder="" />
-              <label for="deviceId" class="form-label">Device ID</label>
-            </div>
-            <div class="form-group col-md-6">
               <input type="text" v-model="form.companyName" class="form-control" id="companyName" placeholder="" />
               <label for="companyName" class="form-label">Company Name</label>
+            </div>
+            <div class="form-group col-md-6">
+              <input type="text" v-model="form.model" class="form-control" id="model" placeholder="" />
+              <label for="model" class="form-label">model</label>
             </div>
           </div>
           <div class="form-row">
             <div class="form-group col-md-6">
-              <input type="text" v-model="form.orderId" class="form-control" id="orderId" placeholder="" />
-              <label for="orderId" class="form-label">Order ID</label>
+              <input type="text" v-model="form.fuelType" class="form-control" id="fuelType" placeholder="" />
+              <label for="fuelType" class="form-label">Fuel Type</label>
             </div>
             <div class="form-group col-md-6">
-              <input type="datetime-local" v-model="form.purchaseDate" class="form-control" id="purchaseDate" placeholder="" />
-              <label for="purchaseDate" class="form-label">Purchase Date</label>
+              <input type="text" v-model="form.chassisNumber" class="form-control" id="chassisNumber" placeholder="" />
+              <label for="chassisNumber" class="form-label">Chassis Number</label>
+            </div>
+            <div class="form-group col-md-6">
+              <input type="text" v-model="form.color" class="form-control" id="color" placeholder="" />
+              <label for="color" class="form-label">Color</label>
             </div>
           </div>
           <div class="col-md-3 col-12 p-0 mt-4">
             <PrimaryButton class="btn save-btn-custom" style="font-size: 20px !important" >
-              Save Customer
+              Save vehicle
             </PrimaryButton>
           </div>
         </form>

@@ -49,6 +49,11 @@ const decrementQuantity = () => {
   if (form.quantity > 1) form.quantity--;
 };
 
+// go to back
+const goBack = () => {
+  window.location.href = "/clients"; // Redirect to the desired Laravel route
+};
+
 // Submit form
 const submit = () => {
   form.post(route("clients.update", customerDetail.id), {
@@ -66,7 +71,7 @@ console.log("Devices:", devices);
   <AuthenticatedLayout>
     <!-- Form -->
     
-    <div class="back-section"><button type="button" class="back-btn-custom"><i class="bi bi-caret-left"></i> Back</button></div>
+    <div class="back-section"><button type="button" class="back-btn-custom" @click="goBack"><i class="bi bi-caret-left"></i> Back</button></div>
 
     <form @submit.prevent="submit">
       <div class="form-row">

@@ -7,12 +7,25 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
+// const deleteCustomer = async (id) => {
+//   if (confirm('Are you sure you want to delete this customer?')) {
+//     try {
+//       await Inertia.delete(`/clients/${id}`);
+
+//     } catch (error) {
+//       alert('An error occurred while deleting the customer.');
+//     }
+//   }
+// };
+
+
 const deleteCustomer = async (id) => {
   if (confirm('Are you sure you want to delete this customer?')) {
     try {
-      await Inertia.delete(`/clients/${id}`);
-
+      await Inertia.delete(route('clients.destroy', id));
+      alert('Customer deleted successfully.');
     } catch (error) {
+      console.error('Error deleting customer:', error);
       alert('An error occurred while deleting the customer.');
     }
   }
