@@ -80,7 +80,7 @@ class DeviceController extends Controller
         $data = Device::where('id',$id)->first();
    
         if (!$data) {
-            return redirect()->route('devices.index')->with('error', 'Device not found.');
+            return redirect()->route('devices')->with('error', 'Device not found.');
         }
 
         $deviceDetail = [

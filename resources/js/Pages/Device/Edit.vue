@@ -19,6 +19,11 @@ const form = useForm({
 
 });
 
+// go to back
+const goBack = () => {
+  window.location.href = "/devices";
+};
+
 // Form submit handler
 const submit = async () => {
     try {
@@ -53,7 +58,7 @@ const submit = async () => {
 
     <AuthenticatedLayout>
         <div class="back-section">
-            <button type="button" class="back-btn-custom">
+            <button type="button" class="back-btn-custom" @click="goBack">
                 <i class="bi bi-caret-left"></i> Back
             </button>
         </div>

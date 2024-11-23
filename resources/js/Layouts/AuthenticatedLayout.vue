@@ -3,27 +3,21 @@
         <div class="min-h-screen bg-gray-100">
 
             <div class="header">
-                    <Header />
+                    <!-- <Header /> -->
+                    <Header :role="role" />
                 </div>
             <div class="flex">
 
                 <div class="siderbar">
-                    <Sidebar />
+                    <Sidebar :role="role" />
                 </div>
 
 
                 <!-- Page Content -->
                 <main class="right-box">
-                    <!-- Page Heading -->
-                <header
-                    class="text-center w-100"
-                    v-if="$slots.header"
-                >
-                    <div class="text-center ">
+                    <header class="text-center w-100" v-if="$slots.header">
                         <slot name="header" />
-                    </div>
-                </header>
-                
+                    </header>
                     <slot />
                 </main>
             </div>
@@ -34,12 +28,16 @@
 <script>
 import Sidebar from './Sidebar.vue';
 import Header from './Header.vue';
+import { computed } from 'vue';
+import { usePage } from '@inertiajs/vue3'; // For Inertia.js
 
 export default {
-  components: {
-    Sidebar,
-    Header,
-  },
+    components: { Sidebar, Header },
+    setup() {
+        const { props } = usePage(); // Get props from Inertia
+        const role = computed(() => props.auth?.user?.role || 'user'); // Default to user if no role is found
+        return { role };
+    },
 };
 </script>
 

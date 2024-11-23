@@ -7,6 +7,9 @@ import InputError from "@/Components/InputError.vue";
 import Multiselect from "vue-multiselect";
 import { ref } from "vue";
 
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
+
 // Access props
 const { devices, customerDetail } = usePage().props;
 
@@ -55,10 +58,33 @@ const goBack = () => {
 };
 
 // Submit form
-const submit = () => {
-  form.post(route("clients.update", customerDetail.id), {
-    onSuccess: () => clearFile(),
-  });
+const submit = async () => {
+  // form.post(route("clients.update", customerDetail.id), {
+  //   onSuccess: () => clearFile(),
+  // });
+
+  try {
+        // Send the form data to the server
+        await form.post(route("clients.update", customerDetail.id), {
+            headers: {
+            "Content-Type": "application/json",
+            },
+            onSuccess: () => {
+            toast.success("Customer updated successfully.");
+            form.reset(); // Reset the form if needed
+            
+            window.location.href = "/clients";
+            },
+            onError: (errors) => {
+            if (errors) {
+                toast.error("An error occurred. Please check your input.");
+            }
+            },
+        });
+    } catch (error) {
+
+        toast.error("An unexpected error occurred.");
+    }
 };
 
 console.log("Preselected device IDs:", form.device_id); // Should output [1, 4]
