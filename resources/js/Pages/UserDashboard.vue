@@ -11,7 +11,7 @@
         </div> 
         <div class="footer-map">
             <nav class="nav justify-content-center">
-                <a class="nav-link" href="#">GPS</a>
+                <a class="nav-link active" href="#">GPS</a>
                 <a class="nav-link" href="#">Safe Alarm</a>
                 <a class="nav-link" href="#">Overspeed</a>
                 <a class="nav-link" href="#">Fatigue</a>
