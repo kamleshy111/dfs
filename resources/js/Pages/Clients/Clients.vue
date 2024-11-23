@@ -3,31 +3,27 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
 import { Inertia } from '@inertiajs/inertia';
 import { useRouter } from 'vue-router';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 
 
 const router = useRouter();
 
-// const deleteCustomer = async (id) => {
-//   if (confirm('Are you sure you want to delete this customer?')) {
-//     try {
-//       await Inertia.delete(`/clients/${id}`);
-
-//     } catch (error) {
-//       alert('An error occurred while deleting the customer.');
-//     }
-//   }
-// };
-
-
+// Delete Customer
 const deleteCustomer = async (id) => {
-  if (confirm('Are you sure you want to delete this customer?')) {
-    try {
-      await Inertia.delete(route('clients.destroy', id));
-      alert('Customer deleted successfully.');
-    } catch (error) {
-      console.error('Error deleting customer:', error);
-      alert('An error occurred while deleting the customer.');
-    }
+  try {
+    await Inertia.delete(route("clients.destroy", id), {
+      onSuccess: () => {
+        toast.success("Customer deleted successfully.");
+      },
+      onError: (errors) => {
+        if (errors) {
+          toast.error("An error occurred while deleting the customer.");
+        }
+      },  
+    });
+  } catch (error) {
+    toast.error("An unexpected error occurred.");
   }
 };
 </script>

@@ -3,6 +3,9 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
+
 const form = useForm({
   companyName: "",
   model: "",
@@ -16,12 +19,28 @@ const goBack = () => {
   window.location.href = "/vehicle-type";
 };
 
-const submit = () => {
-  form.post(route("vehicle-type.store"), {
-    onSuccess: () => {
-      form.reset();
-    },
-  });
+// Submit the form
+const submit = async () => {
+    try {
+        // Send the form data to the server
+        await form.post(route("vehicle-type.store"), {
+            headers: {
+            "Content-Type": "application/json",
+            },
+            onSuccess: () => {
+              toast.success("Vehicle added successfully.");
+            form.reset(); 
+            },
+            onError: (errors) => {
+            if (errors) {
+                toast.error("An error occurred. Please check your input.");
+            }
+            },
+        });
+    } catch (error) {
+
+        toast.error("An unexpected error occurred.");
+    }
 };
 </script>
 <template>

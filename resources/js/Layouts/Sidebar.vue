@@ -82,7 +82,9 @@ const showingNavigationDropdown = ref(false);
                             <a class="nav-link" href="#"><i class="bi bi-person-circle mr-3"></i>Monitor</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#"><i class="bi bi-credit-card-fill mr-3"></i>Billing</a>
+                            <NavLink :href="route('billing')" :active="route().current('billing')" class="nav-link">
+                                <i class="bi bi-credit-card-fill mr-3"></i>Billing
+                            </NavLink>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#"><i class="bi bi-pie-chart-fill mr-3"></i>Report</a>

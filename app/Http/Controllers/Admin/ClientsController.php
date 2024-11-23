@@ -93,7 +93,7 @@ class ClientsController extends Controller
             DB::commit();
     
             // Redirect with success message
-            return redirect()->route('clients')->with('success', 'Client added successfully.');
+            return redirect()->route('clients')->with(['success' => 'Client added successfully.']);
         } catch (\Exception $e) {
             /*-------- Rollback Database Entry --------*/
             DB::rollback();
@@ -216,12 +216,11 @@ class ClientsController extends Controller
 
     public function destroy($id)
     {
-        try {
-            $customer = Customer::findOrFail($id);
+         $customer = Customer::findOrFail($id);
+        if($customer){
             $customer->delete();
-    
-            return redirect()->route('clients')->with('success', 'Customer deleted successfully.');
-        } catch (\Exception $e) {
+            return redirect()->route('clients')->with(['success' => 'Customer deleted successfully.']);
+        }else{
             return back()->withErrors(['error' => 'An error occurred while deleting the customer.']);
         }
     }

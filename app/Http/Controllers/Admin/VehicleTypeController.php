@@ -44,9 +44,9 @@ class VehicleTypeController extends Controller
         ]);
             
         if($vehicle){
-            return redirect()->route('vehicle-type')->with('success', 'Vehicle added successfully.');
+            return redirect()->route('vehicle-type.create')->with(['success' => 'Vehicle added successfully.']);
         } else {
-            return back()->with('error', 'An error occurred while adding the device.');
+            return back()->with(['error' => 'An error occurred while adding the device.']);
         }
 
     }
@@ -102,6 +102,17 @@ class VehicleTypeController extends Controller
             ]);
         }
 
+    }
+
+    public function destroy($id)
+    {
+         $vehicle = Vehicle::findOrFail($id);
+        if($vehicle){
+            $vehicle->delete();
+            return redirect()->route('vehicle-type')->with(['success' => 'Vehicle deleted successfully.']);
+        }else{
+            return back()->withErrors(['error' => 'An error occurred while deleting the Vehicle.']);
+        }
     }
 
 }
