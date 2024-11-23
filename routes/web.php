@@ -27,11 +27,30 @@ Route::get('/', function () {
     return Inertia::render('Auth/Login');
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return Inertia::render('Dashboard');
+// })->middleware(['auth', 'verified',  'role:admin'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+// Route::get('/dashboard', function () {
+//     return Inertia::render('UserDashboard');
+// })->middleware(['auth', 'verified',  'role:user'])->name('dashboard');
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', function () {
+        $user = Auth::user();
+        if ($user->role === 'admin') {
+            return Inertia::render('Dashboard', [
+                'role' => Auth::user()->role,  // Make sure 'role' is a field in the User model
+            ]);
+        } else {
+            return Inertia::render('UserDashboard', [
+                'role' => Auth::user()->role,  // Make sure 'role' is a field in the User model
+            ]);
+        }
+    })->name('dashboard');
+});
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -81,10 +100,16 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/create', [VehicleTypeController::class, 'create'])->name('vehicle-type.create');
         Route::post('/store',[VehicleTypeController::class, 'store'])->name('vehicle-type.store');
-        Route::get('/{id}/view', [VehicleTypeController::class, 'view'])->name('vehicle-type.view');
         Route::get('/{id}/edit',[VehicleTypeController::class, 'edit'])->name('vehicle-type.edit');
         Route::post('/update/{id}', [VehicleTypeController::class, 'update'])->name('vehicle-type.update');
     });
+});
+
+Route::middleware(['auth', 'role:user'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
 });
 
 require __DIR__.'/auth.php';

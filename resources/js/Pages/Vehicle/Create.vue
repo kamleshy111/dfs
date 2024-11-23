@@ -11,8 +11,13 @@ const form = useForm({
   color: "",
 });
 
+// go to back
+const goBack = () => {
+  window.location.href = "/vehicle-type";
+};
+
 const submit = () => {
-  form.post(route("devices.store"), {
+  form.post(route("vehicle-type.store"), {
     onSuccess: () => {
       form.reset();
     },
@@ -24,7 +29,7 @@ const submit = () => {
 
   <AuthenticatedLayout>
     <div class="back-section">
-      <button type="button" class="back-btn-custom">
+      <button type="button" class="back-btn-custom" @click="goBack">
         <i class="bi bi-caret-left"></i> Back
       </button>
     </div>

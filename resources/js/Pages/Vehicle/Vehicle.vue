@@ -21,7 +21,10 @@ import { Head } from "@inertiajs/vue3";
                     <tr>
                         <th scope="col">S No</th>
                         <th scope="col">Company Name</th>
-                        <th scope="col">Date &amp; Time</th>
+                        <th scope="col">Model</th>
+                        <th scope="col">Fuel Type</th>
+                        <th scope="col">Chassis Number</th>
+                        <th scope="col">Coler</th>
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
@@ -32,13 +35,11 @@ import { Head } from "@inertiajs/vue3";
                     <tr v-for="(vehicle, index) in vehicles.data" :key="vehicle.id">
                         <td>{{ index + 1 }}</td>
                         <td>{{ vehicle.company_name }}</td>
-                        <td>{{ formatDate(vehicle.date_time) }}</td>
+                        <td>{{ vehicle.model }}</td>
+                        <td>{{ vehicle.fuel_type }}</td>
+                        <td>{{ vehicle.Chassis_number }}</td>
+                        <td>{{ vehicle.color }}</td>
                         <td>
-
-                        <!-- view button -->
-                        <button class="btn btn-light action-btn" @click="viewVehicle(vehicle.id)">
-                        <i class="bi bi-eye-fill"></i>
-                        </button>
 
                         <!-- Edit button -->
                         <button class="btn btn-warning text-white action-btn" @click="editVehicle(vehicle.id)">
@@ -90,41 +91,12 @@ export default {
     },
   },
   methods: {
-    formatDate(value) {
-      if (!value) return '';
-      
-      // Create a new Date object from the ISO 8601 string
-      const date = new Date(value);
-      
-      // Define the format options
-      const dateOptions = {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-      };
-      const timeOptions = {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true
-      };
-
-      // Format the date and time separately and combine them
-      const formattedDate = date.toLocaleDateString('en-GB', dateOptions);
-      const formattedTime = date.toLocaleTimeString('en-GB', timeOptions);
-
-      // Return the formatted string in the desired format
-      return `${formattedDate} at ${formattedTime}`;
-    },
 
     // Redirect to the edit page
     editVehicle(id) {
       window.location.href = `/vehicle-type/${id}/edit`; 
     },
 
-    // Redirect to the view page
-    viewVehicle(id) {
-      window.location.href = `/vehicle-type/${id}/view`;
-    },
   }
 
 };

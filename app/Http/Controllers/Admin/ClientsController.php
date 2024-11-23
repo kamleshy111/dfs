@@ -55,7 +55,8 @@ class ClientsController extends Controller
                 $filePath = $request->file('file')->store('uploads', 'public'); // Store file in public storage
             }
     
-            $password = rand(10000000, 99999999);
+            // $password = rand(10000000, 99999999);
+            $password = 12345678;
 
            $user = User::create([
                         'name' => $validatedData["first_name"] . ' ' . $validatedData["last_name"],
@@ -126,7 +127,7 @@ class ClientsController extends Controller
         $data = Customer::with('devices')->find($id);
    
         if (!$data) {
-            return redirect()->route('clients.index')->with('error', 'Customer not found.');
+            return redirect()->route('clients')->with('error', 'Customer not found.');
         }
 
         $customerDetail = [
@@ -160,7 +161,7 @@ class ClientsController extends Controller
             'address' => 'required|max:500',
             'device_id' => 'array', // Ensure device_id is an array
             'quantity' => 'integer|min:1',
-            'file' => 'file',
+            // 'file' => 'file',
         ]);
 
         /*------- Start DB Transaction --------*/
@@ -202,7 +203,8 @@ class ClientsController extends Controller
             DB::commit();
     
             // Redirect with success message
-            return redirect()->route('clients')->with('success', 'Client updated successfully.');
+            return redirect()->route('clients')->with(['success' => 'Client updated successfully.']);
+           
         } catch (\Exception $e) {
             /*-------- Rollback Database Entry --------*/
             DB::rollback();
@@ -218,7 +220,7 @@ class ClientsController extends Controller
             $customer = Customer::findOrFail($id);
             $customer->delete();
     
-            return redirect()->route('clients.index')->with('success', 'Customer deleted successfully.');
+            return redirect()->route('clients')->with('success', 'Customer deleted successfully.');
         } catch (\Exception $e) {
             return back()->withErrors(['error' => 'An error occurred while deleting the customer.']);
         }

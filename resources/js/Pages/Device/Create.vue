@@ -15,6 +15,11 @@ const form = useForm({
   purchaseDate: "",
 });
 
+// go to back
+const goBack = () => {
+  window.location.href = "/devices";
+};
+
 // Submit the form
 const submit = () => {
   form.post(route("devices.store"), {
@@ -29,7 +34,7 @@ const submit = () => {
 
   <AuthenticatedLayout>
     <div class="back-section">
-      <button type="button" class="back-btn-custom">
+      <button type="button" class="back-btn-custom" @click="goBack">
         <i class="bi bi-caret-left"></i> Back
       </button>
     </div>
