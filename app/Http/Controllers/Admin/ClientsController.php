@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SendLoginDetail;
 use App\Models\Customer;
 use App\Models\Device;
 use App\Models\CustomerDevice;
@@ -64,6 +66,17 @@ class ClientsController extends Controller
                         'password' => Hash::make($password),
                         'role' => 'user',
                     ]);
+
+            // Prepare email data
+            $loginData = [
+                'title' => 'Your Login Details Have Been Create',
+                'body' => 'your login details.',
+                'email' => $user->email,
+                'password' => $request->password,
+            ];
+
+            // Send email
+            Mail::to($user->email)->send(new SendLoginDetail($loginData));
 
 
             // Create a new Customer
