@@ -18,6 +18,12 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
         ]);
 
+        // API middleware stack (if needed)
+        $middleware->api(append: [
+            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class, // Handles Sanctum for APIs
+        ]);
+
+        // Register middleware aliases
         $middleware->alias([
             'role' => RoleMiddleware::class
         ]);

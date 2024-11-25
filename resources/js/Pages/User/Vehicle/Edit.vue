@@ -34,9 +34,7 @@ const submit = async () => {
             "Content-Type": "application/json",
             },
             onSuccess: () => {
-            toast.success("vehicle updated successfully.");
-            
-            window.location.href = "/vehicle-type";
+                toast.success("vehicle updated successfully.");
             },
             onError: (errors) => {
             if (errors) {

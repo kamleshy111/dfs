@@ -33,12 +33,7 @@ const submit = async () => {
             "Content-Type": "application/json",
             },
             onSuccess: () => {
-            toast.success("Device updated successfully.", {
-                    autoClose: 12000, // Toast stays for 3 seconds
-                });
-            form.reset(); // Reset the form if needed
-            
-            window.location.href = "/devices";
+                toast.success("Device updated successfully.");
             },
             onError: (errors) => {
             if (errors) {

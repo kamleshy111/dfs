@@ -8,6 +8,9 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
+
 const form = useForm({
   deviceId: "",
   companyName: "",
@@ -21,12 +24,27 @@ const goBack = () => {
 };
 
 // Submit the form
-const submit = () => {
-  form.post(route("devices.store"), {
-    onSuccess: () => {
-      form.reset();
-    },
-  });
+const submit = async () => {
+    try {
+        // Send the form data to the server
+        await form.post(route("devices.store"), {
+            headers: {
+            "Content-Type": "application/json",
+            },
+            onSuccess: () => {
+              toast.success("Device added successfully.");
+              form.reset(); 
+            },
+            onError: (errors) => {
+            if (errors) {
+                toast.error("An error occurred. Please check your input.");
+            }
+            },
+        });
+    } catch (error) {
+
+        toast.error("An unexpected error occurred.");
+    }
 };
 </script>
 <template>

@@ -1,6 +1,28 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
+import { Inertia } from "@inertiajs/inertia";
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
+
+
+// Delete device
+const deleteDevice = async (id) => {
+  try {
+    await Inertia.delete(route("devices.destroy", id), {
+      onSuccess: () => {
+        toast.success("Device deleted successfully.");
+      },
+      onError: (errors) => {
+        if (errors) {
+          toast.error("An error occurred. Please check your input.");
+        }
+      },  
+    });
+  } catch (error) {
+    toast.error("An unexpected error occurred.");
+  }
+};
 </script>
 
 <template>
@@ -49,7 +71,10 @@ import { Head } from "@inertiajs/vue3";
                         <i class="bi bi-pencil-fill"></i>
                         </button>
 
-                            <button class="btn btn-danger action-btn"><i class="bi bi-trash-fill"></i></button>
+                        <!-- Delete button -->
+                        <button class="btn btn-danger action-btn" @click="deleteDevice(device.id)">
+                          <i class="bi bi-trash-fill"></i>
+                        </button>
                         </td>
                     </tr>
                     
