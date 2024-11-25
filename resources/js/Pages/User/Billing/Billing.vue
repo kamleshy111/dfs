@@ -6,7 +6,7 @@ import { Inertia } from "@inertiajs/inertia";
 </script>
 
 <template>
-      <Head title="device" />
+      <Head title="billing" />
 
 <AuthenticatedLayout>
     <div class="container mt-5">

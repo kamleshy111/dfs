@@ -11,7 +11,7 @@ use App\Http\Controllers\Admin\DeviceController;
 use App\Http\Controllers\Admin\ManageDocumentsController;
 use App\Http\Controllers\Admin\PaymentsController;
 use App\Http\Controllers\Admin\ReviewRatingController;
-use App\Http\Controllers\Admin\VehicleTypeController;
+use App\Http\Controllers\User\VehicleTypeController;
 
 use App\Http\Controllers\User\BillingController;
 
@@ -101,6 +101,11 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/', [ReviewRatingController::class, 'index'])->name('review-rating');
     });
 
+});
+
+Route::middleware(['auth', 'role:user'])->group(function () {
+
+
     //VehicleType Routes
     Route::group(['prefix' => 'vehicle-type'], function() {
         Route::get('/', [VehicleTypeController::class, 'index'])->name('vehicle-type');
@@ -111,15 +116,11 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::delete('/destroy/{id}', [VehicleTypeController::class, 'destroy'])->name('vehicle-type.destroy');
 
     });
-});
-
-Route::middleware(['auth', 'role:user'])->group(function () {
-
     //Device Routes
     Route::group(['prefix' => 'billing'], function() {
         Route::get('/', [BillingController::class, 'index'])->name('billing');
 
-        
+
     });
 });
 
