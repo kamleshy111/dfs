@@ -46,12 +46,12 @@ class DeviceController extends Controller
             ]);
                 
             if($device){
-                return redirect()->route('devices')->with('success', 'Device added successfully.');
+                return redirect()->route('devices.create')->with(['success' => 'Device added successfully.']);
             } else {
-                return back()->with('error', 'An error occurred while adding the device.');
+                return back()->with(['error' => 'An error occurred while adding the device.']);
             }
         } else {
-            return redirect()->route('devices.create')->with('error', 'device id must be unique.');
+            return redirect()->route('devices.create')->with(['error' => 'device id must be unique.']);
         }
 
     }
@@ -123,5 +123,15 @@ class DeviceController extends Controller
             ]);
         }
 
+    }
+
+    public function destroy($id)
+    {
+         $devicwe = Device::findOrFail($id);
+        if($devicwe){
+            $devicwe->delete();
+            return redirect()->route('devices')->with(['success' => 'Devicwe deleted successfully.']);
+        }
+        return redirect()->back()->with(['error' => 'An error occurred while deleting the device.']);
     }
 }

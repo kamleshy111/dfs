@@ -40,7 +40,7 @@ onMounted(() => {
 
     <div v-if="role === 'admin'"  class="d-flex justify-content-between align-items-center py-3 mb-4 border-bottom">
       <div class="w-50">
-        <h2 class="d-flex align-items-center">Dashboard<img src="storage/heand.png" class="ml-2"></h2>
+        <h2 class="d-flex align-items-center">Dashboard<img src="/storage/heand.png" class="ml-2"></h2>
         <p class="d-none d-md-block">Today is {{ currentDate }}</p>
       </div>
       <div class="d-flex align-items-center w-50 justify-content-end">

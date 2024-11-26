@@ -11,7 +11,9 @@ use App\Http\Controllers\Admin\DeviceController;
 use App\Http\Controllers\Admin\ManageDocumentsController;
 use App\Http\Controllers\Admin\PaymentsController;
 use App\Http\Controllers\Admin\ReviewRatingController;
-use App\Http\Controllers\Admin\VehicleTypeController;
+use App\Http\Controllers\User\VehicleTypeController;
+
+use App\Http\Controllers\User\BillingController;
 
 
 // Route::get('/', function () {
@@ -50,11 +52,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 });
 
-Route::middleware(['auth', 'role:admin'])->group(function () {
+
+Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+});
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    
     //Clients Routes
     Route::group(['prefix' => 'clients'], function() {
         Route::get('/', [ClientsController::class, 'index'])->name('clients');
@@ -76,6 +83,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/{id}/view', [DeviceController::class, 'view'])->name('devices.view');
         Route::get('/{id}/edit',[DeviceController::class, 'edit'])->name('devices.edit');
         Route::post('/update/{id}', [DeviceController::class, 'update'])->name('devices.update');
+        Route::delete('/destroy/{id}', [DeviceController::class, 'destroy'])->name('devices.destroy');
     });
 
     //Payments Routes
@@ -93,23 +101,29 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/', [ReviewRatingController::class, 'index'])->name('review-rating');
     });
 
+});
+
+Route::middleware(['auth', 'role:user'])->group(function () {
+
+
     //VehicleType Routes
     Route::group(['prefix' => 'vehicle-type'], function() {
         Route::get('/', [VehicleTypeController::class, 'index'])->name('vehicle-type');
-
-
         Route::get('/create', [VehicleTypeController::class, 'create'])->name('vehicle-type.create');
         Route::post('/store',[VehicleTypeController::class, 'store'])->name('vehicle-type.store');
         Route::get('/{id}/edit',[VehicleTypeController::class, 'edit'])->name('vehicle-type.edit');
         Route::post('/update/{id}', [VehicleTypeController::class, 'update'])->name('vehicle-type.update');
+        Route::delete('/destroy/{id}', [VehicleTypeController::class, 'destroy'])->name('vehicle-type.destroy');
+
+    });
+    //Device Routes
+    Route::group(['prefix' => 'billing'], function() {
+        Route::get('/', [BillingController::class, 'index'])->name('billing');
+
+
     });
 });
 
-Route::middleware(['auth', 'role:user'])->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-});
 
 require __DIR__.'/auth.php';

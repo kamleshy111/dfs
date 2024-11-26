@@ -1,9 +1,10 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/vue3';
+import axios from 'axios';
 
 // Props
 defineProps({
@@ -13,8 +14,22 @@ defineProps({
   },
 });
 
-// State
+
 const showingNavigationDropdown = ref(false);
+const userDevices   = ref([]);// Initialize as a reactive array
+
+// Fetch user devices when the component is mounted
+onMounted(() => {
+    axios.get('/api/customer-devices')
+        .then(response => {
+            userDevices.value = response.data.userDevices;
+            console.log(userDevices);
+   
+        })
+        .catch(error => {
+            console.error("There was an error fetching the user devices:", error);
+        });
+});
 </script>
 <template>
     <!-- Sidebar -->
@@ -43,12 +58,6 @@ const showingNavigationDropdown = ref(false);
                         </li>
                         <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-credit-card-fill mr-3"></i>Payments</a>
                         </li>
-                        <li class="nav-item">
-                            <NavLink :href="route('vehicle-type')" :active="route().current('vehicle-type')"
-                                class="nav-link">
-                                <i class="bi bi-truck-front-fill mr-3"></i>Vehicle Type
-                            </NavLink>
-                        </li>
                         <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-file-earmark-text-fill mr-3"></i>Manage Documents</a>
                         </li>
                         <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-star-fill mr-3"></i>Review & Rating</a>
@@ -69,20 +78,29 @@ const showingNavigationDropdown = ref(false);
                             </NavLink>
                         </li>
                         <li class="nav-item">
+                            <NavLink :href="route('vehicle-type')" :active="route().current('vehicle-type')"
+                                class="nav-link">
+                                <i class="bi bi-truck-front-fill mr-3"></i>Vehicle Type
+                            </NavLink>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link collapsed" data-bs-toggle="collapse" data-bs-target="#devices-nav" href="#">
                                 <i class="bi bi-truck-front-fill mr-3"></i><span>Devices</span>
                                 <i class="bi bi-chevron-down chevron-icon ml-3"></i>
                             </a>
                             <ul id="devices-nav" class="nav-content collapse list-unstyled">
-                                <li><a href="#" class="nav-link">Devices ID:12345</a></li>
-                                <li><a href="#" class="nav-link">Devices ID:54321</a></li>
+                                <li v-for="device in userDevices" :key="device.id">
+                                    <a href="#" class="nav-link">{{ device.deviceId }}</a>
+                                </li>
                             </ul>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#"><i class="bi bi-person-circle mr-3"></i>Monitor</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#"><i class="bi bi-credit-card-fill mr-3"></i>Billing</a>
+                            <NavLink :href="route('billing')" :active="route().current('billing')" class="nav-link">
+                                <i class="bi bi-credit-card-fill mr-3"></i>Billing
+                            </NavLink>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#"><i class="bi bi-pie-chart-fill mr-3"></i>Report</a>
