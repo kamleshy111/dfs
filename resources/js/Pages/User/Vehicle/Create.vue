@@ -18,10 +18,16 @@ const { devices } = usePage().props;
 const form = useForm({
   companyName: "",
   model: "",
+  year: "",
   fuelType: "",
   chassisNumber: "",
   color: "",
   device_id: [],
+  driverName: "",
+  licenseNumber: "",
+  licenseExpiryDate: "",
+  driverContact: "",
+  driverAddress: "",
 });
 
 // go to back
@@ -73,24 +79,31 @@ const submit = async () => {
             </div>
             <div class="form-group col-md-6">
               <input type="text" v-model="form.model" class="form-control" id="model" placeholder="" />
-              <label for="model" class="form-label">model</label>
+              <label for="model" class="form-label">Model</label>
             </div>
+
           </div>
           <div class="form-row">
+            <div class="form-group col-md-6">
+              <input type="date" v-model="form.year" class="form-control" id="year" placeholder="" />
+              <label for="year" class="form-label">Year</label>
+            </div>
             <div class="form-group col-md-6">
               <input type="text" v-model="form.fuelType" class="form-control" id="fuelType" placeholder="" />
               <label for="fuelType" class="form-label">Fuel Type</label>
             </div>
+          </div>
+          <div class="form-row">
             <div class="form-group col-md-6">
               <input type="text" v-model="form.chassisNumber" class="form-control" id="chassisNumber" placeholder="" />
               <label for="chassisNumber" class="form-label">Chassis Number</label>
             </div>
-          </div>
-          <div class="form-row">  
             <div class="form-group col-md-6">
               <input type="text" v-model="form.color" class="form-control" id="color" placeholder="" />
               <label for="color" class="form-label">Color</label>
             </div>
+          </div>
+          <div class="form-row">  
             <div class="form-group col-md-6">
               <multiselect
                 v-model="form.device_id"
@@ -98,11 +111,35 @@ const submit = async () => {
                 :multiple="true"
                 :searchable="true"
                 track-by="device_id"
-                label="deviceName"
+                label="device_name"
                 placeholder="Select devices"
                 class="form-control"
               ></multiselect>
               <label class="form-label">Devices</label>
+            </div>
+            <div class="form-group col-md-6">
+              <input type="text" v-model="form.driverName" class="form-control" id="driverName" placeholder="" />
+              <label for="driverName" class="form-label">Driver Name</label>
+            </div>
+          </div>
+          <div class="form-row">  
+            <div class="form-group col-md-6">
+              <input type="text" v-model="form.licenseNumber" class="form-control" id="licenseNumber" placeholder="" />
+              <label for="licenseNumber" class="form-label">License Number</label>
+            </div>
+            <div class="form-group col-md-6">
+              <input type="date" v-model="form.licenseExpiryDate" class="form-control" id="licenseExpiryDate" placeholder="" />
+              <label for="licenseExpiryDate" class="form-label">license Expiry Date</label>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <input type="number" v-model="form.driverContact" class="form-control" id="driverContact" placeholder="" />
+              <label for="driverContact" class="form-label">Driver Phone Number</label>
+            </div>
+            <div class="form-group col-md-6">
+              <input type="text" v-model="form.driverAddress" class="form-control" id="driverAddress" placeholder="" />
+              <label for="driverAddress" class="form-label">Driver Address</label>
             </div>
           </div>
           <div class="col-md-3 col-12 p-0 mt-4">

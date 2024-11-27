@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Models\Device;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -11,13 +10,19 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Vehicle;
 use App\Models\CustomerDevice;
 use App\Models\VehicleDevice;
+use App\Models\Customer;
+use App\Models\Device;
 
 
 class VehicleTypeController extends Controller
 {
     public function index(){
 
-        $vehicles = Vehicle::paginate(10);
+        $userId = Auth::user()->id;
+
+        $customer = Customer::where('user_id', $userId)->select('id')->first();
+        $customerId = $customer->id;
+        $vehicles = Vehicle::where('customer_id',$customerId)->paginate(10);
         return Inertia::render('User/Vehicle/Vehicle',[
             'user' => Auth::user(),
             'vehicles' => $vehicles,
@@ -25,12 +30,19 @@ class VehicleTypeController extends Controller
     }
 
     public function create(){
-            $userId = Auth::user()->id;
-     
-        $devices = CustomerDevice::select('devices.id as device_id', 'devices.device_id as deviceName')
-                    ->leftJoin('devices','customer_devices.device_id', '=', 'devices.id')
-                    ->where('customer_id', $userId)->get();
-   
+        $userId = Auth::user()->id;
+
+        $customerId = Customer::where('user_id', $userId)->pluck('id')->first();
+
+        $assignedCustomerDevices = CustomerDevice::where('customer_id', $customerId)->pluck('device_id')->toArray(); 
+        
+        $assignedVehicleDevices = VehicleDevice::pluck('device_id')->toArray(); 
+
+        $devices = Device::whereIn('id', $assignedCustomerDevices)
+                        ->whereNotIn('id', $assignedVehicleDevices)
+                        ->select('id as device_id', 'device_id as device_name') 
+                        ->get();
+
         return Inertia::render('User/Vehicle/Create',[
             'devices' => $devices,
         ]);
@@ -38,40 +50,41 @@ class VehicleTypeController extends Controller
 
     public function store(Request $request){
 
-        // $data = $request->all();
-        // dd($data);
-        $validatedData = $request->validate([
-            'companyName' => 'required',
-            'model' => 'required',
-            'fuelType'=> 'required',
-            'chassisNumber' => 'required',
-            'color' => 'required',
-            'device_id' => 'array', 
-        ]);
-
         /*------- Start DB Transaction --------*/
         DB::beginTransaction();
 
         try {
 
+            $userId = Auth::user()->id;
+
+            $customer = Customer::where('user_id', $userId)->select('id')->first();
+            $customerId = $customer->id;
             
             // Create a new Vehicle
             $vehicle = Vehicle::create([
-                'company_name' => $validatedData['companyName'],
-                'model' => $validatedData['model'],
-                'fuel_type' => $validatedData['fuelType'],
-                'Chassis_number' => $validatedData['chassisNumber'],
-                'color' => $validatedData['color'],
+                'customer_id' => $customerId,
+                'company_name' => $request->input('companyName'),
+                'model' => $request->input('model'),
+                'year' => $request->input('year'),
+                'fuel_type' => $request->input('fuelType'),
+                'Chassis_number' => $request->input('chassisNumber'),
+                'color' => $request->input("color"),
+                'driver_name' => $request->input('driverName'),
+                'license_number' => $request->input('licenseNumber'),
+                'license_expiry_date' => $request->input('licenseExpiryDate'),
+                'driver_contact' => $request->input('driverContact'),
+                'driver_address' => $request->input('driverAddress'),
             ]);
 
             $vehicleId = $vehicle->id;
-            $devices = $validatedData["device_id"];
+            $devices = $request->input('device_id', []);
+
 
             foreach ($devices as $device) {
                 $deviceId = $device['device_id'];
                 VehicleDevice::create([
-                    'vehicle_id' => $deviceId,
-                    'device_id' => $vehicleId,
+                    'vehicle_id' => $vehicleId, // Vehicle ID
+                    'device_id' => $deviceId,   // Device ID
                 ]);
             }
 
@@ -89,7 +102,7 @@ class VehicleTypeController extends Controller
 
     public function edit($id) {
 
-        $data = Vehicle::where('id',$id)->first();
+        $data = Vehicle::with('devices')->find($id);
    
         if (!$data) {
             return redirect()->route('vehicle-type')->with('error', 'Vehicle not found.');
@@ -99,43 +112,88 @@ class VehicleTypeController extends Controller
             'id'   => $data->id ?? 0,
             'company_name' => $data->company_name ?? '',
             'model' => $data->model ?? '',
+            'year' => $data->year ?? '',
             'fuel_type' => $data->fuel_type ?? '',
             'Chassis_number' => $data->Chassis_number ?? '',
+            'driver_name' => $data->driver_name ?? '',
+            'license_number' => $data->license_number ?? '',
+            'license_expiry_date' => $data->license_expiry_date ?? '',
+            'driver_contact' => $data->driver_contact ?? '',
             'color' => $data->color ?? '',
+            'driver_address' => $data->driver_address ?? '',
+            'device_id' => $data->devices->select('id','device_id')->toArray(),
         ];
 
+
+        $userId = Auth::user()->id;
+        $customerId = Customer::where('user_id', $userId)->pluck('id')->first();
+
+        $assignedCustomerDevices = CustomerDevice::where('customer_id', $customerId)->pluck('device_id')->toArray(); 
+       
+        $useVehicleDevice = VehicleDevice::where('vehicle_id', $id)->pluck('device_id')->toArray(); 
+
+        $assignedVehicleDevices = VehicleDevice::pluck('device_id')->toArray(); 
+
+        $devices = Device::whereIn('id', $assignedCustomerDevices)
+                        ->when($id, function ($query) use ($id, $assignedVehicleDevices, $useVehicleDevice) {
+                            return $query->where(function ($query) use ($assignedVehicleDevices, $useVehicleDevice) {
+                                $query->whereNotIn('id', $assignedVehicleDevices)
+                                    ->orWhereIn('id', $useVehicleDevice);
+                            });
+                        })
+                        ->select('id', 'device_id')
+                        ->get();
+
         return Inertia::render('User/Vehicle/Edit',[
+            'devices' => $devices,
             'vehicleDetail' => $vehicleDetail,
         ]);
     }
 
     public function update(Request $request, $id) {
 
-        $validatedData = $request->validate([
-            'company_name' => 'required',
-            'model' => 'required',
-            'fuel_type' => 'required',
-            'Chassis_number'=> 'required',
-            'color' => 'required',
-        ]);
+        /*------- Start DB Transaction --------*/
+        DB::beginTransaction();
+
+        try {
+
+            $vehicle = Vehicle::where('id',$id)->first();
+            $vehicle->company_name = $request->input("company_name");
+            $vehicle->model = $request->input("model");
+            $vehicle->year = $request->input('year');
+            $vehicle->fuel_type = $request->input("fuel_type");
+            $vehicle->Chassis_number  = $request->input("Chassis_number");
+            $vehicle->color  = $request->input("color");
+            $vehicle->driver_name  = $request->input("driver_name");
+            $vehicle->license_number  = $request->input("license_number");
+            $vehicle->license_expiry_date  = $request->input("license_expiry_date");
+            $vehicle->driver_contact  = $request->input("driver_contact");
+            $vehicle->driver_address  = $request->input("driver_address");
+            $vehicle->save();
 
 
-        $vehicle = Vehicle::where('id',$id)->first();
-        $vehicle->company_name = $validatedData["company_name"];
-        $vehicle->model = $validatedData["model"];
-        $vehicle->fuel_type = $validatedData["fuel_type"];
-        $vehicle->Chassis_number  = $validatedData["Chassis_number"];
-        $vehicle->color  = $validatedData["color"];
-        $vehicle->save();
+            $vehicleId = $vehicle->id;
+            $devices = $request->input('device_id', []);
 
-        if($vehicle){
-            return redirect()->route('vehicle-type')->with([
-                'success' => 'Vehicle updated successfully.',
-            ]);
-        }else{
-            return redirect()->route('vehicle-type')->with([
-                'error' => 'Vehicle ID not found..',
-            ]);
+            VehicleDevice::where('vehicle_id', $vehicleId)->delete();
+
+            foreach ($devices as $device) {
+                $deviceId = $device['id'];
+                VehicleDevice::create([
+                    'vehicle_id' => $vehicleId,
+                    'device_id' => $deviceId, 
+                ]);
+            }
+
+            DB::commit();
+
+            // Redirect with success message
+            return redirect()->route('vehicle-type')->with(['success' => 'Vehicle updated successfully.']);
+
+        } catch (\Exception $e) {
+            /*-------- Rollback Database Entry --------*/
+            DB::rollback();
+            return back()->withErrors(['error' => 'An error occurred: ' . $e->getMessage()]);
         }
 
     }
@@ -144,6 +202,7 @@ class VehicleTypeController extends Controller
     {
          $vehicle = Vehicle::findOrFail($id);
         if($vehicle){
+            VehicleDevice::where('vehicle_id',$id)->delete();
             $vehicle->delete();
             return redirect()->route('vehicle-type')->with(['success' => 'Vehicle deleted successfully.']);
         }else{
