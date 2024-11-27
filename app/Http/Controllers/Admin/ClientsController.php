@@ -28,8 +28,13 @@ class ClientsController extends Controller
     }
 
     public function create() {
+
+        $useDevice =  CustomerDevice::select('device_id')->get();
+
+        $devices = Device::whereNotIn('id', $useDevice)->select('id', 'device_id')->get();
+
         return Inertia::render('Clients/Create', [
-            'devices' => Device::select('id', 'device_id')->get(),
+            'devices' => $devices,
         ]);
     }
 
@@ -152,10 +157,29 @@ class ClientsController extends Controller
             'phone' => $data->phone ?? '',
             'address' => $data->address ?? '',
             'file' => $data->file ? asset('storage/'.$data->file) : null,
-            'device_id' => $data->devices->pluck('id','device_id')->toArray(),
+            'device_id' => $data->devices->select('id','device_id')->toArray(),
         ];
 
-        $devices = Device::select('id', 'device_id')->get();
+        $allDevices = Device::pluck('id')->toArray();
+
+        $assignedDevice =  CustomerDevice::pluck('device_id')->toArray();
+
+        $currentCustomerDevice = CustomerDevice::where('customer_id', $id)->pluck('device_id')->toArray();
+
+        $unusedDevices = array_diff($allDevices, $assignedDevice);
+
+
+        $unusedDevicesList = Device::whereIn('id', $unusedDevices)
+                            ->select('id', 'device_id')
+                            ->get();
+
+       
+        $currentDevicesList = Device::whereIn('id', $currentCustomerDevice)
+                             ->select('id', 'device_id')
+                             ->get();
+
+        $devices = $unusedDevicesList->merge($currentDevicesList);
+
 
         return Inertia::render('Clients/Edit',[
             'devices' => $devices,

@@ -20,8 +20,8 @@ const form = useForm({
   email: customerDetail.email || "",
   phone: customerDetail.phone || "",
   address: customerDetail.address || "",
-  device_id: customerDetail.devices?.map((d) => d.id) || [],
-  quantity: customerDetail.quantity || 1,
+  device_id: customerDetail.device_id || [],
+  quantity: customerDetail.quantity || '0',
   file: customerDetail.file || null,
 });
 
@@ -87,8 +87,6 @@ const submit = async () => {
     }
 };
 
-console.log("Preselected device IDs:", form.device_id); // Should output [1, 4]
-console.log("Devices:", devices);
 </script>
 
 <template>
@@ -157,16 +155,15 @@ console.log("Devices:", devices);
 
       <div class="form-row">
         <div class="form-group col-md-6">
+
           <Multiselect
-            id="id"
-            v-model="form.device_id"
-            :options="devices"
-            :multiple="true"
-            :searchable="false"
-            track-by="id"
-            label="device_id"
-            placeholder="Select devices"
-            class="form-control"
+              v-model="form.device_id"
+              :options="devices"
+              :multiple="true"
+              track-by="id"
+              label="device_id"
+              placeholder="Select devices"
+              class="form-control"
           />
         </div>
         <div class="form-group col-md-6">
@@ -253,8 +250,10 @@ console.log("Devices:", devices);
   </AuthenticatedLayout>
 </template>
 
-<style scoped>
+<style>
 @import "vue-multiselect/dist/vue-multiselect.min.css";
+</style>
+<style scoped>
 
 .upload-box {
   border: 2px dashed #ccc;
