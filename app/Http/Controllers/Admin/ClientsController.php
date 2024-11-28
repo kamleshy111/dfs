@@ -39,18 +39,7 @@ class ClientsController extends Controller
     }
 
     public function store(Request $request){
-        // Validate the incoming data
-        $validatedData = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'phone' => 'required|string|max:15',
-            'address' => 'required|max:500',
-            'device_id' => 'array', // Ensure device_id is an array
-            'quantity' => 'integer|min:1',
-            'file' => 'file',
-        ]);
-    
+
         /*------- Start DB Transaction --------*/
         DB::beginTransaction();
     
@@ -66,8 +55,8 @@ class ClientsController extends Controller
             $password = 12345678;
 
            $user = User::create([
-                        'name' => $validatedData["first_name"] . ' ' . $validatedData["last_name"],
-                        'email' => $validatedData["email"],
+                        'name' => $request->input("first_name") . ' ' . $request->input("last_name"),
+                        'email' => $request->input("email"),
                         'password' => Hash::make($password),
                         'role' => 'user',
                     ]);
@@ -77,7 +66,7 @@ class ClientsController extends Controller
                 'title' => 'Your Login Details Have Been Create',
                 'body' => 'your login details.',
                 'email' => $user->email,
-                'password' => $request->password,
+                'password' => $password,
             ];
 
             // Send email
@@ -87,18 +76,18 @@ class ClientsController extends Controller
             // Create a new Customer
             $customer = new Customer;
             $customer->user_id = $user->id;
-            $customer->first_name = $validatedData["first_name"];
-            $customer->last_name = $validatedData["last_name"];
-            $customer->email = $validatedData["email"];
-            $customer->phone  = $validatedData["phone"];
-            $customer->address  = $validatedData["address"];
-            $customer->quantity  = $validatedData["quantity"];
+            $customer->first_name = $request->input("first_name");
+            $customer->last_name = $request->input("last_name");
+            $customer->email = $request->input("email");
+            $customer->phone  = $request->input("phone");
+            $customer->address  = $request->input("address");
+            $customer->quantity  = $request->input("quantity");
             $customer->file  =  $filePath;
             $customer->save();
     
             $customerId = $customer->id;
 
-            $devices = $validatedData["device_id"];
+            $devices = $request->input("device_id", []);
 
             foreach ($devices as $device) {
                 $deviceId = $device['id'];

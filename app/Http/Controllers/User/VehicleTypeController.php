@@ -100,6 +100,30 @@ class VehicleTypeController extends Controller
 
     }
 
+    public function view($id) {
+
+        $data = Vehicle::with('devices')->find($id);
+
+        $vehicleDetails = [
+            'id' => $data->id ?? '0',
+            'company_name' => $data->company_name ?? '--',
+            'model' => $data->model ?? '--',
+            'year' => $data->year ?? '--',
+            'fuel_type' => $data->fuel_type ?? '--',
+            'Chassis_number' => $data->Chassis_number ?? '--',
+            'color' => $data->color ?? '',
+            'driver_name' => $data->driver_name ?? '--',
+            'license_number' => $data->license_number ?? '--',
+            'license_expiry_date' => $data->license_expiry_date ?? '--',
+            'driver_contact' => $data->driver_contact ?? '--',
+            'driver_address' => $data->driver_address ?? '--',
+            'devices' => $data->devices->toArray(),
+        ];
+        return Inertia::render('User/Vehicle/View',[
+            'Vehicles' => $vehicleDetails,
+        ]);
+    }
+
     public function edit($id) {
 
         $data = Vehicle::with('devices')->find($id);

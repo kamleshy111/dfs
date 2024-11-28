@@ -37,6 +37,7 @@ const goBack = () => {
                 <p class="mt-2">Email: {{ props.customers.email }}</p>
                 <p class="mt-2">Quantity: {{ props.customers.quantity }}</p>
                 <p class="mt-2">Mobile: {{ props.customers.phone }}</p>
+                <p class="mt-2">Address: {{ props.customers.address }}</p>
                 </div>
             <div class="col-md-6 col-12">
                 <p class="mt-2">Devices:</p>
@@ -47,7 +48,6 @@ const goBack = () => {
                         <p>Company Name: {{ device.company_name }}</p><br>
                     </li>
                 </ul>
-                <p class="mt-2">Address: {{ props.customers.address }}</p>
             </div>
             </div>
         </div>

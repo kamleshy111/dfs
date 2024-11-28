@@ -111,6 +111,7 @@ Route::middleware(['auth', 'role:user'])->group(function () {
         Route::get('/', [VehicleTypeController::class, 'index'])->name('vehicle-type');
         Route::get('/create', [VehicleTypeController::class, 'create'])->name('vehicle-type.create');
         Route::post('/store',[VehicleTypeController::class, 'store'])->name('vehicle-type.store');
+        Route::get('/{id}/view', [VehicleTypeController::class, 'view'])->name('vehicle-type.view');
         Route::get('/{id}/edit',[VehicleTypeController::class, 'edit'])->name('vehicle-type.edit');
         Route::post('/update/{id}', [VehicleTypeController::class, 'update'])->name('vehicle-type.update');
         Route::delete('/destroy/{id}', [VehicleTypeController::class, 'destroy'])->name('vehicle-type.destroy');
