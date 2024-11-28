@@ -64,6 +64,11 @@ const deleteVehicle = async (id) => {
                         <td>{{ vehicle.color }}</td>
                         <td>
 
+                        <!-- view button -->
+                        <button class="btn btn-light action-btn" @click="viewDevice(vehicle.id)">
+                        <i class="bi bi-eye-fill"></i>
+                        </button>
+
                         <!-- Edit button -->
                         <button class="btn btn-warning text-white action-btn" @click="editVehicle(vehicle.id)">
                         <i class="bi bi-pencil-fill"></i>
@@ -123,6 +128,11 @@ export default {
     editVehicle(id) {
       window.location.href = `/vehicle-type/${id}/edit`; 
     },
+
+    // Redirect to the view page
+    viewDevice(id){
+      window.location.href = `/vehicle-type/${id}/view`; 
+    }
 
   }
 
