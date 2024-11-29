@@ -5,6 +5,7 @@ import { Head, useForm, usePage } from "@inertiajs/vue3";
 
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
+import axios from 'axios';
 
 import { ref } from "vue";
 import Multiselect from "vue-multiselect";
@@ -15,7 +16,7 @@ import Multiselect from "vue-multiselect";
 // Get props from the server
 const { devices } = usePage().props;
 
-const form = useForm({
+const form = ref({
   companyName: "",
   model: "",
   year: "",
@@ -35,28 +36,28 @@ const goBack = () => {
   window.location.href = "/vehicle-type";
 };
 
-// Submit the form
-const submit = async () => {
-    try {
-        // Send the form data to the server
-        await form.post(route("vehicle-type.store"), {
-            headers: {
-            "Content-Type": "application/json",
-            },
-            onSuccess: () => {
-              toast.success("Vehicle added successfully.");
-            form.reset(); 
-            },
-            onError: (errors) => {
-            if (errors) {
-                toast.error("An error occurred. Please check your input.");
-            }
-            },
-        });
-    } catch (error) {
-
-        toast.error("An unexpected error occurred.");
-    }
+const submitForm = async () => {
+  try {
+    const response = await axios.post(`/vehicle-type/store`, form.value);
+    toast.success(response.data.message);
+    form.value = {
+      companyName: "",
+      model: "",
+      year: "",
+      fuelType: "",
+      chassisNumber: "",
+      color: "",
+      device_id: [],
+      driverName: "",
+      licenseNumber: "",
+      licenseExpiryDate: "",
+      driverContact: "",
+      driverAddress: "", 
+    };
+  } catch (error) {
+    const errorMessage = error.response?.data?.message || 'An error occurred. Please try again.';
+    toast.error(errorMessage);
+  }
 };
 </script>
 <template>
@@ -71,7 +72,7 @@ const submit = async () => {
 
     <div class="my-3">
       <div class="form-container shadow from-main-design">
-        <form @submit.prevent="submit">
+        <form @submit.prevent="submitForm">
           <div class="form-row">
             <div class="form-group col-md-6">
               <input type="text" v-model="form.companyName" class="form-control" id="companyName" placeholder="" />
@@ -95,7 +96,7 @@ const submit = async () => {
           </div>
           <div class="form-row">
             <div class="form-group col-md-6">
-              <input type="text" v-model="form.chassisNumber" class="form-control" id="chassisNumber" placeholder="" />
+              <input type="number" v-model="form.chassisNumber" class="form-control" id="chassisNumber" placeholder="" />
               <label for="chassisNumber" class="form-label">Chassis Number</label>
             </div>
             <div class="form-group col-md-6">
