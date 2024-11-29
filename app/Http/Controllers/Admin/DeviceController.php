@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use App\Models\Device;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\DevicesImport;
+
 
 class DeviceController extends Controller
 {
@@ -25,35 +28,33 @@ class DeviceController extends Controller
 
     public function store(Request $request){
 
-        $validatedData = $request->validate([
-            'deviceId' => 'required',
-            'orderId' => 'required',
-            'companyName'=> 'required',
+        $validated = $request->validate([
+            'deviceId' => 'required|string|max:255|unique:devices,device_id',
+            'companyName' => 'required|string|max:255',
+            'orderId' => 'required|numeric',
             'purchaseDate' => 'required|date',
+        ], [
+            'deviceId.unique' => 'The device ID must be unique. Please choose a different ID.',
+            'deviceId.required' => 'Device ID is required.',
+            'companyName.required' => 'Company name is required.',
+            'orderId.required' => 'Order ID is required.',
+            'purchaseDate.required' => 'Purchase Date is required.',
         ]);
 
-        $data = Device::where('device_id', $validatedData['deviceId'])->first();
-
-        if(empty($data)){
-            
-       
-            // Create a new Device
-            $device = Device::create([
-                'device_id' => $validatedData['deviceId'],
-                'order_id' => $validatedData['orderId'],
-                'company_name' => $validatedData['companyName'],
-                'date_time' => $validatedData['purchaseDate'],
-            ]);
-                
-            if($device){
-                return redirect()->route('devices.create')->with(['success' => 'Device added successfully.']);
-            } else {
-                return back()->with(['error' => 'An error occurred while adding the device.']);
-            }
-        } else {
-            return redirect()->route('devices.create')->with(['error' => 'device id must be unique.']);
+        if (!$validated) {
+            // Return validation errors as a JSON response
+            return response()->json(["message" => $validated]);
         }
+       
+        // Create a new Device
+        Device::create([
+            'device_id' => $request->input('deviceId'),
+            'order_id' => $request->input('orderId'),
+            'company_name' => $request->input('companyName'),
+            'date_time' => $request->input('purchaseDate'),
+        ]);
 
+        return response()->json(['message' => 'Device added successfully!']);
     }
 
 
@@ -98,31 +99,26 @@ class DeviceController extends Controller
 
     public function update(Request $request, $id) {
 
-        $validatedData = $request->validate([
-            'device_id' => 'required',
-            'order_id' => 'required',
-            'company_name'=> 'required',
-            'date_time' => 'required|date',
+        $validated = $request->validate([
+            'device_id' => 'required|string|max:255|unique:devices,device_id,' . $id,
+        ], [
+            'device_id.unique' => 'The device ID must be unique. Please choose a different ID.',
+            'device_id.required' => 'Device ID is required.',
         ]);
 
-
-        $device = Device::where('id',$id)->first();
-        $device->device_id = $validatedData["device_id"];
-        $device->order_id = $validatedData["order_id"];
-        $device->company_name = $validatedData["company_name"];
-        $device->date_time  = $validatedData["date_time"];
-        $device->save();
-
-        if($device){
-            return redirect()->route('devices')->with([
-                'success' => 'Device updated successfully.',
-            ]);
-        }else{
-            return redirect()->route('devices')->with([
-                'error' => 'Device ID not found..',
-            ]);
+        if (!$validated) {
+            // Return validation errors as a JSON response
+            return response()->json(["message" => $validated]);
         }
 
+        $device = Device::where('id',$id)->first();
+        $device->device_id = $request->input("device_id");
+        $device->order_id = $request->input("order_id");
+        $device->company_name = $request->input("company_name");
+        $device->date_time  = $request->input("date_time");
+        $device->save();
+
+        return response()->json(['message' => 'Device updated successfully.']);
     }
 
     public function destroy($id)

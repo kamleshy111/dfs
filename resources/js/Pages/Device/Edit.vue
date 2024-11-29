@@ -2,16 +2,17 @@
 import { Head, useForm, usePage } from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-// import { useRoute } from "vue-router";
+import { useRoute } from "vue-router";
+import { ref } from "vue";
 
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
+import axios from 'axios';
 
 // Access props
 const { deviceDetail } = usePage().props;
 
-// Initialize the form with existing device data
-const form = useForm({
+const form = ref({
     device_id: deviceDetail.device_id || "",
     company_name: deviceDetail.company_name || "",
     order_id: deviceDetail.order_id || "",
@@ -25,26 +26,14 @@ const goBack = () => {
 };
 
 // Form submit handler
-const submit = async () => {
-    try {
-        // Send the form data to the server
-        await form.post(route("devices.update", deviceDetail.id), {
-            headers: {
-            "Content-Type": "application/json",
-            },
-            onSuccess: () => {
-                toast.success("Device updated successfully.");
-            },
-            onError: (errors) => {
-            if (errors) {
-                toast.error("An error occurred. Please check your input.");
-            }
-            },
-        });
-    } catch (error) {
-
-        toast.error("An unexpected error occurred.");
-    }
+const submitForm = async () => {
+  try {
+    const response = await axios.post(`/devices/update/${deviceDetail.id}`, form.value);
+        toast.success(response.data.message);
+  } catch (error) {
+    const errorMessage = error.response?.data?.message || 'An error occurred. Please try again.';
+    toast.error(errorMessage);
+  }
 };
 </script>
 <template>
@@ -60,28 +49,28 @@ const submit = async () => {
 
         <div class="my-3">
             <div class="form-container shadow from-main-design">
-                <form @submit.prevent="submit">
+                <form @submit.prevent="submitForm">
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <input type="text" v-model="form.device_id" class="form-control" id="device_id"
-                                placeholder="Enter Device ID" />
+                                placeholder="" />
                             <label for="device_id" class="form-label">Device ID</label>
                         </div>
                         <div class="form-group col-md-6">
                             <input type="text" v-model="form.company_name" class="form-control" id="company_name"
-                                placeholder="Enter Company Name" />
+                                placeholder="" />
                             <label for="company_name" class="form-label">Company Name</label>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <input type="text" v-model="form.order_id" class="form-control" id="order_id"
-                                placeholder="Enter Order ID" />
+                                placeholder="" />
                             <label for="order_id" class="form-label">Order ID</label>
                         </div>
                         <div class="form-group col-md-6">
                             <input type="datetime-local" v-model="form.date_time" class="form-control" id="date_time"
-                                placeholder="Enter Purchase Date" />
+                                placeholder="" />
                             <label for="date_time" class="form-label">Purchase Date</label>
                         </div>
                     </div>

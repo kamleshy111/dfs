@@ -2,20 +2,20 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 
 import GuestLayout from "@/Layouts/GuestLayout.vue";
-import InputError from "@/Components/InputError.vue";
-import InputLabel from "@/Components/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import TextInput from "@/Components/TextInput.vue";
-import { Head, Link, useForm } from "@inertiajs/vue3";
+import { Head, Link  } from "@inertiajs/vue3";
+import { ref } from "vue";
 
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
+import axios from 'axios';
 
-const form = useForm({
-  deviceId: "",
-  companyName: "",
-  orderId: "",
-  purchaseDate: "",
+// Form state
+const form = ref({
+  deviceId: '',
+  companyName: '',
+  orderId: '',
+  purchaseDate: '',
 });
 
 // go to back
@@ -24,27 +24,20 @@ const goBack = () => {
 };
 
 // Submit the form
-const submit = async () => {
-    try {
-        // Send the form data to the server
-        await form.post(route("devices.store"), {
-            headers: {
-            "Content-Type": "application/json",
-            },
-            onSuccess: () => {
-              toast.success("Device added successfully.");
-              form.reset(); 
-            },
-            onError: (errors) => {
-            if (errors) {
-                toast.error("An error occurred. Please check your input.");
-            }
-            },
-        });
-    } catch (error) {
-
-        toast.error("An unexpected error occurred.");
-    }
+const submitForm = async () => {
+  try {
+    const response = await axios.post(`/devices/store`, form.value);
+    toast.success(response.data.message);
+    form.value = {
+      device_id: "",
+      company_name: "",
+      order_id: "",
+      date_time: "",
+    };
+  } catch (error) {
+    const errorMessage = error.response?.data?.message || 'An error occurred. Please try again.';
+    toast.error(errorMessage);
+  }
 };
 </script>
 <template>
@@ -54,12 +47,11 @@ const submit = async () => {
     <div class="back-section">
       <button type="button" class="back-btn-custom" @click="goBack">
         <i class="bi bi-caret-left"></i> Back
-      </button>
-    </div>
+      </button>    
 
     <div class="my-3">
-      <div class="form-container shadow from-main-design">
-        <form @submit.prevent="submit">
+               
+        <form @submit.prevent="submitForm">
           <div class="form-row">
             <div class="form-group col-md-6">
               <input type="text" v-model="form.deviceId" class="form-control" id="deviceId" placeholder="" />
@@ -72,7 +64,7 @@ const submit = async () => {
           </div>
           <div class="form-row">
             <div class="form-group col-md-6">
-              <input type="text" v-model="form.orderId" class="form-control" id="orderId" placeholder="" />
+              <input type="number" v-model="form.orderId" class="form-control" id="orderId" placeholder="" />
               <label for="orderId" class="form-label">Order ID</label>
             </div>
             <div class="form-group col-md-6">
