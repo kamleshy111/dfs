@@ -7,19 +7,24 @@ import InputError from "@/Components/InputError.vue";
 import { ref } from "vue";
 import Multiselect from "vue-multiselect";
 
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
+import axios from 'axios';
+
 // Access data from Inertia props
 const { devices } = usePage().props;
 
-const form = useForm({
+const form = ref({
   first_name: "",
   last_name: "",
   email: "",
   phone: "",
   address: "",
   device_id: [],
-  quantity: 1,
+  quantity: 0,
   file: null,
 });
+
 
 const file = ref(null);
 const fileName = ref("");
@@ -55,12 +60,12 @@ const clearFile = () => {
 
 // Increase quantity
 const incrementQuantity = () => {
-  form.quantity++;
+  form.value.quantity++;
 };
 
 // Decrease quantity
 const decrementQuantity = () => {
-  if (form.quantity > 1) form.quantity--;
+  if (form.value.quantity > 1) form.value.quantity--;
 };
 
 // go to back
@@ -68,13 +73,35 @@ const goBack = () => {
   window.location.href = "/clients"; // Redirect to the desired Laravel route
 };
 
-// Submit the form
-const submit = () => {
-  const formData = new FormData();
-  for (const [key, value] of Object.entries(form)) {
-    formData.append(key, value);
+const submitForm = async () => {
+  try {
+    // Send form data to the server
+    const response = await axios.post('/clients/store', {
+      first_name: form.value.first_name,
+      last_name: form.value.last_name,
+      email: form.value.email,
+      phone: form.value.phone,
+      address: form.value.address,
+      device_id: form.value.device_id,
+      quantity: form.value.quantity ?? 1,
+      file: form.value.file,
+    });
+
+    // Handle successful response
+    toast.success(response.data.message);
+    form.value.first_name = '';
+    form.value.last_name = '';
+    form.value.email = '';
+    form.value.phone = '';
+    form.value.address = '';
+    form.value.device_id = '';
+    form.value.quantity = '';
+    form.value.file = '';
+    
+  } catch (error) {
+    const errorMessage = error.response?.data?.message || 'An error occurred. Please try again.';
+    toast.error(errorMessage);
   }
-  form.post(route("clients.store"), { data: formData });
 };
 </script>
 
@@ -88,7 +115,7 @@ const submit = () => {
    </div>
 
     <!-- Form -->
-    <form @submit.prevent="submit">
+    <form @submit.prevent="submitForm">
       <div class="form-row">
         <div class="form-group col-md-6">
           <TextInput
@@ -97,7 +124,6 @@ const submit = () => {
             class="mt-1 block w-full form-control"
             placeholder=""
             v-model="form.first_name"
-            required
             autofocus
             autocomplete="first_name"
           />
@@ -111,7 +137,6 @@ const submit = () => {
             class="mt-1 block w-full form-control"
             placeholder=""
             v-model="form.last_name"
-            required
             autofocus
             autocomplete="last_name"
           />
@@ -126,7 +151,6 @@ const submit = () => {
             class="mt-1 block w-full form-control"
             placeholder=""
             v-model="form.email"
-            required
             autofocus
             autocomplete="email"
           />
@@ -139,7 +163,6 @@ const submit = () => {
             class="mt-1 block w-full form-control"
             placeholder=""
             v-model="form.phone"
-            required
             autofocus
             autocomplete="phone"
           />
@@ -197,7 +220,6 @@ const submit = () => {
           type="text"
           class="mt-1 block w-full form-control"
           v-model="form.address"
-          required
           autofocus
           autocomplete="address"
           placeholder=""

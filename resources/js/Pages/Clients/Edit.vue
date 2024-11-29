@@ -9,12 +9,12 @@ import { ref } from "vue";
 
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
+import axios from 'axios';
 
 // Access props
 const { devices, customerDetail } = usePage().props;
 
-// Initialize form with default values
-const form = useForm({
+const form = ref({
   first_name: customerDetail.first_name || "",
   last_name: customerDetail.last_name || "",
   email: customerDetail.email || "",
@@ -23,6 +23,7 @@ const form = useForm({
   device_id: customerDetail.device_id || [],
   quantity: customerDetail.quantity || '0',
   file: customerDetail.file || null,
+
 });
 
 // File handling
@@ -47,9 +48,9 @@ const clearFile = () => {
 };
 
 // Quantity increment/decrement
-const incrementQuantity = () => form.quantity++;
+const incrementQuantity = () => form.value.quantity++;
 const decrementQuantity = () => {
-  if (form.quantity > 1) form.quantity--;
+  if (form.value.quantity > 1) form.value.quantity--;
 };
 
 // go to back
@@ -57,34 +58,14 @@ const goBack = () => {
   window.location.href = "/clients"; // Redirect to the desired Laravel route
 };
 
-// Submit form
-const submit = async () => {
-  // form.post(route("clients.update", customerDetail.id), {
-  //   onSuccess: () => clearFile(),
-  // });
-
+const submitForm = async () => {
   try {
-        // Send the form data to the server
-        await form.post(route("clients.update", customerDetail.id), {
-            headers: {
-            "Content-Type": "application/json",
-            },
-            onSuccess: () => {
-            toast.success("Customer updated successfully.");
-            form.reset(); // Reset the form if needed
-            
-            window.location.href = "/clients";
-            },
-            onError: (errors) => {
-            if (errors) {
-                toast.error("An error occurred. Please check your input.");
-            }
-            },
-        });
-    } catch (error) {
-
-        toast.error("An unexpected error occurred.");
-    }
+    const response = await axios.post(`/clients/update/${customerDetail.id}`, form.value);
+        toast.success(response.data.message);
+  } catch (error) {
+    const errorMessage = error.response?.data?.message || 'An error occurred. Please try again.';
+    toast.error(errorMessage);
+  }
 };
 
 </script>
@@ -97,7 +78,7 @@ const submit = async () => {
     
     <div class="back-section"><button type="button" class="back-btn-custom" @click="goBack"><i class="bi bi-caret-left"></i> Back</button></div>
 
-    <form @submit.prevent="submit">
+    <form @submit.prevent="submitForm">
       <div class="form-row">
         <div class="form-group col-md-6">
           <TextInput
@@ -110,7 +91,6 @@ const submit = async () => {
             placeholder=""
           />
           <label for="first_name" class="form-label">First Name</label>
-          <InputError :message="form.errors.first_name" />
         </div>
         <div class="form-group col-md-6">
           <TextInput
@@ -122,7 +102,6 @@ const submit = async () => {
             placeholder=""
           />
           <label for="last_name" class="form-label">Last Name</label>
-          <InputError :message="form.errors.last_name" />
         </div>
       </div>
 
@@ -137,7 +116,6 @@ const submit = async () => {
             placeholder=""
           />
           <label for="email" class="form-label">Email</label>
-          <InputError :message="form.errors.email" />
         </div>
         <div class="form-group col-md-6">
           <TextInput
@@ -149,7 +127,6 @@ const submit = async () => {
             placeholder=""
           />
           <label for="phone" class="form-label">Phone</label>
-          <InputError :message="form.errors.phone" />
         </div>
       </div>
 
@@ -191,7 +168,7 @@ const submit = async () => {
                 +
               </button>
             </div>
-            <InputError :message="form.errors.quantity" />
+          
           </div>
         </div>
       </div>
@@ -205,7 +182,6 @@ const submit = async () => {
           required
         />
         <label for="address" class="form-label">Address</label>
-        <InputError :message="form.errors.address" />
       </div>
 
       <div class="form-group">
@@ -240,7 +216,6 @@ const submit = async () => {
             </button>
           </p>
         </div>
-        <InputError :message="form.errors.file" />
       </div>
 
       <PrimaryButton class="btn save-btn-custom mt-3"

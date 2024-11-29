@@ -14,6 +14,9 @@ use App\Models\Customer;
 use App\Models\Device;
 use App\Models\CustomerDevice;
 use App\Models\User;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\CustomerDeviceImport;
+use Illuminate\Validation\ValidationException;
 
 class ClientsController extends Controller
 {
@@ -40,16 +43,30 @@ class ClientsController extends Controller
 
     public function store(Request $request){
 
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email',
+            'phone' => 'required|numeric',
+            'address' => 'required|string',
+        ], [
+            'first_name.required' => 'First Name is required.',
+            'last_name.required' => 'Last name is required.',
+            'email.unique' => 'The customer email ID must be unique. Please choose a different email ID.',
+            'phone.required' => 'Phone Number is required.',
+            'address.required' => 'Address is required.',
+        ]);
+
+        if (!$validated) {
+            // Return validation errors as a JSON response
+            return response()->json(["message" => $validated]);
+        }
+        
+
         /*------- Start DB Transaction --------*/
         DB::beginTransaction();
     
         try {
-            $filePath = null;
-    
-            // Handle file upload if present
-            if ($request->hasFile('file')) {
-                $filePath = $request->file('file')->store('uploads', 'public'); // Store file in public storage
-            }
     
             // $password = rand(10000000, 99999999);
             $password = 12345678;
@@ -61,16 +78,16 @@ class ClientsController extends Controller
                         'role' => 'user',
                     ]);
 
-            // Prepare email data
-            $loginData = [
-                'title' => 'Your Login Details Have Been Create',
-                'body' => 'your login details.',
-                'email' => $user->email,
-                'password' => $password,
-            ];
+            // // Prepare email data
+            // $loginData = [
+            //     'title' => 'Your Login Details Have Been Create',
+            //     'body' => 'your login details.',
+            //     'email' => $user->email,
+            //     'password' => $password,
+            // ];
 
-            // Send email
-            Mail::to($user->email)->send(new SendLoginDetail($loginData));
+            // // Send email
+            // Mail::to($user->email)->send(new SendLoginDetail($loginData));
 
 
             // Create a new Customer
@@ -81,30 +98,34 @@ class ClientsController extends Controller
             $customer->email = $request->input("email");
             $customer->phone  = $request->input("phone");
             $customer->address  = $request->input("address");
-            $customer->quantity  = $request->input("quantity");
-            $customer->file  =  $filePath;
+            $customer->quantity  = $request->input("quantity") ?? '0';
             $customer->save();
     
             $customerId = $customer->id;
 
             $devices = $request->input("device_id", []);
 
-            foreach ($devices as $device) {
-                $deviceId = $device['id'];
-                CustomerDevice::create([
-                    'device_id' => $deviceId,
-                    'customer_id' => $customerId,
-                ]);
+            if($devices){
+                foreach ($devices as $device) {
+                    $deviceId = $device['id'];
+                    CustomerDevice::create([
+                        'device_id' => $deviceId,
+                        'customer_id' => $customerId,
+                    ]);
+                }
+            }
+
+            if ($request->file('file')) {
+                Excel::import(new CustomerDeviceImport($customerId), $request->file('file'));
             }
     
             DB::commit();
-    
-            // Redirect with success message
-            return redirect()->route('clients')->with(['success' => 'Client added successfully.']);
+            return response()->json(["message" => 'Client added successfully.']);
         } catch (\Exception $e) {
             /*-------- Rollback Database Entry --------*/
             DB::rollback();
-            return back()->withErrors(['error' => 'An error occurred: ' . $e->getMessage()]);
+            return response()->json(["message" => 'An error occurred: ' . $e->getMessage()]);
+
         }
     }
 
@@ -178,17 +199,25 @@ class ClientsController extends Controller
     }
 
     public function update(Request $request, $id) {
-        // Validate the incoming data
-        $validatedData = $request->validate([
+
+        $validated = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'phone' => 'required|string|max:15',
-            'address' => 'required|max:500',
-            'device_id' => 'array', // Ensure device_id is an array
-            'quantity' => 'integer|min:1',
-            // 'file' => 'file',
+            'email' => 'required|email|max:255|unique:customers,email,' . $id,
+            'phone' => 'required|numeric',
+            'address' => 'required|string',
+        ], [
+            'first_name.required' => 'First Name is required.',
+            'last_name.required' => 'Last name is required.',
+            'email.unique' => 'The customer email ID must be unique. Please choose a different email ID.',
+            'phone.required' => 'Phone Number is required.',
+            'address.required' => 'Address is required.',
         ]);
+
+        if (!$validated) {
+            // Return validation errors as a JSON response
+            return response()->json(["message" => $validated]);
+        }
 
         /*------- Start DB Transaction --------*/
         DB::beginTransaction();
@@ -198,38 +227,44 @@ class ClientsController extends Controller
             // Retrieve the customer to be updated
             $customer = Customer::findOrFail($id);
     
-            // Handle file upload if a new file is uploaded
-            $filePath = $customer->file; // Keep existing file if not updating
-            if ($request->hasFile('file')) {
-                $filePath = $request->file('file')->store('uploads', 'public');
-            }
-    
             // Update customer information
-            $customer->first_name = $validatedData["first_name"];
-            $customer->last_name = $validatedData["last_name"];
-            $customer->email = $validatedData["email"];
-            $customer->phone  = $validatedData["phone"];
-            $customer->address  = $validatedData["address"];
-            $customer->quantity  = $validatedData["quantity"];
-            $customer->file  = $filePath; // Updated file path
+            $customer->first_name = $request->input("first_name");
+            $customer->last_name = $request->input("last_name");
+            $customer->email = $request->input("email");
+            $customer->phone  = $request->input("phone");
+            $customer->address  = $request->input("address");
+            $customer->quantity  = $request->input("quantity") ?? '0';
             $customer->save(); // Save the updated customer
     
             $customerId = $customer->id;
 
-            $deviceIds = array_column($validatedData['device_id'], 'id');
+            $userID = $customer->user_id;
+
+            $user = User::where('id',$userID)->first();
+            $user->name = $request->input("first_name") . ' ' . $request->input("last_name");
+            $user->email = $request->input("email");
+            $user->save();
+
 
             CustomerDevice::where('customer_id',$customerId)->delete();
-            foreach ($deviceIds as $deviceId) {
-                CustomerDevice::create([
-                    'device_id' => $deviceId,
-                    'customer_id' => $customerId,
-                ]);
+
+            $devices = $request->input("device_id", []);
+
+            if($devices){
+                foreach ($devices as $device) {
+                    $deviceId = $device['id'];
+                    CustomerDevice::create([
+                        'device_id' => $deviceId,
+                        'customer_id' => $customerId,
+                    ]);
+                }
             }
      
             DB::commit();
     
             // Redirect with success message
-            return redirect()->route('clients')->with(['success' => 'Client updated successfully.']);
+            // return redirect()->route('clients')->with(['success' => 'Client updated successfully.']);
+            return response()->json(['message' => 'Client updated successfully..']);
            
         } catch (\Exception $e) {
             /*-------- Rollback Database Entry --------*/
