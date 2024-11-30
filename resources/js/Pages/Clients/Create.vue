@@ -33,7 +33,7 @@ const handleFileUpload = (event) => {
   const uploadedFile = event.target.files[0];
   if (uploadedFile) {
     file.value = uploadedFile;
-    form.file = uploadedFile; // Include in form data
+    form.value.file = uploadedFile; // Include in form data
     fileName.value = uploadedFile.name;
   }
 };
@@ -75,17 +75,20 @@ const goBack = () => {
 
 const submitForm = async () => {
   try {
+
+    let formData = new FormData();
+  
+    formData.append("first_name", form.value.first_name);
+    formData.append("last_name", form.value.last_name);
+    formData.append("email", form.value.email);
+    formData.append("phone", form.value.phone);
+    formData.append("address", form.value.address);
+    formData.append("device_id", form.value.device_id);
+    formData.append("quantity", form.value.quantity ?? 0);
+    formData.append("file", form.value.file);
+
     // Send form data to the server
-    const response = await axios.post('/clients/store', {
-      first_name: form.value.first_name,
-      last_name: form.value.last_name,
-      email: form.value.email,
-      phone: form.value.phone,
-      address: form.value.address,
-      device_id: form.value.device_id,
-      quantity: form.value.quantity ?? 1,
-      file: form.value.file,
-    });
+    const response = await axios.post('/clients/store', formData);
 
     // Handle successful response
     toast.success(response.data.message);
@@ -115,7 +118,7 @@ const submitForm = async () => {
    </div>
 
     <!-- Form -->
-    <form @submit.prevent="submitForm">
+    <form @submit.prevent="submitForm" enctype="multipart/form-data">
       <div class="form-row">
         <div class="form-group col-md-6">
           <TextInput
