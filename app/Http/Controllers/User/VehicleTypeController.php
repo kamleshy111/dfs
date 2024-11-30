@@ -21,12 +21,17 @@ class VehicleTypeController extends Controller
         $userId = Auth::user()->id;
 
         $customer = Customer::where('user_id', $userId)->select('id')->first();
-        $customerId = $customer->id;
-        $vehicles = Vehicle::where('customer_id',$customerId)->paginate(10);
-        return Inertia::render('User/Vehicle/Vehicle',[
-            'user' => Auth::user(),
-            'vehicles' => $vehicles,
-        ]);
+
+        if($customer){
+            $customerId = $customer->id;
+            $vehicles = Vehicle::where('customer_id',$customerId)->paginate(10);
+            return Inertia::render('User/Vehicle/Vehicle',[
+                'user' => Auth::user(),
+                'vehicles' => $vehicles,
+            ]);
+        }
+
+        return redirect()->back();
     }
 
     public function create(){

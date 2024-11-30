@@ -17,6 +17,8 @@ use App\Models\User;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\CustomerDeviceImport;
 use Illuminate\Validation\ValidationException;
+use App\Models\Vehicle;
+use App\Models\VehicleDevice;
 
 class ClientsController extends Controller
 {
@@ -79,15 +81,15 @@ class ClientsController extends Controller
                     ]);
 
             // // Prepare email data
-            // $loginData = [
-            //     'title' => 'Your Login Details Have Been Create',
-            //     'body' => 'your login details.',
-            //     'email' => $user->email,
-            //     'password' => $password,
-            // ];
+            $loginData = [
+                'title' => 'Your Account  Has Been Create Successfully ',
+                'body' => 'Pless find Account Login.',
+                'email' => $user->email,
+                'password' => $password,
+            ];
 
-            // // Send email
-            // Mail::to($user->email)->send(new SendLoginDetail($loginData));
+            // Send email
+            Mail::to($user->email)->send(new SendLoginDetail($loginData));
 
 
             // Create a new Customer
@@ -103,13 +105,13 @@ class ClientsController extends Controller
     
             $customerId = $customer->id;
 
+    
             $devices = $request->input("device_id", []);
 
             if($devices){
-                foreach ($devices as $device) {
-                    $deviceId = $device['id'];
+                foreach ($devices as $device_id) {
                     CustomerDevice::create([
-                        'device_id' => $deviceId,
+                        'device_id' => $device_id,
                         'customer_id' => $customerId,
                     ]);
                 }
@@ -200,6 +202,9 @@ class ClientsController extends Controller
 
     public function update(Request $request, $id) {
 
+
+        $data = $request->all();
+        dd($data);
         $validated = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -272,14 +277,67 @@ class ClientsController extends Controller
         }
     }
 
+    // public function destroy($id)
+    // {
+
+    //     $userId = Customer::where('id', $id)->pluck('user_id')->first();
+
+    //     if($userId){
+    //         User::where('id', $userId)->delete();
+
+    //         Customer::where('user_id', $userId)->delete();
+
+    //         CustomerDevice::where('customer_id', $id)->delete();
+
+    //         $allVehicleId  = Vehicle::where('customer_id', $id)->pluck('id')->get();
+
+    //         VehicleDevice::where('vehicle_id', $allVehicleId)->delete();
+
+    //         Vehicle::where('customer_id', $id)->delete();
+
+            
+
+    //         return response()->json(['message' => 'Client deleted successfully.']);
+    //     }else{
+    //         return response()->json(['message' => 'An error occurred while deleting the Client.']);
+    //     }
+    // }
+
     public function destroy($id)
     {
-         $customer = Customer::findOrFail($id);
-        if($customer){
-            $customer->delete();
-            return response()->json(['message' => 'Client deleted successfully.']);
-        }else{
-            return response()->json(['message' => 'An error occurred while deleting the Client.']);
+        // Start a database transaction
+        DB::beginTransaction();
+
+        try {
+            
+            $userId = Customer::where('id', $id)->value('user_id');
+
+            if ($userId) {
+            
+                User::where('id', $userId)->delete();
+
+                Customer::where('id', $id)->delete();
+
+                CustomerDevice::where('customer_id', $id)->delete();
+
+                $allVehicleId = Vehicle::where('customer_id', $id)->pluck('id')->toArray();
+
+                VehicleDevice::whereIn('vehicle_id', $allVehicleId)->delete();
+
+                Vehicle::where('customer_id', $id)->delete();
+
+                // Commit the transaction
+                DB::commit();
+
+                return response()->json(['message' => 'Client deleted successfully.']);
+            } else {
+                return response()->json(['message' => 'Client not found.'], 404);
+            }
+        } catch (\Exception $e) {
+            // Rollback the transaction if any operation fails
+            DB::rollBack();
+
+            return response()->json(['message' => 'An error occurred while deleting the Client.', 'error' => $e->getMessage()], 500);
         }
     }
     

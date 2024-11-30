@@ -29,7 +29,7 @@ class SendLoginDetail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Login Detail',
+            subject: 'DFS New Account',
         );
     }
 

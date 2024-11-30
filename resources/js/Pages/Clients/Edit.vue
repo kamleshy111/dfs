@@ -78,7 +78,7 @@ const submitForm = async () => {
     
     <div class="back-section"><button type="button" class="back-btn-custom" @click="goBack"><i class="bi bi-caret-left"></i> Back</button></div>
 
-    <form @submit.prevent="submitForm">
+    <form @submit.prevent="submitForm" enctype="multipart/form-data">
       <div class="form-row">
         <div class="form-group col-md-6">
           <TextInput
@@ -184,31 +184,28 @@ const submitForm = async () => {
         <label for="address" class="form-label">Address</label>
       </div>
 
-      <div class="form-group">
+            <div class="form-group">
         <div
           class="upload-box text-center"
-          @drop.prevent="handleFileUpload"
-          @dragover.prevent="handleDragOver"
+          @drop="handleDrop"
+          @dragover="handleDragOver"
+          :class="{ 'drag-over': fileName }"
         >
           <i class="bi bi-cloud-arrow-up-fill"></i>
           <span>
-            Drop your file here, or
-            <label
-              for="file-upload"
-              class="text-primary"
-              style="cursor: pointer"
-            >
-              browse
+            Drop Your File Here, or
+            <label for="file-upload" style="color: #2239c3cc; cursor: pointer">
+              Browse
             </label>
-            .
           </span>
-          <p>Supported formats: Excel, Word, PDF</p>
+          <p>Supports file, Excel, Word, PDF</p>
           <input
             type="file"
             id="file-upload"
             class="d-none"
             @change="handleFileUpload"
           />
+          <!-- Display uploaded file name -->
           <p v-if="fileName">
             {{ fileName }}
             <button class="btn btn-link text-danger" @click="clearFile">

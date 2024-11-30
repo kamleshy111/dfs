@@ -77,14 +77,16 @@ const submitForm = async () => {
   try {
 
     let formData = new FormData();
-  
+
     formData.append("first_name", form.value.first_name);
     formData.append("last_name", form.value.last_name);
     formData.append("email", form.value.email);
     formData.append("phone", form.value.phone);
     formData.append("address", form.value.address);
-    formData.append("device_id", form.value.device_id);
-    formData.append("quantity", form.value.quantity ?? 0);
+    form.value.device_id.forEach((deviceId) => {
+      formData.append('device_id[]', deviceId.id);
+    });
+    formData.append("quantity", form.value.quantity);
     formData.append("file", form.value.file);
 
     // Send form data to the server
@@ -97,7 +99,7 @@ const submitForm = async () => {
     form.value.email = '';
     form.value.phone = '';
     form.value.address = '';
-    form.value.device_id = '';
+    form.value.device_id = [];
     form.value.quantity = '';
     form.value.file = '';
     
