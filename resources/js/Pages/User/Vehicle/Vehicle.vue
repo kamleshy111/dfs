@@ -5,23 +5,21 @@ import { Inertia } from "@inertiajs/inertia";
 
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
+import axios from 'axios';
 
 
 // Delete Vehicle
-const deleteVehicle = async (id) => {
+const deleteVehicle = async (id) =>  {
   try {
-    await Inertia.delete(route("vehicle-type.destroy", id), {
-      onSuccess: () => {
-        toast.success("Vehicle deleted successfully.");
-      },
-      onError: (errors) => {
-        if (errors) {
-          toast.error("An error occurred. Please check your input.");
-        }
-      },  
-    });
+    const response = await axios.delete(`vehicle-type/destroy/${id}`);
+        toast.success(response.data.message);
+        // Reload the page
+        setTimeout(function(){
+          window.location.reload();
+        }, 3000);
   } catch (error) {
-    toast.error("An unexpected error occurred.");
+    const errorMessage = error.response?.data?.message || 'An error occurred. Please try again.';
+    toast.error(errorMessage);
   }
 };
 </script>
@@ -47,7 +45,7 @@ const deleteVehicle = async (id) => {
                         <th scope="col">Model</th>
                         <th scope="col">Fuel Type</th>
                         <th scope="col">Chassis Number</th>
-                        <th scope="col">Coler</th>
+                        <th scope="col">Color</th>
                         <th scope="col">Action</th>
                     </tr>
                 </thead>

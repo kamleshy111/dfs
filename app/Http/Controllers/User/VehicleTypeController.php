@@ -50,6 +50,25 @@ class VehicleTypeController extends Controller
 
     public function store(Request $request){
 
+        $validated = $request->validate([
+            'companyName' => 'required|string|max:255',
+            'model' => 'required|string|max:255',
+            'year' => 'required',
+            'fuelType' => 'required|string|max:255',
+            'chassisNumber' => 'required|numeric',
+        ], [
+            'companyName.required' => 'Company Name is required.',
+            'model.required' => 'Model is required.',
+            'year.required' => 'Year is required.',
+            'fuelType.required' => 'Fuel Type is required.',
+            'chassisNumber.required' => 'Chassis Number is required.',
+        ]);
+
+        if (!$validated) {
+        
+            return response()->json(["message" => $validated]);
+        }
+
         /*------- Start DB Transaction --------*/
         DB::beginTransaction();
 
@@ -77,25 +96,27 @@ class VehicleTypeController extends Controller
             ]);
 
             $vehicleId = $vehicle->id;
+
             $devices = $request->input('device_id', []);
 
-
-            foreach ($devices as $device) {
-                $deviceId = $device['device_id'];
-                VehicleDevice::create([
-                    'vehicle_id' => $vehicleId, // Vehicle ID
-                    'device_id' => $deviceId,   // Device ID
-                ]);
+            if($devices){
+                foreach ($devices as $device) {
+                    $deviceId = $device['device_id'];
+                    VehicleDevice::create([
+                        'vehicle_id' => $vehicleId, // Vehicle ID
+                        'device_id' => $deviceId,   // Device ID
+                    ]);
+                }
             }
 
             DB::commit();
 
             // Redirect with success message
-            return redirect()->route('vehicle-type.create')->with(['success' => 'Vehicle added successfully.']);
+            return response()->json(["message" => 'Vehicle added successfully.']);
         } catch (\Exception $e) {
             /*-------- Rollback Database Entry --------*/
             DB::rollback();
-            return back()->withErrors(['error' => 'An error occurred: ' . $e->getMessage()]);
+            return response()->json(['message' => 'An error occurred: ' . $e->getMessage()]);
         }
 
     }
@@ -129,7 +150,7 @@ class VehicleTypeController extends Controller
         $data = Vehicle::with('devices')->find($id);
    
         if (!$data) {
-            return redirect()->route('vehicle-type')->with('error', 'Vehicle not found.');
+            return response()->json(["message" => 'Vehicle not found.']);
         }
 
         $vehicleDetail = [
@@ -176,6 +197,25 @@ class VehicleTypeController extends Controller
 
     public function update(Request $request, $id) {
 
+        $validated = $request->validate([
+            'company_name' => 'required|string|max:255',
+            'model' => 'required|string|max:255',
+            'year' => 'required',
+            'fuel_type' => 'required|string|max:255',
+            'Chassis_number' => 'required|numeric',
+        ], [
+            'company_name.required' => 'Company Name is required.',
+            'model.required' => 'Model is required.',
+            'year.required' => 'Year is required.',
+            'fuel_type.required' => 'Fuel Type is required.',
+            'Chassis_number.required' => 'Chassis Number is required.',
+        ]);
+
+        if (!$validated) {
+        
+            return response()->json(["message" => $validated]);
+        }
+
         /*------- Start DB Transaction --------*/
         DB::beginTransaction();
 
@@ -195,7 +235,6 @@ class VehicleTypeController extends Controller
             $vehicle->driver_address  = $request->input("driver_address");
             $vehicle->save();
 
-
             $vehicleId = $vehicle->id;
             $devices = $request->input('device_id', []);
 
@@ -212,12 +251,11 @@ class VehicleTypeController extends Controller
             DB::commit();
 
             // Redirect with success message
-            return redirect()->route('vehicle-type')->with(['success' => 'Vehicle updated successfully.']);
-
+            return response()->json(["message" => 'Vehicle updated successfully.']);
         } catch (\Exception $e) {
             /*-------- Rollback Database Entry --------*/
             DB::rollback();
-            return back()->withErrors(['error' => 'An error occurred: ' . $e->getMessage()]);
+            return response()->json(['error' => 'An error occurred: ' . $e->getMessage()]);
         }
 
     }
@@ -228,9 +266,9 @@ class VehicleTypeController extends Controller
         if($vehicle){
             VehicleDevice::where('vehicle_id',$id)->delete();
             $vehicle->delete();
-            return redirect()->route('vehicle-type')->with(['success' => 'Vehicle deleted successfully.']);
+            return response()->json(["message" => 'Vehicle deleted successfully.']);
         }else{
-            return back()->withErrors(['error' => 'An error occurred while deleting the Vehicle.']);
+            return response()->json(["message" => 'An error occurred while deleting the Vehicle..']);
         }
     }
 

@@ -81,7 +81,7 @@ class DeviceController extends Controller
         $data = Device::where('id',$id)->first();
    
         if (!$data) {
-            return redirect()->route('devices')->with('error', 'Device not found.');
+            return response()->json(["message" => 'Device not found.']);
         }
 
         $deviceDetail = [
@@ -126,8 +126,8 @@ class DeviceController extends Controller
          $devicwe = Device::findOrFail($id);
         if($devicwe){
             $devicwe->delete();
-            return redirect()->route('devices')->with(['success' => 'Devicwe deleted successfully.']);
+            return response()->json(["message" => 'Devicwe deleted successfully.']);
         }
-        return redirect()->back()->with(['error' => 'An error occurred while deleting the device.']);
+        return response()->json(['message' => 'An error occurred while deleting the device.']);
     }
 }

@@ -155,7 +155,7 @@ class ClientsController extends Controller
         $data = Customer::with('devices')->find($id);
    
         if (!$data) {
-            return redirect()->route('clients')->with('error', 'Customer not found.');
+            return response()->json(["message" => 'Customer not found.']);
         }
 
         $customerDetail = [
@@ -263,26 +263,23 @@ class ClientsController extends Controller
             DB::commit();
     
             // Redirect with success message
-            // return redirect()->route('clients')->with(['success' => 'Client updated successfully.']);
             return response()->json(['message' => 'Client updated successfully..']);
            
         } catch (\Exception $e) {
             /*-------- Rollback Database Entry --------*/
             DB::rollback();
-            return back()->withErrors(['error' => 'An error occurred: ' . $e->getMessage()]);
+            return response()->json(["message" => 'An error occurred: ' . $e->getMessage()]);
         }
     }
-
-
 
     public function destroy($id)
     {
          $customer = Customer::findOrFail($id);
         if($customer){
             $customer->delete();
-            return redirect()->route('clients')->with(['success' => 'Customer deleted successfully.']);
+            return response()->json(['message' => 'Client deleted successfully.']);
         }else{
-            return back()->withErrors(['error' => 'An error occurred while deleting the customer.']);
+            return response()->json(['message' => 'An error occurred while deleting the Client.']);
         }
     }
     

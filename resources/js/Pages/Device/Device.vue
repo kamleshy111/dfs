@@ -4,24 +4,22 @@ import { Head } from "@inertiajs/vue3";
 import { Inertia } from "@inertiajs/inertia";
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
+import axios from 'axios';
 
 
 // Delete device
-const deleteDevice = async (id) => {
+const deleteDevice = async (id) =>  {
   try {
-    await Inertia.delete(route("devices.destroy", id), {
-      onSuccess: () => {
-        toast.success("Device deleted successfully.");
-      },
-      onError: (errors) => {
-        if (errors) {
-          toast.error("An error occurred. Please check your input.");
-        }
-      },  
-    });
-  } catch (error) {
-    toast.error("An unexpected error occurred.");
-  }
+      const response = await axios.delete(`devices/destroy/${id}`);
+          toast.success(response.data.message);
+            // Reload the page
+            setTimeout(function(){
+              window.location.reload();
+            }, 3000);
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || 'An error occurred. Please try again.';
+      toast.error(errorMessage);
+    }
 };
 </script>
 
