@@ -70,8 +70,7 @@ class ClientsController extends Controller
     
         try {
     
-            // $password = rand(10000000, 99999999);
-            $password = 12345678;
+            $password = rand(10000000, 99999999);
 
            $user = User::create([
                         'name' => $request->input("first_name") . ' ' . $request->input("last_name"),
@@ -202,9 +201,6 @@ class ClientsController extends Controller
 
     public function update(Request $request, $id) {
 
-
-        $data = $request->all();
-        dd($data);
         $validated = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -256,13 +252,16 @@ class ClientsController extends Controller
             $devices = $request->input("device_id", []);
 
             if($devices){
-                foreach ($devices as $device) {
-                    $deviceId = $device['id'];
+                foreach ($devices as $device_id) {
                     CustomerDevice::create([
-                        'device_id' => $deviceId,
+                        'device_id' => $device_id,
                         'customer_id' => $customerId,
                     ]);
                 }
+            }
+
+            if ($request->file('file')) {
+                Excel::import(new CustomerDeviceImport($customerId), $request->file('file'));
             }
      
             DB::commit();
@@ -276,32 +275,6 @@ class ClientsController extends Controller
             return response()->json(["message" => 'An error occurred: ' . $e->getMessage()]);
         }
     }
-
-    // public function destroy($id)
-    // {
-
-    //     $userId = Customer::where('id', $id)->pluck('user_id')->first();
-
-    //     if($userId){
-    //         User::where('id', $userId)->delete();
-
-    //         Customer::where('user_id', $userId)->delete();
-
-    //         CustomerDevice::where('customer_id', $id)->delete();
-
-    //         $allVehicleId  = Vehicle::where('customer_id', $id)->pluck('id')->get();
-
-    //         VehicleDevice::where('vehicle_id', $allVehicleId)->delete();
-
-    //         Vehicle::where('customer_id', $id)->delete();
-
-            
-
-    //         return response()->json(['message' => 'Client deleted successfully.']);
-    //     }else{
-    //         return response()->json(['message' => 'An error occurred while deleting the Client.']);
-    //     }
-    // }
 
     public function destroy($id)
     {

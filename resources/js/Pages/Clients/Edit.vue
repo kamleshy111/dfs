@@ -3,16 +3,15 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { Head, useForm, usePage } from "@inertiajs/vue3";
 import TextInput from "@/Components/TextInput.vue";
-import InputError from "@/Components/InputError.vue";
-import Multiselect from "vue-multiselect";
 import { ref } from "vue";
+import Multiselect from "vue-multiselect";
 
-import { toast } from 'vue3-toastify';
-import 'vue3-toastify/dist/index.css';
-import axios from 'axios';
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
+import axios from "axios";
 
-// Access props
-const { devices, customerDetail } = usePage().props;
+// Access data from Inertia props
+const {devices, customerDetail } = usePage().props;
 
 const form = ref({
   first_name: customerDetail.first_name || "",
@@ -21,63 +20,103 @@ const form = ref({
   phone: customerDetail.phone || "",
   address: customerDetail.address || "",
   device_id: customerDetail.device_id || [],
-  quantity: customerDetail.quantity || '0',
-  file: customerDetail.file || null,
-
+  quantity: customerDetail.quantity || 0,
+  file: null,
 });
 
-// File handling
 const file = ref(null);
 const fileName = ref("");
 
-// Handle file upload
+//File Upload Handlers
 const handleFileUpload = (event) => {
   const uploadedFile = event.target.files[0];
   if (uploadedFile) {
     file.value = uploadedFile;
-    form.file = uploadedFile;
+    form.value.file = uploadedFile;
     fileName.value = uploadedFile.name;
   }
 };
 
-// Clear file input
+// Drag-and-Drop Handlers
+const handleDrop = (event) => {
+  event.preventDefault();
+  const droppedFile = event.dataTransfer.files[0];
+  if (droppedFile) {
+    file.value = droppedFile;
+    form.file = droppedFile;
+    fileName.value = droppedFile.name;
+  }
+};
+
+const handleDragOver = (event) => {
+  event.preventDefault();
+};
+
 const clearFile = () => {
   file.value = null;
   form.file = null;
   fileName.value = "";
 };
 
-// Quantity increment/decrement
-const incrementQuantity = () => form.value.quantity++;
+// Increment/Decrement Quantity
+const incrementQuantity = () => {
+  form.value.quantity++;
+};
+
 const decrementQuantity = () => {
   if (form.value.quantity > 1) form.value.quantity--;
 };
 
-// go to back
+// Go Back Function
 const goBack = () => {
   window.location.href = "/clients"; // Redirect to the desired Laravel route
 };
 
+// Submit Form (Update Logic)
 const submitForm = async () => {
   try {
-    const response = await axios.post(`/clients/update/${customerDetail.id}`, form.value);
-        toast.success(response.data.message);
+  
+    let formData = new FormData();
+
+    formData.append("first_name", form.value.first_name);
+    formData.append("last_name", form.value.last_name);
+    formData.append("email", form.value.email);
+    formData.append("phone", form.value.phone);
+    formData.append("address", form.value.address);
+    form.value.device_id.forEach((deviceId) => {
+      formData.append('device_id[]', deviceId.id);
+    });
+    formData.append("quantity", form.value.quantity);
+
+    if (form.value.file) {
+      formData.append("file", form.value.file);
+    }
+
+    // Send the update request
+    const customerId = customerDetail.id || "";
+   
+    const response = await axios.post(`/clients/update/${customerId}`, formData);
+
+    // Handle successful response
+    toast.success(response.data.message);
+
   } catch (error) {
-    const errorMessage = error.response?.data?.message || 'An error occurred. Please try again.';
+    const errorMessage = error.response?.data?.message || "An error occurred. Please try again.";
     toast.error(errorMessage);
   }
 };
-
 </script>
-
 <template>
-  <Head title="Add Customer" />
+  <Head title="Edit Customer" />
 
   <AuthenticatedLayout>
-    <!-- Form -->
-    
-    <div class="back-section"><button type="button" class="back-btn-custom" @click="goBack"><i class="bi bi-caret-left"></i> Back</button></div>
+    <div class="back-section">
+      <button type="button" class="back-btn-custom" @click="goBack">
+        <i class="bi bi-caret-left"></i> Back
+      </button>
+    </div>
 
+    <!-- Form -->
     <form @submit.prevent="submitForm" enctype="multipart/form-data">
       <div class="form-row">
         <div class="form-group col-md-6">
@@ -86,9 +125,8 @@ const submitForm = async () => {
             type="text"
             class="mt-1 block w-full form-control"
             v-model="form.first_name"
-            required
             autofocus
-            placeholder=""
+            autocomplete="first_name"
           />
           <label for="first_name" class="form-label">First Name</label>
         </div>
@@ -98,8 +136,8 @@ const submitForm = async () => {
             type="text"
             class="mt-1 block w-full form-control"
             v-model="form.last_name"
-            required
-            placeholder=""
+            autofocus
+            autocomplete="last_name"
           />
           <label for="last_name" class="form-label">Last Name</label>
         </div>
@@ -112,27 +150,26 @@ const submitForm = async () => {
             type="email"
             class="mt-1 block w-full form-control"
             v-model="form.email"
-            required
-            placeholder=""
+            autofocus
+            autocomplete="email"
           />
-          <label for="email" class="form-label">Email</label>
+          <label for="email" class="form-label">Email ID</label>
         </div>
         <div class="form-group col-md-6">
           <TextInput
             id="phone"
-            type="text"
+            type="number"
             class="mt-1 block w-full form-control"
             v-model="form.phone"
-            required
-            placeholder=""
+            autofocus
+            autocomplete="phone"
           />
-          <label for="phone" class="form-label">Phone</label>
+          <label for="mobile" class="form-label">Mobile Number</label>
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group col-md-6">
-
           <Multiselect
               v-model="form.device_id"
               :options="devices"
@@ -145,30 +182,33 @@ const submitForm = async () => {
         </div>
         <div class="form-group col-md-6">
           <div class="form-quantity">
-            <label for="quantity" class="form-label">Quantity</label>
+            <label class="form-label">Add Quantity</label>
             <div class="input-group">
-              <button
-                class="btn btn-outline-secondary input-group-prepend"
-                type="button"
-                @click="decrementQuantity"
-              >
-                -
-              </button>
+              <div class="input-group-prepend">
+                <button
+                  class="btn btn-outline-secondary"
+                  type="button"
+                  @click="decrementQuantity"
+                >
+                  -
+                </button>
+              </div>
               <input
                 type="text"
                 v-model="form.quantity"
                 class="form-control text-center"
                 readonly
               />
-              <button
-                class="btn btn-outline-secondary"
-                type="button"
-                @click="incrementQuantity"
-              >
-                +
-              </button>
+              <div class="input-group-append">
+                <button
+                  class="btn btn-outline-secondary"
+                  type="button"
+                  @click="incrementQuantity"
+                >
+                  +
+                </button>
+              </div>
             </div>
-          
           </div>
         </div>
       </div>
@@ -179,12 +219,13 @@ const submitForm = async () => {
           type="text"
           class="mt-1 block w-full form-control"
           v-model="form.address"
-          required
+          autofocus
+          autocomplete="address"
         />
         <label for="address" class="form-label">Address</label>
       </div>
 
-            <div class="form-group">
+      <div class="form-group">
         <div
           class="upload-box text-center"
           @drop="handleDrop"
@@ -205,7 +246,6 @@ const submitForm = async () => {
             class="d-none"
             @change="handleFileUpload"
           />
-          <!-- Display uploaded file name -->
           <p v-if="fileName">
             {{ fileName }}
             <button class="btn btn-link text-danger" @click="clearFile">
@@ -215,9 +255,12 @@ const submitForm = async () => {
         </div>
       </div>
 
-      <PrimaryButton class="btn save-btn-custom mt-3"
-        >Update Customer</PrimaryButton
+      <PrimaryButton
+        class="btn save-btn-custom"
+        style="background-color: var(--light-color); color: #fff; font-size: 20px;"
       >
+        Update Customer
+      </PrimaryButton>
     </form>
   </AuthenticatedLayout>
 </template>
