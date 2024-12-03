@@ -23,8 +23,8 @@ onMounted(() => {
     axios.get('/api/customer-devices')
         .then(response => {
             userDevices.value = response.data.userDevices;
-            console.log(userDevices);
-   
+            // console.log(userDevices);
+
         })
         .catch(error => {
             console.error("There was an error fetching the user devices:", error);
