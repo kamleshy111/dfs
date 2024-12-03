@@ -10,7 +10,6 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::get('/dashboard', [DashboardController::class, 'getDashboardData'])->name('dashboard');
-
 Route::get('/customer-devices', [CustomerDeviceController::class, 'getDevices']);
 
-
+Route::get('/get-devices', [DashboardController::class, 'getMapDevices'])->name('get-devices');
