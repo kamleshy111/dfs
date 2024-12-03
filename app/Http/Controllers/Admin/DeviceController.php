@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use App\Models\Device;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\DevicesImport;
-use Illuminate\Support\Facades\Storage;
+
 
 
 class DeviceController extends Controller
@@ -49,7 +50,7 @@ class DeviceController extends Controller
         $imageUrl = null;
         if($request->hasFile('invoicePhotos')){
             $file = $request->file('invoicePhotos');
-            $path = $file->store('InvoicePhotos');
+            $path = $file->store('InvoicePhotos', 'public');
             $imageUrl = Storage::url($path);
         }    
        
@@ -98,6 +99,7 @@ class DeviceController extends Controller
             'order_id' => $data->order_id ?? '',
             'company_name' => $data->company_name ?? '',
             'date_time' => $data->date_time ?? '',
+            'invoice_photos' => $data->invoice_photos ? asset($data->invoice_photos) : '',
         ];
 
         return Inertia::render('Device/Edit',[
@@ -124,6 +126,11 @@ class DeviceController extends Controller
         $device->order_id = $request->input("order_id");
         $device->company_name = $request->input("company_name");
         $device->date_time  = $request->input("date_time");
+        if($request->hasFile('invoice_photos')){
+            $file = $request->file('invoice_photos');
+            $path = $file->store('InvoicePhotos', 'public');
+            $device->invoice_photos = Storage::url($path);
+        }   
         $device->save();
 
         return response()->json(['message' => 'Device updated successfully.']);
