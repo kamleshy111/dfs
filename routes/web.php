@@ -11,7 +11,7 @@ use App\Http\Controllers\Admin\DeviceController;
 use App\Http\Controllers\Admin\ManageDocumentsController;
 use App\Http\Controllers\Admin\PaymentsController;
 use App\Http\Controllers\Admin\ReviewRatingController;
-use App\Http\Controllers\User\VehicleTypeController;
+use App\Http\Controllers\Admin\VehicleTypeController;
 
 use App\Http\Controllers\User\BillingController;
 
@@ -86,6 +86,19 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::delete('/destroy/{id}', [DeviceController::class, 'destroy'])->name('devices.destroy');
     });
 
+    //VehicleType Routes
+    Route::group(['prefix' => 'vehicle-type'], function() {
+        Route::get('/', [VehicleTypeController::class, 'index'])->name('vehicle-type');
+        Route::post('/upload-vehicle', [VehicleTypeController::class, 'uploadVehicle'])->name('vehicle-type.uploadVehicle');
+        Route::get('/create', [VehicleTypeController::class, 'create'])->name('vehicle-type.create');
+        Route::post('/store',[VehicleTypeController::class, 'store'])->name('vehicle-type.store');
+        Route::get('/{id}/view', [VehicleTypeController::class, 'view'])->name('vehicle-type.view');
+        Route::get('/{id}/edit',[VehicleTypeController::class, 'edit'])->name('vehicle-type.edit');
+        Route::post('/update/{id}', [VehicleTypeController::class, 'update'])->name('vehicle-type.update');
+        Route::delete('/destroy/{id}', [VehicleTypeController::class, 'destroy'])->name('vehicle-type.destroy');
+
+    });
+
     //Payments Routes
     Route::group(['prefix' => 'payments'], function() {
         Route::get('/', [PaymentsController::class, 'index'])->name('payments');
@@ -106,17 +119,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 Route::middleware(['auth', 'role:user'])->group(function () {
 
 
-    //VehicleType Routes
-    Route::group(['prefix' => 'vehicle-type'], function() {
-        Route::get('/', [VehicleTypeController::class, 'index'])->name('vehicle-type');
-        Route::get('/create', [VehicleTypeController::class, 'create'])->name('vehicle-type.create');
-        Route::post('/store',[VehicleTypeController::class, 'store'])->name('vehicle-type.store');
-        Route::get('/{id}/view', [VehicleTypeController::class, 'view'])->name('vehicle-type.view');
-        Route::get('/{id}/edit',[VehicleTypeController::class, 'edit'])->name('vehicle-type.edit');
-        Route::post('/update/{id}', [VehicleTypeController::class, 'update'])->name('vehicle-type.update');
-        Route::delete('/destroy/{id}', [VehicleTypeController::class, 'destroy'])->name('vehicle-type.destroy');
-
-    });
     //Device Routes
     Route::group(['prefix' => 'billing'], function() {
         Route::get('/', [BillingController::class, 'index'])->name('billing');

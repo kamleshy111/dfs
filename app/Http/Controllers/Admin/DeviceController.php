@@ -9,6 +9,7 @@ use Inertia\Inertia;
 use App\Models\Device;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\DevicesImport;
+use Illuminate\Support\Facades\Storage;
 
 
 class DeviceController extends Controller
@@ -30,13 +31,11 @@ class DeviceController extends Controller
 
         $validated = $request->validate([
             'deviceId' => 'required|string|max:255|unique:devices,device_id',
-            'companyName' => 'required|string|max:255',
             'orderId' => 'required|numeric',
             'purchaseDate' => 'required|date',
         ], [
             'deviceId.unique' => 'The device ID must be unique. Please choose a different ID.',
             'deviceId.required' => 'Device ID is required.',
-            'companyName.required' => 'Company name is required.',
             'orderId.required' => 'Order ID is required.',
             'purchaseDate.required' => 'Purchase Date is required.',
         ]);
@@ -45,13 +44,22 @@ class DeviceController extends Controller
             // Return validation errors as a JSON response
             return response()->json(["message" => $validated]);
         }
+
+        // Handle file upload
+        $imageUrl = null;
+        if($request->hasFile('invoicePhotos')){
+            $file = $request->file('invoicePhotos');
+            $path = $file->store('InvoicePhotos');
+            $imageUrl = Storage::url($path);
+        }    
        
         // Create a new Device
         Device::create([
             'device_id' => $request->input('deviceId'),
             'order_id' => $request->input('orderId'),
-            'company_name' => $request->input('companyName'),
+            'company_name' => $request->input('companyName') ?? '',
             'date_time' => $request->input('purchaseDate'),
+            'invoice_photos' => $imageUrl,
         ]);
 
         return response()->json(['message' => 'Device added successfully!']);

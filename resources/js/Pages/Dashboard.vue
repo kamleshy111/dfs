@@ -12,7 +12,7 @@
                 <div class="card-summary">
                     <i class="bi bi-car-front"></i>
                     <div class="icon-box">
-                        <h4>100K</h4>
+                        <h4>0K</h4>
                         <p>Device Sale</p>
                     </div>
                 </div>
@@ -21,7 +21,7 @@
                 <div class="card-summary">
                     <i class="bi bi-people"></i>
                     <div class="icon-box">
-                        <h4>50K</h4>
+                        <h4>0K</h4>
                         <p>Total Clients</p>
                     </div>
                 </div>
@@ -30,7 +30,7 @@
                 <div class="card-summary">
                     <i class="bi bi-currency-dollar"></i>
                     <div class="icon-box">
-                        <h4>10 Cr</h4>
+                        <h4>0 Cr</h4>
                         <p>Total Earning</p>
                     </div>
                 </div>
@@ -39,7 +39,7 @@
                 <div class="card-summary">
                     <i class="bi bi-box-seam"></i>
                     <div class="icon-box">
-                        <h4>10</h4>
+                        <h4>0</h4>
                         <p>Cancelled Devices</p>
                     </div>
                 </div>

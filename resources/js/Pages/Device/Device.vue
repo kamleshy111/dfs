@@ -42,7 +42,6 @@ const deleteDevice = async (id) =>  {
                         <th scope="col">S No</th>
                         <th scope="col">Device ID</th>
                         <th scope="col">Order ID</th>
-                        <th scope="col">Purchase By (Company)</th>
                         <th scope="col">Date &amp; Time</th>
                         <th scope="col">Action</th>
                     </tr>
@@ -55,7 +54,6 @@ const deleteDevice = async (id) =>  {
                         <td>{{ index + 1 }}</td>
                         <td>{{ device.device_id }}</td>
                         <td>{{ device.order_id }}</td>
-                        <td>{{ device.company_name }}</td>
                         <td>{{ formatDate(device.date_time) }}</td>
                         <td>
 

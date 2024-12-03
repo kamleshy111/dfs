@@ -159,7 +159,33 @@ const submitForm = async () => {
             autofocus
             autocomplete="email"
           />
-          <label for="email" class="form-label">Email ID</label>
+          <label for="email" class="form-label">Primary Email ID</label>
+        </div>
+        <div class="form-group col-md-6">
+          <TextInput
+            id="email"
+            type="email"
+            class="mt-1 block w-full form-control"
+            placeholder=""
+            v-model="form.email"
+            autofocus
+            autocomplete="email"
+          />
+          <label for="email" class="form-label">Secondary Email ID</label>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <TextInput
+            id="phone"
+            type="number"
+            class="mt-1 block w-full form-control"
+            placeholder=""
+            v-model="form.phone"
+            autofocus
+            autocomplete="phone"
+          />
+          <label for="mobile" class="form-label">Primary Mobile Number</label>
         </div>
         <div class="form-group col-md-6">
           <TextInput
@@ -171,7 +197,7 @@ const submitForm = async () => {
             autofocus
             autocomplete="phone"
           />
-          <label for="mobile" class="form-label">Mobile Number</label>
+          <label for="mobile" class="form-label">Secondary Mobile Number</label>
         </div>
       </div>
       <div class="form-row">
