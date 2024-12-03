@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Customer extends Model
 {
     protected $fillable = ['user_id','first_name','last_name','email','password','phone','profile_picture',
-    'date_of_birth','booking_id','device_id','address','quantity','file','is_verified' ];
+    'date_of_birth','booking_id','device_id','address','quantity','file','is_verified', 'secondary_email', 'secondary_phone',
+    'invoice_number', 'amount', 'payment_status' ];
 
     public function devices(){
 

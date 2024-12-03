@@ -4,7 +4,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import GuestLayout from "@/Layouts/GuestLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { Head, Link  } from "@inertiajs/vue3";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
@@ -16,6 +16,22 @@ const form = ref({
   companyName: '',
   orderId: '',
   purchaseDate: '',
+  invoicePhotos: null,
+});
+
+// Handle file input change
+const handleFileChange = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    form.value.invoicePhotos = file;
+  }
+};
+
+
+const imagePreview = computed(() => {
+  return form.value.invoicePhotos
+    ? URL.createObjectURL(form.value.invoicePhotos)
+    : null;
 });
 
 // go to back
@@ -26,14 +42,26 @@ const goBack = () => {
 // Submit the form
 const submitForm = async () => {
   try {
-    const response = await axios.post(`/devices/store`, form.value);
+
+    let formData = new FormData();
+
+    formData.append("deviceId", form.value.deviceId);
+    formData.append("companyName", form.value.companyName);
+    formData.append("orderId", form.value.orderId);
+    formData.append("purchaseDate", form.value.purchaseDate);
+    formData.append("invoicePhotos", form.value.invoicePhotos);
+
+    // Send form data to the server
+    const response = await axios.post('/devices/store', formData);
+
+    // Handle successful response
     toast.success(response.data.message);
-    form.value = {
-      device_id: "",
-      company_name: "",
-      order_id: "",
-      date_time: "",
-    };
+    form.value.deviceId = '';
+    form.value.companyName = '',
+    form.value.orderId = '';
+    form.value.purchaseDate = '',
+    form.value.invoicePhotos = '';
+    
   } catch (error) {
     const errorMessage = error.response?.data?.message || 'An error occurred. Please try again.';
     toast.error(errorMessage);
@@ -51,7 +79,7 @@ const submitForm = async () => {
 
     <div class="my-3">
                
-        <form @submit.prevent="submitForm">
+        <form @submit.prevent="submitForm" enctype="multipart/form-data">
           <div class="form-row">
             <div class="form-group col-md-6">
               <input type="text" v-model="form.deviceId" class="form-control" id="deviceId" placeholder="" />
@@ -70,6 +98,12 @@ const submitForm = async () => {
             <div class="form-group col-md-6">
               <input type="datetime-local" v-model="form.purchaseDate" class="form-control" id="purchaseDate" placeholder="" />
               <label for="purchaseDate" class="form-label">Purchase Date</label>
+            </div>
+            <div class="form-group col-md-6">
+              <input type="file" accept="image/*" @change="handleFileChange" class="form-control" id="invoicePhotos" required>
+              <label for="invoicePhotos" class="form-label">Invoice Photos: </label>
+
+              <img v-if="form.invoicePhotos" :src="imagePreview" alt="Invoice Photos" class="mt-2" style="max-width:20%;">
             </div>
           </div>
           <div class="col-md-3 col-12 p-0 mt-4">

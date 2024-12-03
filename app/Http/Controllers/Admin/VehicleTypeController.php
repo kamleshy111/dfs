@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -12,38 +12,51 @@ use App\Models\CustomerDevice;
 use App\Models\VehicleDevice;
 use App\Models\Customer;
 use App\Models\Device;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\VechicleImport;
 
 
 class VehicleTypeController extends Controller
 {
     public function index(){
 
+        $vehicles = Vehicle::paginate(10);
+        return Inertia::render('Vehicle/Vehicle',[
+            'user' => Auth::user(),
+            'vehicles' => $vehicles,
+        ]);
+
+    }
+
+    public function uploadVehicle(Request $request){
+
         $userId = Auth::user()->id;
 
         $customer = Customer::where('user_id', $userId)->select('id')->first();
         $customerId = $customer->id;
-        $vehicles = Vehicle::where('customer_id',$customerId)->paginate(10);
-        return Inertia::render('User/Vehicle/Vehicle',[
-            'user' => Auth::user(),
-            'vehicles' => $vehicles,
-        ]);
+
+        if ($request->file('file')) {
+            Excel::import(new VechicleImport($customerId), $request->file('file'));
+        }
     }
 
     public function create(){
-        $userId = Auth::user()->id;
+        // $userId = Auth::user()->id;
 
-        $customerId = Customer::where('user_id', $userId)->pluck('id')->first();
+        // $customerId = Customer::where('user_id', $userId)->pluck('id')->first();
 
-        $assignedCustomerDevices = CustomerDevice::where('customer_id', $customerId)->pluck('device_id')->toArray(); 
+        // $assignedCustomerDevices = CustomerDevice::where('customer_id', $customerId)->pluck('device_id')->toArray(); 
         
-        $assignedVehicleDevices = VehicleDevice::pluck('device_id')->toArray(); 
+        // $assignedVehicleDevices = VehicleDevice::pluck('device_id')->toArray(); 
 
-        $devices = Device::whereIn('id', $assignedCustomerDevices)
-                        ->whereNotIn('id', $assignedVehicleDevices)
-                        ->select('id as device_id', 'device_id as device_name') 
-                        ->get();
+        // $devices = Device::whereIn('id', $assignedCustomerDevices)
+        //                 ->whereNotIn('id', $assignedVehicleDevices)
+        //                 ->select('id as device_id', 'device_id as device_name') 
+        //                 ->get();
 
-        return Inertia::render('User/Vehicle/Create',[
+        $devices = Device::select('id as device_id', 'device_id as device_name')->get(); 
+
+        return Inertia::render('Vehicle/Create',[
             'devices' => $devices,
         ]);
     }

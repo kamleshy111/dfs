@@ -56,6 +56,12 @@ onMounted(() => {
                                 <i class="bi bi-sd-card-fill mr-3"></i>All Device
                             </NavLink>
                         </li>
+                        <li class="nav-item">
+                            <NavLink :href="route('vehicle-type')" :active="route().current('vehicle-type')"
+                                class="nav-link">
+                                <i class="bi bi-truck-front-fill mr-3"></i>Vehicle Type
+                            </NavLink>
+                        </li>
                         <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-credit-card-fill mr-3"></i>Payments</a>
                         </li>
                         <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-file-earmark-text-fill mr-3"></i>Manage Documents</a>
@@ -75,12 +81,6 @@ onMounted(() => {
                         <li class="nav-item">
                             <NavLink :href="route('dashboard')" :active="route().current('dashboard')" class="nav-link">
                                 <i class="bi bi-grid-fill mr-3"></i>Dashboard
-                            </NavLink>
-                        </li>
-                        <li class="nav-item">
-                            <NavLink :href="route('vehicle-type')" :active="route().current('vehicle-type')"
-                                class="nav-link">
-                                <i class="bi bi-truck-front-fill mr-3"></i>Vehicle Type
                             </NavLink>
                         </li>
                         <li class="nav-item">

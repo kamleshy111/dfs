@@ -33,7 +33,7 @@ const handleFileUpload = (event) => {
   const uploadedFile = event.target.files[0];
   if (uploadedFile) {
     file.value = uploadedFile;
-    form.file = uploadedFile; // Include in form data
+    form.value.file = uploadedFile; // Include in form data
     fileName.value = uploadedFile.name;
   }
 };
@@ -75,17 +75,22 @@ const goBack = () => {
 
 const submitForm = async () => {
   try {
-    // Send form data to the server
-    const response = await axios.post('/clients/store', {
-      first_name: form.value.first_name,
-      last_name: form.value.last_name,
-      email: form.value.email,
-      phone: form.value.phone,
-      address: form.value.address,
-      device_id: form.value.device_id,
-      quantity: form.value.quantity ?? 1,
-      file: form.value.file,
+
+    let formData = new FormData();
+
+    formData.append("first_name", form.value.first_name);
+    formData.append("last_name", form.value.last_name);
+    formData.append("email", form.value.email);
+    formData.append("phone", form.value.phone);
+    formData.append("address", form.value.address);
+    form.value.device_id.forEach((deviceId) => {
+      formData.append('device_id[]', deviceId.id);
     });
+    formData.append("quantity", form.value.quantity);
+    formData.append("file", form.value.file);
+
+    // Send form data to the server
+    const response = await axios.post('/clients/store', formData);
 
     // Handle successful response
     toast.success(response.data.message);
@@ -94,7 +99,7 @@ const submitForm = async () => {
     form.value.email = '';
     form.value.phone = '';
     form.value.address = '';
-    form.value.device_id = '';
+    form.value.device_id = [];
     form.value.quantity = '';
     form.value.file = '';
     
@@ -115,7 +120,7 @@ const submitForm = async () => {
    </div>
 
     <!-- Form -->
-    <form @submit.prevent="submitForm">
+    <form @submit.prevent="submitForm" enctype="multipart/form-data">
       <div class="form-row">
         <div class="form-group col-md-6">
           <TextInput
@@ -154,7 +159,33 @@ const submitForm = async () => {
             autofocus
             autocomplete="email"
           />
-          <label for="email" class="form-label">Email ID</label>
+          <label for="email" class="form-label">Primary Email ID</label>
+        </div>
+        <div class="form-group col-md-6">
+          <TextInput
+            id="email"
+            type="email"
+            class="mt-1 block w-full form-control"
+            placeholder=""
+            v-model="form.email"
+            autofocus
+            autocomplete="email"
+          />
+          <label for="email" class="form-label">Secondary Email ID</label>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <TextInput
+            id="phone"
+            type="number"
+            class="mt-1 block w-full form-control"
+            placeholder=""
+            v-model="form.phone"
+            autofocus
+            autocomplete="phone"
+          />
+          <label for="mobile" class="form-label">Primary Mobile Number</label>
         </div>
         <div class="form-group col-md-6">
           <TextInput
@@ -166,7 +197,7 @@ const submitForm = async () => {
             autofocus
             autocomplete="phone"
           />
-          <label for="mobile" class="form-label">Mobile Number</label>
+          <label for="mobile" class="form-label">Secondary Mobile Number</label>
         </div>
       </div>
       <div class="form-row">
