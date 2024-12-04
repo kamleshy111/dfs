@@ -79,6 +79,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::group(['prefix' => 'devices'], function() {
         Route::get('/', [DeviceController::class, 'index'])->name('devices');
         Route::get('/create', [DeviceController::class, 'create'])->name('devices.create');
+        Route::post('/upload-device', [DeviceController::class, 'uploadDevice'])->name('devices.upload-device');
         Route::post('/store',[DeviceController::class, 'store'])->name('devices.store');
         Route::get('/{id}/view', [DeviceController::class, 'view'])->name('devices.view');
         Route::get('/{id}/edit',[DeviceController::class, 'edit'])->name('devices.edit');
@@ -89,7 +90,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     //VehicleType Routes
     Route::group(['prefix' => 'vehicle-type'], function() {
         Route::get('/', [VehicleTypeController::class, 'index'])->name('vehicle-type');
-        Route::post('/upload-vehicle', [VehicleTypeController::class, 'uploadVehicle'])->name('vehicle-type.uploadVehicle');
         Route::get('/create', [VehicleTypeController::class, 'create'])->name('vehicle-type.create');
         Route::post('/store',[VehicleTypeController::class, 'store'])->name('vehicle-type.store');
         Route::get('/{id}/view', [VehicleTypeController::class, 'view'])->name('vehicle-type.view');

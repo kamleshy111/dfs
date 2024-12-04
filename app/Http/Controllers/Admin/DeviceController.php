@@ -28,6 +28,15 @@ class DeviceController extends Controller
         return Inertia::render('Device/Create');
     }
 
+    
+    public function uploadDevice(Request $request){
+
+
+        if ($request->file('file')) {
+            Excel::import(new DevicesImport, $request->file('file'));
+        }
+    }
+
     public function store(Request $request){
 
         $validated = $request->validate([

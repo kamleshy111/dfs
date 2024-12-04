@@ -14,21 +14,20 @@ import Multiselect from "vue-multiselect";
 
 
 // Get props from the server
-const { devices } = usePage().props;
+const { devices, customers } = usePage().props;
 
 const form = ref({
-  companyName: "",
-  model: "",
-  year: "",
-  fuelType: "",
-  chassisNumber: "",
-  color: "",
-  device_id: [],
-  driverName: "",
-  licenseNumber: "",
-  licenseExpiryDate: "",
-  driverContact: "",
-  driverAddress: "",
+  customerId: "",
+  deviceId: "",
+  vehicleRegisterNumber: "",
+  vehicleType: "",
+  imeiNumber: "",
+  simCardNumber: "",
+  installationDate: "",
+  startDate: "",
+  duration: "",
+  simOperator: "",
+
 });
 
 // go to back
@@ -41,18 +40,18 @@ const submitForm = async () => {
     const response = await axios.post(`/vehicle-type/store`, form.value);
     toast.success(response.data.message);
     form.value = {
-      companyName: "",
-      model: "",
-      year: "",
-      fuelType: "",
-      chassisNumber: "",
-      color: "",
-      device_id: [],
-      driverName: "",
-      licenseNumber: "",
-      licenseExpiryDate: "",
-      driverContact: "",
-      driverAddress: "", 
+      customerId: "",
+      deviceId: "",
+      vehicleRegisterNumber: "",
+      vehicleType: "",
+      vehicleName: "",
+      imeiNumber: "",
+      simCardNumber: "",
+      installationDate: "",
+      startDate: "",
+      duration: "",
+      simOperator: "",
+ 
     };
   } catch (error) {
     const errorMessage = error.response?.data?.message || 'An error occurred. Please try again.';
@@ -75,72 +74,71 @@ const submitForm = async () => {
         <form @submit.prevent="submitForm">
           <div class="form-row">
             <div class="form-group col-md-6">
-              <input type="text" v-model="form.companyName" class="form-control" id="companyName" placeholder="" />
-              <label for="companyName" class="form-label">Company Name</label>
+              <select class="form-control" v-model="form.customerId">
+                <option value="" disabled>Select Customer Name</option>
+                <option v-for="customer in customers" v-bind:value="customer.id" >{{ customer.first_name +' '+ customer.last_name }}</option>
+              </select>
+              <label for="customerId" class="form-label">customers Name</label>
             </div>
             <div class="form-group col-md-6">
-              <input type="text" v-model="form.model" class="form-control" id="model" placeholder="" />
-              <label for="model" class="form-label">Model</label>
-            </div>
-
-          </div>
-          <div class="form-row">
-            <div class="form-group col-md-6">
-              <input type="date" v-model="form.year" class="form-control" id="year" placeholder="" />
-              <label for="year" class="form-label">Year</label>
-            </div>
-            <div class="form-group col-md-6">
-              <input type="text" v-model="form.fuelType" class="form-control" id="fuelType" placeholder="" />
-              <label for="fuelType" class="form-label">Fuel Type</label>
+              <select class="form-control" v-model="form.deviceId">
+                <option value="" disabled>Select Device ID</option>
+                <option v-for="device in devices" v-bind:value="device.device_id" >{{ device.device_name }}</option>
+              </select>
+              <label for="deviceId" class="form-label">Devices Name</label>
             </div>
           </div>
           <div class="form-row">
             <div class="form-group col-md-6">
-              <input type="number" v-model="form.chassisNumber" class="form-control" id="chassisNumber" placeholder="" />
-              <label for="chassisNumber" class="form-label">Chassis Number</label>
+              <input type="text" v-model="form.vehicleRegisterNumber" class="form-control" id="vehicleRegisterNumber" placeholder="" />
+              <label for="vehicleRegisterNumber" class="form-label">Vehicle Register Number</label>
             </div>
             <div class="form-group col-md-6">
-              <input type="text" v-model="form.color" class="form-control" id="color" placeholder="" />
-              <label for="color" class="form-label">Color</label>
-            </div>
-          </div>
-          <div class="form-row">  
-            <div class="form-group col-md-6">
-              <multiselect
-                v-model="form.device_id"
-                :options="devices"
-                :multiple="true"
-                :searchable="true"
-                track-by="device_id"
-                label="device_name"
-                placeholder="Select devices"
-                class="form-control"
-              ></multiselect>
-              <label class="form-label">Devices</label>
-            </div>
-            <div class="form-group col-md-6">
-              <input type="text" v-model="form.driverName" class="form-control" id="driverName" placeholder="" />
-              <label for="driverName" class="form-label">Driver Name</label>
-            </div>
-          </div>
-          <div class="form-row">  
-            <div class="form-group col-md-6">
-              <input type="text" v-model="form.licenseNumber" class="form-control" id="licenseNumber" placeholder="" />
-              <label for="licenseNumber" class="form-label">License Number</label>
-            </div>
-            <div class="form-group col-md-6">
-              <input type="date" v-model="form.licenseExpiryDate" class="form-control" id="licenseExpiryDate" placeholder="" />
-              <label for="licenseExpiryDate" class="form-label">license Expiry Date</label>
+              <input type="text" v-model="form.vehicleName" class="form-control" id="vehicleName" placeholder="" />
+              <label for="vehicleName" class="form-label">Vehicle Name</label>
             </div>
           </div>
           <div class="form-row">
             <div class="form-group col-md-6">
-              <input type="number" v-model="form.driverContact" class="form-control" id="driverContact" placeholder="" />
-              <label for="driverContact" class="form-label">Driver Phone Number</label>
+              <select class="form-control" v-model="form.vehicleType">
+                <option value="" disabled>Select Vehicle type</option>
+                <option value="car">Car</option>
+                <option value="truck">Truck</option>
+                <option value="motorcycle">Motorcycle</option>
+                <option value="bus">Bus</option>
+                <option value="other">Other</option>
+              </select>
+              <label for="vehicleType" class="form-label">Select Vehicle type</label>
             </div>
             <div class="form-group col-md-6">
-              <input type="text" v-model="form.driverAddress" class="form-control" id="driverAddress" placeholder="" />
-              <label for="driverAddress" class="form-label">Driver Address</label>
+              <input type="text" v-model="form.imeiNumber" class="form-control" id="imeiNumber" placeholder="" />
+              <label for="imeiNumber" class="form-label">IMEI Number</label>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <input type="text" v-model="form.simCardNumber" class="form-control" id="simCardNumber" placeholder="" />
+              <label for="simCardNumber" class="form-label">SIM Card Number</label>
+            </div>
+            <div class="form-group col-md-6">
+              <input type="date" v-model="form.installationDate" class="form-control" id="installationDate" placeholder="" />
+              <label for="installationDate" class="form-label">Installation Date</label>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <input type="date" v-model="form.startDate" class="form-control" id="startDate" placeholder="" />
+              <label for="startDate" class="form-label">Start Date</label>
+            </div>
+            <div class="form-group col-md-6">
+              <input type="text" v-model="form.duration" class="form-control" id="duration" placeholder="" />
+              <label for="duration" class="form-label">Duration</label>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <input type="text" v-model="form.simOperator" class="form-control" id="simOperator" placeholder="" />
+              <label for="simOperator" class="form-label">SIM Operator</label>
             </div>
           </div>
           <div class="col-md-3 col-12 p-0 mt-4">
