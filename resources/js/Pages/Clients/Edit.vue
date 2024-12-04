@@ -17,7 +17,11 @@ const form = ref({
   first_name: customerDetail.first_name || "",
   last_name: customerDetail.last_name || "",
   email: customerDetail.email || "",
+  secondary_email: customerDetail.secondary_email || "",
   phone: customerDetail.phone || "",
+  secondary_phone: customerDetail.secondary_phone || "",
+  invoice_number: customerDetail.invoice_number || "",
+  amount: customerDetail.amount || 0.00,
   address: customerDetail.address || "",
   device_id: customerDetail.device_id || [],
   quantity: customerDetail.quantity || 0,
@@ -81,7 +85,11 @@ const submitForm = async () => {
     formData.append("first_name", form.value.first_name);
     formData.append("last_name", form.value.last_name);
     formData.append("email", form.value.email);
+    formData.append("secondary_email", form.value.secondary_email);
     formData.append("phone", form.value.phone);
+    formData.append("secondary_phone", form.value.secondary_phone);
+    formData.append("invoice_number", form.value.invoice_number);
+    formData.append("amount", form.value.amount);
     formData.append("address", form.value.address);
     form.value.device_id.forEach((deviceId) => {
       formData.append('device_id[]', deviceId.id);
@@ -99,6 +107,11 @@ const submitForm = async () => {
 
     // Handle successful response
     toast.success(response.data.message);
+
+        // Reload the window
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
 
   } catch (error) {
     const errorMessage = error.response?.data?.message || "An error occurred. Please try again.";
@@ -153,8 +166,22 @@ const submitForm = async () => {
             autofocus
             autocomplete="email"
           />
-          <label for="email" class="form-label">Email ID</label>
+          <label for="email" class="form-label">Primary Email ID</label>
         </div>
+        <div class="form-group col-md-6">
+          <TextInput
+            id="secondary_email"
+            type="email"
+            class="mt-1 block w-full form-control"
+            v-model="form.secondary_email"
+            autofocus
+            autocomplete="secondary_email"
+          />
+          <label for="secondary_email" class="form-label">Secondary Email ID</label>
+        </div>
+      </div>
+
+      <div class="form-row">
         <div class="form-group col-md-6">
           <TextInput
             id="phone"
@@ -164,7 +191,44 @@ const submitForm = async () => {
             autofocus
             autocomplete="phone"
           />
-          <label for="mobile" class="form-label">Mobile Number</label>
+          <label for="phone" class="form-label">Primary Mobile Number</label>
+        </div>
+        <div class="form-group col-md-6">
+          <TextInput
+            id="secondary_phone"
+            type="number"
+            class="mt-1 block w-full form-control"
+            v-model="form.secondary_phone"
+            autofocus
+            autocomplete="secondary_phone"
+          />
+          <label for="secondary_phone" class="form-label">Secondary Mobile Number</label>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <TextInput
+            id="invoice_number"
+            type="text"
+            class="mt-1 block w-full form-control"
+            v-model="form.invoice_number"
+            autofocus
+            autocomplete="invoice_number"
+          />
+          <label for="invoice_number" class="form-label">Invoice Number</label>
+        </div>
+        <div class="form-group col-md-6">
+          <TextInput
+            id="amount"
+            type="number"
+            step="0.01"
+            class="mt-1 block w-full form-control"
+            v-model="form.amount"
+            autofocus
+            autocomplete="amount"
+          />
+          <label for="amount" class="form-label">Amount</label>
         </div>
       </div>
 

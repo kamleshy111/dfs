@@ -18,7 +18,11 @@ const form = ref({
   first_name: "",
   last_name: "",
   email: "",
+  secondary_email: "",
   phone: "",
+  secondary_phone: "",
+  invoice_number: "",
+  amount: "",
   address: "",
   device_id: [],
   quantity: 0,
@@ -81,7 +85,11 @@ const submitForm = async () => {
     formData.append("first_name", form.value.first_name);
     formData.append("last_name", form.value.last_name);
     formData.append("email", form.value.email);
+    formData.append("secondary_email",form.value.secondary_email);
     formData.append("phone", form.value.phone);
+    formData.append("secondary_phone", form.value.secondary_phone);
+    formData.append("invoice_number", form.value.invoice_number);
+    formData.append("amount", form.value.amount)
     formData.append("address", form.value.address);
     form.value.device_id.forEach((deviceId) => {
       formData.append('device_id[]', deviceId.id);
@@ -97,11 +105,20 @@ const submitForm = async () => {
     form.value.first_name = '';
     form.value.last_name = '';
     form.value.email = '';
+    form.value.secondary_email = '',
     form.value.phone = '';
+    form.value.secondary_phone = '',
+    form.value.invoice_number = '',
+    form.value.amount = '',
     form.value.address = '';
     form.value.device_id = [];
     form.value.quantity = '';
     form.value.file = '';
+
+    // Reload the window
+    setTimeout(() => {
+      window.location.reload();
+    }, 3000);
     
   } catch (error) {
     const errorMessage = error.response?.data?.message || 'An error occurred. Please try again.';
@@ -163,15 +180,15 @@ const submitForm = async () => {
         </div>
         <div class="form-group col-md-6">
           <TextInput
-            id="email"
+            id="secondary_email"
             type="email"
             class="mt-1 block w-full form-control"
             placeholder=""
-            v-model="form.email"
+            v-model="form.secondary_email"
             autofocus
-            autocomplete="email"
+            autocomplete="secondary_email"
           />
-          <label for="email" class="form-label">Secondary Email ID</label>
+          <label for="secondary_email" class="form-label">Secondary Email ID</label>
         </div>
       </div>
       <div class="form-row">
@@ -185,19 +202,46 @@ const submitForm = async () => {
             autofocus
             autocomplete="phone"
           />
-          <label for="mobile" class="form-label">Primary Mobile Number</label>
+          <label for="phone" class="form-label">Primary Mobile Number</label>
         </div>
         <div class="form-group col-md-6">
           <TextInput
-            id="phone"
+            id="secondary_phone"
             type="number"
             class="mt-1 block w-full form-control"
             placeholder=""
-            v-model="form.phone"
+            v-model="form.secondary_phone"
             autofocus
-            autocomplete="phone"
+            autocomplete="secondary_phone"
           />
-          <label for="mobile" class="form-label">Secondary Mobile Number</label>
+          <label for="secondary_phone" class="form-label">Secondary Mobile Number</label>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <TextInput
+            id="invoice_number"
+            type="text"
+            class="mt-1 block w-full form-control"
+            placeholder=""
+            v-model="form.invoice_number"
+            autofocus
+            autocomplete="invoice_number"
+          />
+          <label for="invoice_number" class="form-label">Invoice Number</label>
+        </div>
+        <div class="form-group col-md-6">
+          <TextInput
+            id="amount"
+            type="number"
+            step="0.01"
+            class="mt-1 block w-full form-control"
+            placeholder=""
+            v-model="form.amount"
+            autofocus
+            autocomplete="amount"
+          />
+          <label for="amount" class="form-label">Amount</label>
         </div>
       </div>
       <div class="form-row">

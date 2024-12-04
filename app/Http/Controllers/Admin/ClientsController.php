@@ -24,7 +24,7 @@ class ClientsController extends Controller
 {
     public function index() {
 
-        $customers = Customer::paginate(10);
+        $customers = Customer::select('id','first_name','last_name','email','phone','created_at')->paginate(10);
 
         return Inertia::render('Clients/Clients',[
             'user' => Auth::user(),
@@ -97,7 +97,11 @@ class ClientsController extends Controller
             $customer->first_name = $request->input("first_name");
             $customer->last_name = $request->input("last_name");
             $customer->email = $request->input("email");
+            $customer->secondary_email = $request->input("secondary_email");
             $customer->phone  = $request->input("phone");
+            $customer->secondary_phone = $request->input("secondary_phone");
+            $customer->invoice_number = $request->input("invoice_number");
+            $customer->amount = $request->input("amount");
             $customer->address  = $request->input("address");
             $customer->quantity  = $request->input("quantity") ?? '0';
             $customer->save();
@@ -139,10 +143,13 @@ class ClientsController extends Controller
             'first_name' => $data->first_name ?? '--',
             'last_name' => $data->last_name ?? '--',
             'email' => $data->email ?? '--',
+            'secondary_email' => $data->secondary_email ?? '--',
             'address' => $data->address ?? '--',
             'quantity' => $data->quantity ?? '',
             'phone' => $data->phone ?? '--',
-            'file' => $data->file  ? asset('storage/'.$data->file) : '',
+            'secondary_phone' => $data->secondary_phone ?? '--',
+            'invoice_number' => $data->invoice_number  ?? '',
+            'amount'    => $data->amount ?? 0.00,
             'devices' => $data->devices->toArray(),
         ];
         return Inertia::render('Clients/View',[
@@ -164,10 +171,13 @@ class ClientsController extends Controller
             'first_name' => $data->first_name ?? '',
             'last_name' => $data->last_name ?? '',
             'email' => $data->email ?? '',
+            'secondary_email' => $data->secondary_email ?? '',
             'quantity' => $data->quantity ?? '',
             'phone' => $data->phone ?? '',
+            'secondary_phone' => $data->secondary_phone ?? '',
+            'invoice_number'    => $data->invoice_number ?? '',
+            'amount'    => $data->amount ?? 0,
             'address' => $data->address ?? '',
-            'file' => $data->file ? asset('storage/'.$data->file) : null,
             'device_id' => $data->devices->select('id','device_id')->toArray(),
         ];
 
@@ -232,7 +242,11 @@ class ClientsController extends Controller
             $customer->first_name = $request->input("first_name");
             $customer->last_name = $request->input("last_name");
             $customer->email = $request->input("email");
+            $customer->secondary_email = $request->input("secondary_email");
             $customer->phone  = $request->input("phone");
+            $customer->secondary_phone = $request->input("secondary_phone");
+            $customer->invoice_number = $request->input("invoice_number");
+            $customer->amount   = $request->input("amount");
             $customer->address  = $request->input("address");
             $customer->quantity  = $request->input("quantity") ?? '0';
             $customer->save(); // Save the updated customer
