@@ -10,15 +10,6 @@ use App\Http\Controllers\Controller;
 
 class DashboardController extends Controller
 {
-    public function monitorDevice() {
-        $user = Auth::user();
-        if ($user->role === 'user') {
-            return Inertia::render('Dashboard', [
-                'role' => Auth::user()->role,  // Make sure 'role' is a field in the User model
-            ]);
-        }
-    }
-
     public function getDashboardData()
     {
 

@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 
+use App\Http\Controllers\User\MonitorController;
 use App\Http\Controllers\Admin\ClientsController;
 use App\Http\Controllers\Admin\DeviceController;
 use App\Http\Controllers\Admin\ManageDocumentsController;
@@ -50,9 +51,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ]);
         }
     })->name('dashboard');
-
-    Route::get('/dashboard/monitor/{device_id}', [DashboardController::class, 'monitorDevice'])->name('monitor-device');
-
 });
 
 
@@ -120,6 +118,12 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::group(['prefix' => 'billing'], function () {
         Route::get('/', [BillingController::class, 'index'])->name('billing');
     });
+
+    # Monitor
+    Route::group(['prefix' => 'monitor'], function () {
+        Route::get('/{device_id}', [MonitorController::class, 'index'])->name('monitor');
+    });
+
 });
 
 
