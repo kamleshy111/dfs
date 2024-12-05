@@ -44,7 +44,7 @@ onMounted(() => {
         <p class="d-none d-md-block">Today is {{ currentDate }}</p>
       </div>
       <div class="d-flex align-items-center w-50 justify-content-end">
-        <div class="position-relative mr-4 search-desktop">
+        <!-- <div class="position-relative mr-4 search-desktop">
           <input
             type="text"
             class="form-control mr-3 search-header"
@@ -52,7 +52,7 @@ onMounted(() => {
             style="max-width: 300px"
           />
           <span class="search-icon-header"><i class="bi bi-search"></i></span>
-        </div>
+        </div> -->
       <div class="icon-profile">
         <div class="dropdown">
           <button class="dropdown-toggle" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
