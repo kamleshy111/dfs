@@ -31,8 +31,7 @@
                                 <div class="item-body flex-grow-1">
                                     <div>
                                         <h2 class="item-title">
-                                            <a target="_blank" :href="selectedInfoWindow.url">{{
-                                                selectedInfoWindow.device_name }}</a>
+                                            {{selectedInfoWindow.device_name }}
                                         </h2>
                                         <ul class="list-unstyled item-info">
                                             <li>Message: {{ selectedInfoWindow.message }}</li>
