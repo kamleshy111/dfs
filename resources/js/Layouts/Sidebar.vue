@@ -87,22 +87,25 @@ onMounted(() => {
                             </NavLink>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link collapsed" data-bs-toggle="collapse" data-bs-target="#devices-nav"
+                            <!-- <a class="nav-link collapsed" data-bs-toggle="collapse" data-bs-target="#devices-nav"
                                 href="#">
                                 <i class="bi bi-truck-front-fill mr-3"></i><span>Devices</span>
                                 <i class="bi bi-chevron-down chevron-icon ml-3"></i>
-                            </a>
+                            </a> -->
+                            <NavLink :href="route('monitor', 1)" :active="route().current('monitor')" class="nav-link">
+                                <i class="bi bi-truck-front-fill mr-3"></i>Devices
+                            </NavLink>
                             <ul id="devices-nav" class="nav-content collapse list-unstyled">
                                 <li v-for="device in userDevices" :key="device.id">
                                     <a href="#" class="nav-link">{{ device.deviceId }}</a>
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <NavLink :href="route('monitor', 1)" :active="route().current('monitor')" class="nav-link">
                                 <i class="bi bi-grid-fill mr-3"></i>Monitor
                             </NavLink>
-                        </li>
+                        </li> -->
 
                         <li class="nav-item">
                             <NavLink :href="route('billing')" :active="route().current('billing')" class="nav-link">

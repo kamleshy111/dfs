@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\MonitorController;
 use App\Http\Controllers\Api\BillingController;
 use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\AdminDashboardController;
 use App\Http\Controllers\Api\CustomerDeviceController;
 
 Route::get('/user', function (Request $request) {
@@ -24,3 +25,8 @@ Route::get('/get-devices', [DashboardController::class, 'getMapDevices'])->name(
 Route::get('/get-device-notifications', [MonitorController::class, 'getNotifications'])->name('get-device-notifications');
 
 Route::get('/get-billing-invoices', [BillingController::class, 'getBillingInvoices'])->name('get-device-notifications');
+Route::get('/get-devices-1', [MonitorController::class, 'getDevices'])->name('get-devices');
+
+## START: Admin Routes
+Route::get('/get-admin-stats', [AdminDashboardController::class, 'getAdminStats']);
+## END: Admin Routes

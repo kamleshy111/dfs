@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Device;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -62,6 +63,13 @@ class MonitorController extends Controller
 
         return response()->json([
             'device_notifications' => $devicesNotifications,
+        ]);
+    }
+
+    public function getDevices() {
+        $devices = Device::all();
+        return response()->json([
+            'devices' => $devices
         ]);
     }
 }
