@@ -48,7 +48,7 @@
                     </div>
                 </GoogleMap>
             </div>
-            <div class="footer-map">
+            <!-- <div class="footer-map">
                 <nav class="nav justify-content-center">
                     <a class="nav-link active" href="#">GPS</a>
                     <a class="nav-link" href="#">Safe Alarm</a>
@@ -61,7 +61,7 @@
                     <a class="nav-link" href="#">Media Files</a>
                     <a class="nav-link" href="#">System</a>
                 </nav>
-            </div>
+            </div> -->
         </div>
     </AuthenticatedLayout>
 </template>

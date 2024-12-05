@@ -9,7 +9,12 @@
                     <h4><i class="bi bi-bell-fill mr-2"></i>Notifications</h4>
                 </div>
 
-                <table class="table table-hover table-bordered mt-3">
+                <label for="devices">Device: </label>
+                <select name="devices" id="devices">
+                    <option v-for="d in device_select" :value="d.device_id" :key="d.device_id">{{d.device_id}}</option>
+                </select>
+
+                <DataTable class="display" :data="devices">
                     <thead class="thead-light">
                         <tr>
                             <th scope="col">S No</th>
@@ -21,21 +26,7 @@
                             <th scope="col">Address</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr v-for="device in devices" :key="device.id">
-                            <td>{{'1'}}</td>
-                            <td>{{device.id}}</td>
-                            <td>{{device.coordinates}}</td>
-                            <td>{{device.location}}</td>
-                            <td>{{device.status}}</td>
-                            <td><img width="50px" height="50px" :src="device.capture" @click="openImage(device.capture)" /></td>
-                            <td>{{device.address}}</td>
-                        </tr>
-                        <tr v-if="devices.length < 0">
-                            <td colspan="7" class="text-center">All Good!</td>
-                        </tr>
-                    </tbody>
-                </table>
+                </DataTable>
             </div>
         </div>
     </AuthenticatedLayout>
@@ -47,13 +38,34 @@ import { Head } from "@inertiajs/vue3";
 // import 'vue3-toastify/dist/index.css';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 
-var devices = ref('');
+import DataTable from 'datatables.net-vue3';
+import DataTablesCore from 'datatables.net-dt';
+DataTable.use(DataTablesCore);
 
+var devices = ref('');
+var device_select = ref([]);
 onMounted(() => {
+    getDevices();
+
     axios.get(import.meta.env.VITE_AJAX_URL + 'get-device-notifications')
         .then(response => {
             if (response.status == 200) {
-                devices.value = response.data.device_notifications;
+                let data = [];
+                let index = 1
+
+                for( let device of response.data.device_notifications ) {
+                    data.push([
+                        index,
+                        device.id,
+                        device.coordinates,
+                        device.location,
+                        device.status,
+                        `<img width="50px" height="50px" src="${device.capture}" onclick="window.open('${device.capture}', '_blank')" />`,
+                        device.address
+                    ]);
+                    index++;
+                }
+                devices.value = data;
             }
         })
         .catch(error => {
@@ -61,6 +73,19 @@ onMounted(() => {
         });
 });
 
-const openImage = (url) => window.open(url, '_blank');
-
+const getDevices = () => {
+    axios.get(import.meta.env.VITE_AJAX_URL + 'get-devices')
+        .then(response => {
+            if (response.status == 200) {
+                console.log(response.data.devices);
+                device_select.value = response.data.devices;
+            }
+        })
+        .catch(error => {
+            console.error("There was an error fetching the user devices:", error);
+        });
+}
 </script>
+<style>
+@import 'datatables.net-dt';
+</style>
