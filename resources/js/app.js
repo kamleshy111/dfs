@@ -7,6 +7,9 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
+
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 createInertiaApp({
@@ -14,15 +17,27 @@ createInertiaApp({
     resolve: (name) =>
         resolvePageComponent(
             `./Pages/${name}.vue`,
-            import.meta.glob('./Pages/**/*.vue'),
+            import.meta.glob('./Pages/**/*.vue')
         ),
     setup({ el, App, props, plugin }) {
-        return createApp({ render: () => h(App, props) })
-            .use(plugin)
-            .use(ZiggyVue)
-            .mount(el);
+        // Create the Vue app
+        const vueApp = createApp({ render: () => h(App, props) });
+
+        // Register the Inertia.js plugin
+        vueApp.use(plugin);
+
+        // Register the ZiggyVue plugin for route generation
+        vueApp.use(ZiggyVue);
+
+        // Register VueDatePicker globally
+        vueApp.component('VueDatePicker', VueDatePicker);
+
+        // Mount the app
+        vueApp.mount(el);
+
+        return vueApp; // Return the app instance if further extensions are needed
     },
     progress: {
-        color: '#4B5563',
+        color: '#4B5563', // Configure progress bar color
     },
 });

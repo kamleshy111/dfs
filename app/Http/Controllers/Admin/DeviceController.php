@@ -10,6 +10,7 @@ use Inertia\Inertia;
 use App\Models\Device;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\DevicesImport;
+use Carbon\Carbon;
 
 
 
@@ -46,14 +47,13 @@ class DeviceController extends Controller
     }
 
     public function store(Request $request){
-
+      
         $validated = $request->validate([
             'deviceId' => 'required|string|max:255|unique:devices,device_id',
             'orderId' => 'required|numeric',
-            'purchaseDate' => 'required|date',
+            'purchaseDate' => 'required',
         ], [
             'deviceId.unique' => 'The device ID must be unique. Please choose a different ID.',
-            'deviceId.required' => 'Device ID is required.',
             'orderId.required' => 'Order ID is required.',
             'purchaseDate.required' => 'Purchase Date is required.',
         ]);
@@ -71,12 +71,16 @@ class DeviceController extends Controller
             $imageUrl = Storage::url($path);
         }    
        
+        $date_string = $request->input('purchaseDate');
+        $date_string = preg_replace('/\s\([^)]+\)$/', '', $date_string);
+        $formatted_date = Carbon::parse($date_string)->format('Y-m-d H:i:s');
+
         // Create a new Device
         Device::create([
             'device_id' => $request->input('deviceId'),
             'order_id' => $request->input('orderId'),
             'company_name' => $request->input('companyName') ?? '',
-            'date_time' => $request->input('purchaseDate'),
+            'date_time' => $formatted_date,
             'invoice_photos' => $imageUrl,
         ]);
 
@@ -96,6 +100,8 @@ class DeviceController extends Controller
             'date_time' => $data->date_time ?? '--',
             'invoice_photos' => $data->invoice_photos ? asset($data->invoice_photos) : '',
         ];
+
+        dd($deviceDetails);
 
         return Inertia::render('Device/View',[
             'devices' => $deviceDetails,
@@ -138,12 +144,15 @@ class DeviceController extends Controller
             // Return validation errors as a JSON response
             return response()->json(["message" => $validated]);
         }
+        $date_string = $request->input('date_time');
+        $date_string = preg_replace('/\s\([^)]+\)$/', '', $date_string);
+        $formatted_date = Carbon::parse($date_string)->format('Y-m-d H:i:s');
 
         $device = Device::where('id',$id)->first();
         $device->device_id = $request->input("device_id");
         $device->order_id = $request->input("order_id");
         $device->company_name = $request->input("company_name");
-        $device->date_time  = $request->input("date_time");
+        $device->date_time  = $formatted_date;
         if($request->hasFile('invoice_photos')){
             $file = $request->file('invoice_photos');
             $path = $file->store('InvoicePhotos', 'public');

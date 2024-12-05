@@ -14,6 +14,7 @@ use App\Models\Customer;
 use App\Models\VehicleInstallationPhoto;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\VechicleImport;
+use Carbon\Carbon;
 
 
 class VehicleTypeController extends Controller
@@ -39,18 +40,19 @@ class VehicleTypeController extends Controller
     public function store(Request $request){
 
         $validated = $request->validate([
-            'vehicleRegisterNumber' => 'required',
             'customerId' => 'required',
-            'deviceId' =>  'required',
-            'imeiNumber' => 'required',
+            'vehicleType' => 'required',
+            'vehicleName' => 'required',
+            'vehicleRegisterNumber' => 'required',
             'simCardNumber' => 'required',
+            'imeiNumber' => 'required',
         ], [
-            'vehicleRegisterNumber' => 'Vehicle Register Number id required',
             'customerId.required' => 'Customer Name is required.',
-            'deviceId.required' => 'Device is required.',
-            'imeiNumber.required' => 'IMEI Number is required.',
+            'vehicleRegisterNumber' => 'Vehicle Register Number id required',
+            'vehicleType.required' => 'Vehicle Type is required.',
+            'vehicleName' => 'Vehicle Name is required.',
             'simCardNumber.required' => 'SIM Card Number is required.',
-  
+            'imeiNumber.required' => 'IMEI Number is required.',
         ]);
 
         if (!$validated) {
@@ -60,16 +62,16 @@ class VehicleTypeController extends Controller
         // Create a new Vehicle
         $vehicle = Vehicle::create([
             'customer_id' => $request->input('customerId'),
-            'device_id' => $request->input('deviceId'),
+            'device_id' => $request->input('deviceId') ?? 0,
             'vehicle_register_number' => $request->input('vehicleRegisterNumber'),
-            'vehicle_name' => $request->input('vehicleName'),
+            'vehicle_name' => $request->input('vehicleName') ?? '',
             'vehicle_type' => $request->input('vehicleType'),
             'imei_number' => $request->input('imeiNumber'),
             'sim_card_number' => $request->input('simCardNumber'),
-            'installation_date' => $request->input('installationDate'),
-            'start_date' => $request->input('startDate'),
-            'duration' => $request->input("duration"),
-            'sim_operator' => $request->input('simOperator'),
+            'installation_date' => $request->input('installationDate')  ? Carbon::parse($request->input('installationDate'))->toDateString() : null,
+            'start_date' => $request->input('startDate')  ? Carbon::parse($request->input('startDate'))->toDateString() : null,
+            'duration' => $request->input("duration") ?? '',
+            'sim_operator' => $request->input('simOperator') ?? '',
         ]);
 
         if($vehicle) {
@@ -99,8 +101,8 @@ class VehicleTypeController extends Controller
             'start_date' => $data->start_date ?? '--',
             'duration' => $data->duration ?? '--',
             'sim_operator' => $data->sim_operator ?? '--',
-            'first_name' => $data->first_name ?? '--',
-            'last_name' => $data->last_name ?? '--',
+            'first_name' => $data->first_name,
+            'last_name' => $data->last_name,
             'deviceName' => $data->deviceName ?? '--',
    
         ];
@@ -154,12 +156,18 @@ class VehicleTypeController extends Controller
 
         $validated = $request->validate([
             'customer_id' => 'required',
-            'device_id' => 'required',
+            'vehicle_type' => 'required',
+            'vehicle_name' => 'required',
             'vehicle_register_number' => 'required',
+            'sim_card_number' => 'required',
+            'imei_number' => 'required',
         ], [
             'customer_id.required' => 'Customer Name is required.',
-            'device_id.required' => 'Device is required.',
-            'vehicle_register_number.required' => 'Vehicle Register Number is required.',
+            'vehicle_register_number' => 'Vehicle Register Number id required',
+            'vehicle_type.required' => 'Vehicle Type is required.',
+            'vehicle_name' => 'Vehicle Name is required.',
+            'sim_card_number.required' => 'SIM Card Number is required.',
+            'imei_number.required' => 'IMEI Number is required.',
         ]);
 
         if (!$validated) {
@@ -172,16 +180,16 @@ class VehicleTypeController extends Controller
         if($vehicle) {
 
             $vehicle->customer_id = $request->input("customer_id");
-            $vehicle->device_id = $request->input("device_id");
+            $vehicle->device_id = $request->input("device_id") ?? 0;
             $vehicle->vehicle_register_number = $request->input('vehicle_register_number');
             $vehicle->vehicle_name = $request->input("vehicle_name");
             $vehicle->vehicle_type  = $request->input("vehicle_type");
             $vehicle->imei_number  = $request->input("imei_number");
             $vehicle->sim_card_number  = $request->input("sim_card_number");
-            $vehicle->installation_date  = $request->input("installation_date");
-            $vehicle->start_date  = $request->input("start_date");
-            $vehicle->duration  = $request->input("duration");
-            $vehicle->sim_operator  = $request->input("sim_operator");
+            $vehicle->installation_date  = $request->input("installation_date") ? Carbon::parse($request->input('installation_date'))->toDateString() : null;
+            $vehicle->start_date  = $request->input("start_date") ? Carbon::parse($request->input('start_date'))->toDateString() : null;
+            $vehicle->duration  = $request->input("duration") ?? '';
+            $vehicle->sim_operator  = $request->input("sim_operator") ?? '';
             $vehicle->save();
 
             // Redirect with success message

@@ -10,6 +10,9 @@ import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 import axios from 'axios';
 
+import Datepicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
+
 // Form state
 const form = ref({
   deviceId: '',
@@ -99,8 +102,7 @@ const submitForm = async () => {
               <label for="orderId" class="form-label">Order ID</label>
             </div>
             <div class="form-group col-md-6">
-              <input type="datetime-local" v-model="form.purchaseDate" class="form-control" id="purchaseDate"
-                placeholder="" />
+              <Datepicker v-model="form.purchaseDate" class="form-control" id="purchaseDate" placeholder="" />
               <label for="purchaseDate" class="form-label">Purchase Date</label>
             </div>
             <div class="form-group col-md-12">

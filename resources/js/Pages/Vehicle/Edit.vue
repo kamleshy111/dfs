@@ -10,6 +10,12 @@ import axios from 'axios';
 import Multiselect from "vue-multiselect";
 import { ref, onMounted } from "vue";
 
+import Datepicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
+
+// Date format to use in the Datepicker
+const dateFormat = "dd/MM/yyyy";
+
 // Access props
 const { customers, vehicleDetail } = usePage().props;
 
@@ -100,7 +106,7 @@ const submitForm = async () => {
                         <div class="form-group col-md-6">
                             <select class="form-control" v-model="form.customer_id" @change="onCustomerChange">
                                 <option value="" disabled>Select Customer Name</option>
-                                <option v-for="customer in customers" v-bind:value="customer.id" >{{ customer.first_name +' '+ customer.last_name }}</option>
+                                <option v-for="customer in customers" v-bind:value="customer.id" >{{ customer.first_name ? customer.first_name + ' ' + (customer.last_name ?? '') : '---' }}</option>
                             </select>
                             <label for="customerId" class="form-label">customers Name</label>
                         </div>
@@ -110,18 +116,6 @@ const submitForm = async () => {
                                 <option v-for="device in devices" v-bind:value="device.id" >{{ device.device_id }}</option>
                             </select>
                             <label for="device_id" class="form-label">Devices Name</label>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <input type="text" v-model="form.vehicle_register_number" class="form-control" id="vehicle_register_number"
-                                placeholder="" />
-                            <label for="vehicle_register_number" class="form-label">Vehicle Rregister Number</label>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <input type="text" v-model="form.vehicle_name" class="form-control" id="vehicle_name"
-                                placeholder="" />
-                            <label for="vehicle_name" class="form-label">Vehicle Name</label>
                         </div>
                     </div>
                     <div class="form-row">
@@ -137,10 +131,23 @@ const submitForm = async () => {
                             <label for="vehicle_type" class="form-label">Select Vehicle type</label>
                         </div>
                         <div class="form-group col-md-6">
-                            <input type="text" v-model="form.imei_number" class="form-control" id="imei_number"
+                            <input type="text" v-model="form.vehicle_name" class="form-control" id="vehicle_name"
                                 placeholder="" />
-                            <label for="imei_number" class="form-label">IMEI Number</label>
+                            <label for="vehicle_name" class="form-label">Vehicle Name</label>
                         </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <input type="text" v-model="form.vehicle_register_number" class="form-control" id="vehicle_register_number"
+                                placeholder="" />
+                            <label for="vehicle_register_number" class="form-label">Vehicle Rregister Number</label>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <input type="text" v-model="form.sim_operator" class="form-control" id="sim_operator"
+                                placeholder="" />
+                            <label for="sim_operator" class="form-label">SIM Operator</label>
+                        </div>
+
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
@@ -149,28 +156,26 @@ const submitForm = async () => {
                             <label for="sim_card_number" class="form-label">SIM Card Number</label>
                         </div>
                         <div class="form-group col-md-6">
-                            <input type="date" v-model="form.installation_date" class="form-control" id="installation_date"
+                            <input type="text" v-model="form.imei_number" class="form-control" id="imei_number"
                                 placeholder="" />
-                            <label for="installation_date" class="form-label">Installation Date</label>
+                            <label for="imei_number" class="form-label">IMEI Number</label>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <input type="date" v-model="form.start_date" class="form-control" id="start_date"
-                                placeholder="" />
-                            <label for="start_date" class="form-label">Start Date</label>
+                            <Datepicker v-model="form.installation_date" class="form-control" id="installation_date" :format="dateFormat" placeholder="" />
+                            <label for="installation_date" class="form-label">Installation Date</label>
                         </div>
                         <div class="form-group col-md-6">
-                            <input type="text" v-model="form.duration" class="form-control" id="duration"
-                                placeholder="" />
-                            <label for="duration" class="form-label">Duration</label>
+                            <Datepicker v-model="form.start_date" class="form-control" id="start_date" :format="dateFormat" placeholder="" />
+                            <label for="start_date" class="form-label">Start Date</label>
                         </div>
                     </div>
                     <div class="form-row"> 
                         <div class="form-group col-md-6">
-                            <input type="text" v-model="form.sim_operator" class="form-control" id="sim_operator"
+                            <input type="number" v-model="form.duration" class="form-control" id="duration"
                                 placeholder="" />
-                            <label for="sim_operator" class="form-label">SIM Operator</label>
+                            <label for="duration" class="form-label">Duration</label>
                         </div>
 
                     </div>

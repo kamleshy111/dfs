@@ -62,7 +62,7 @@ onMounted(() => {
                                 <i class="bi bi-truck-front-fill mr-3"></i>Vehicle Type
                             </NavLink>
                         </li>
-                        <li class="nav-item"><a class="nav-link" href="#"><i
+                        <!-- <li class="nav-item"><a class="nav-link" href="#"><i
                                     class="bi bi-credit-card-fill mr-3"></i>Payments</a>
                         </li>
                         <li class="nav-item"><a class="nav-link" href="#"><i
@@ -70,7 +70,7 @@ onMounted(() => {
                         </li>
                         <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-star-fill mr-3"></i>Review &
                                 Rating</a>
-                        </li>
+                        </li> -->
                         <li class="nav-item">
                             <ResponsiveNavLink :href="route('logout')" method="post" as="button" class="nav-link">
                                 <i class="bi bi-box-arrow-left mr-3"></i>
