@@ -21,4 +21,4 @@ Route::get('/get-devices', [DashboardController::class, 'getMapDevices'])->name(
 Route::get('/get-device-notifications', [MonitorController::class, 'getNotifications'])->name('get-device-notifications');
 
 Route::get('/get-billing-invoices', [BillingController::class, 'getBillingInvoices'])->name('get-device-notifications');
-Route::get('/get-devices', [MonitorController::class, 'getDevices'])->name('get-devices');
+Route::get('/get-devices-1', [MonitorController::class, 'getDevices'])->name('get-devices');

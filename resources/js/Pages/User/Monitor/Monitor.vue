@@ -74,7 +74,7 @@ onMounted(() => {
 });
 
 const getDevices = () => {
-    axios.get(import.meta.env.VITE_AJAX_URL + 'get-devices')
+    axios.get(import.meta.env.VITE_AJAX_URL + 'get-devices-1')
         .then(response => {
             if (response.status == 200) {
                 console.log(response.data.devices);
