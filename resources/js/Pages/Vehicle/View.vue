@@ -39,7 +39,7 @@ const goBack = () => {
               <p class="mt-2">Start Date: {{ props.Vehicles.start_date }}</p>
               <p class="mt-2">Duration: {{ props.Vehicles.duration }}</p>
               <p class="mt-2">SIM Operator: {{ props.Vehicles.sim_operator }}</p>
-              <p class="mt-2">Customer Name: {{ props.Vehicles.first_name +' '+ props.Vehicles.last_name}}</p>
+              <p class="mt-2">Customer Name: {{ props.Vehicles.first_name ? props.Vehicles.first_name + ' ' + (props.Vehicles.last_name ?? '') : '---' }}</p>
               <p class="mt-2">Device Name: {{ props.Vehicles.deviceName }}</p>
 
             </div>
