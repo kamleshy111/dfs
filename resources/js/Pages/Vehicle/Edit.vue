@@ -8,10 +8,10 @@ import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 import axios from 'axios';
 import Multiselect from "vue-multiselect";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 
 // Access props
-const { customers, devices, vehicleDetail } = usePage().props;
+const { customers, vehicleDetail } = usePage().props;
 
 const form = ref({
     customer_id: vehicleDetail.customer_id || 0,
@@ -28,6 +28,43 @@ const form = ref({
     
 
 });
+
+// Devices list
+const devices = ref([]);
+
+// Fetch devices when the component is mounted or when customer_id changes
+onMounted(() => {
+  if (vehicleDetail.customer_id) {
+    fetchDevices(vehicleDetail.customer_id);
+  }
+});
+
+const fetchDevices = async (customerId) => {
+  try {
+    const response = await axios.get(`/api/customers/${customerId}/devices`);
+    devices.value = response.data.devices;
+    console.log("Devices fetched:", devices.value);
+  } catch (error) {
+    console.error("Error fetching devices:", error);
+    toast.error("Failed to fetch devices. Please try again.");
+  }
+};
+
+// Method to handle change event
+const onCustomerChange = async () => {
+  if (form.value.customer_id) {
+    try {
+      const response = await axios.get(`/api/customers/${form.value.customer_id}/devices`);
+      devices.value = response.data.devices;
+      console.log("Devices fetched:", devices.value);
+    } catch (error) {
+      console.error("Error fetching devices:", error);
+      toast.error("Failed to fetch devices. Please try again.");
+    }
+  } else {
+    devices.value = [];
+  }
+};
 
 // go to back
 const goBack = () => {
@@ -61,7 +98,7 @@ const submitForm = async () => {
                 <form @submit.prevent="submitForm">
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <select class="form-control" v-model="form.customer_id">
+                            <select class="form-control" v-model="form.customer_id" @change="onCustomerChange">
                                 <option value="" disabled>Select Customer Name</option>
                                 <option v-for="customer in customers" v-bind:value="customer.id" >{{ customer.first_name +' '+ customer.last_name }}</option>
                             </select>

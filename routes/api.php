@@ -13,4 +13,7 @@ Route::get('/dashboard', [DashboardController::class, 'getDashboardData'])->name
 
 Route::get('/customer-devices', [CustomerDeviceController::class, 'getDevices']);
 
+Route::get('/customers/{customer}/devices', [CustomerDeviceController::class, 'getDevicesByCustomer']);
+
+Route::post('/addInstalltionPhoto', [CustomerDeviceController::class, 'addInstalltionPhoto']);
 

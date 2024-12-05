@@ -11,7 +11,7 @@ use App\Models\Vehicle;
 use App\Models\CustomerDevice;
 use App\Models\VehicleDevice;
 use App\Models\Customer;
-use App\Models\Device;
+use App\Models\VehicleInstallationPhoto;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\VechicleImport;
 
@@ -29,23 +29,9 @@ class VehicleTypeController extends Controller
     }
 
     public function create(){
-        // $userId = Auth::user()->id;
 
-        // $customerId = Customer::where('user_id', $userId)->pluck('id')->first();
-
-        // $assignedCustomerDevices = CustomerDevice::where('customer_id', $customerId)->pluck('device_id')->toArray(); 
-        
-        // $assignedVehicleDevices = VehicleDevice::pluck('device_id')->toArray(); 
-
-        // $devices = Device::whereIn('id', $assignedCustomerDevices)
-        //                 ->whereNotIn('id', $assignedVehicleDevices)
-        //                 ->select('id as device_id', 'device_id as device_name') 
-        //                 ->get();
-
-        $devices = Device::select('id as device_id', 'device_id as device_name')->get(); 
         $customers = Customer::all();
         return Inertia::render('Vehicle/Create',[
-            'devices' => $devices,
             'customers' => $customers,
         ]);
     }
@@ -124,10 +110,19 @@ class VehicleTypeController extends Controller
         ]);
     }
 
+    public function photos($id){
+
+        $vehicleInstalltionPhotos = VehicleInstallationPhoto::where('vehicle_id', $id)->get();
+
+        return Inertia::render('Vehicle/InstalltionPhoto',[
+            'vehicleInstalltionPhotos' => $vehicleInstalltionPhotos,
+            'vehicleId' => $id,
+        ]);
+    }
+
     public function edit($id) {
 
         $customers = Customer::all();
-        $devices = Device::all();
         $data = Vehicle::find($id);
    
         if (!$data) {
@@ -149,28 +144,7 @@ class VehicleTypeController extends Controller
             'sim_operator' => $data->sim_operator ?? '',
         ];
 
-
-        // $userId = Auth::user()->id;
-        // $customerId = Customer::where('user_id', $userId)->pluck('id')->first();
-
-        // $assignedCustomerDevices = CustomerDevice::where('customer_id', $customerId)->pluck('device_id')->toArray(); 
-       
-        // $useVehicleDevice = VehicleDevice::where('vehicle_id', $id)->pluck('device_id')->toArray(); 
-
-        // $assignedVehicleDevices = VehicleDevice::pluck('device_id')->toArray(); 
-
-        // $devices = Device::whereIn('id', $assignedCustomerDevices)
-        //                 ->when($id, function ($query) use ($id, $assignedVehicleDevices, $useVehicleDevice) {
-        //                     return $query->where(function ($query) use ($assignedVehicleDevices, $useVehicleDevice) {
-        //                         $query->whereNotIn('id', $assignedVehicleDevices)
-        //                             ->orWhereIn('id', $useVehicleDevice);
-        //                     });
-        //                 })
-        //                 ->select('id', 'device_id')
-        //                 ->get();
-
         return Inertia::render('Vehicle/Edit',[
-            'devices' => $devices,
             'customers' => $customers,
             'vehicleDetail' => $vehicleDetail,
         ]);

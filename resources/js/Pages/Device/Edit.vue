@@ -90,7 +90,7 @@ const submitForm = async () => {
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <input type="text" v-model="form.device_id" class="form-control" id="device_id"
-                                placeholder="Enter Device ID" />
+                                placeholder="" />
                             <label for="device_id" class="form-label">Device ID</label>
                         </div>
                         <div class="form-group col-md-6">
@@ -99,7 +99,7 @@ const submitForm = async () => {
                                 v-model="form.company_name"
                                 class="form-control"
                                 id="company_name"
-                                placeholder="Enter Company Name"
+                                placeholder=""
                             />
                             <label for="company_name" class="form-label">Company Name</label>
                         </div>
@@ -111,7 +111,7 @@ const submitForm = async () => {
                                 v-model="form.order_id"
                                 class="form-control"
                                 id="order_id"
-                                placeholder="Enter Order ID"
+                                placeholder=""
                             />
                             <label for="order_id" class="form-label">Order ID</label>
                         </div>

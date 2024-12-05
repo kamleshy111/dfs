@@ -45,10 +45,10 @@ const deleteVehicle = async (id) => {
           <thead class="thead-light">
             <tr>
               <th scope="col">S No</th>
+              <th scope="col">Customers Name</th>
               <th scope="col">Vehicle Register Number</th>
               <th scope="col">Vehicle Name</th>
               <th scope="col">Vehicle Type</th>
-              <th scope="col">IMEI Number</th>
               <th scope="col">Installation Date</th>
               <th scope="col">Action</th>
             </tr>
@@ -59,11 +59,10 @@ const deleteVehicle = async (id) => {
             </tr>
             <tr v-for="(vehicle, index) in vehicles.data" :key="vehicle.id">
               <td>{{ index + 1 }}</td>
+              <td>{{ vehicle.first_name+ ' '+vehicle.last_name }}</td>
               <td>{{ vehicle.vehicle_register_number }}</td>
               <td>{{ vehicle.vehicle_name }}</td>
               <td>{{ vehicle.vehicle_type }}</td>
-              
-              <td>{{ vehicle.imei_number }}</td>
               <td>{{ vehicle.installation_date }}</td>
               <td>
 
@@ -74,6 +73,11 @@ const deleteVehicle = async (id) => {
 
                 <!-- Edit button -->
                 <button class="btn btn-warning text-white action-btn" @click="editVehicle(vehicle.id)">
+                  <i class="bi bi-pencil-fill"></i>
+                </button>
+
+                <!-- Installtion photos button -->
+                <button class="btn btn-warning text-white action-btn" @click="InstalltionPhotos(vehicle.id)">
                   <i class="bi bi-pencil-fill"></i>
                 </button>
 
@@ -142,6 +146,11 @@ export default {
     // Redirect to the view page
     viewDevice(id) {
       window.location.href = `/vehicle-type/${id}/view`;
+    },
+
+    // Installtion photos
+    InstalltionPhotos(id) {
+      window.location.href = `/vehicle-type/${id}/photos`;
     }
 
   }

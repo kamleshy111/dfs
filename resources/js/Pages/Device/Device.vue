@@ -48,6 +48,7 @@ const deleteDevice = async (id) =>  {
                         <th scope="col">S No</th>
                         <th scope="col">Device ID</th>
                         <th scope="col">Order ID</th>
+                        <th scope="col">Customers Name</th>
                         <th scope="col">Date &amp; Time</th>
                         <th scope="col">Action</th>
                     </tr>
@@ -60,7 +61,8 @@ const deleteDevice = async (id) =>  {
                         <td>{{ index + 1 }}</td>
                         <td>{{ device.device_id }}</td>
                         <td>{{ device.order_id }}</td>
-                        <td>{{ formatDate(device.date_time) }}</td>
+                        <td>{{ device.first_name ? device.first_name + ' ' + (device.last_name ?? '') : '---' }}</td>
+                        <td>{{ formatDate(device.date_time ) }}</td>
                         <td>
 
                         <!-- view button -->
@@ -208,7 +210,7 @@ export default {
     },
 
     formatDate(value) {
-      if (!value) return '';
+      if (!value) return '---';
       
       // Create a new Date object from the ISO 8601 string
       const date = new Date(value);

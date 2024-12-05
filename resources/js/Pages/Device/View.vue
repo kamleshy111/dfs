@@ -29,6 +29,7 @@ const goBack = () => {
                 <p class="mt-2">Order Id: {{ props.devices.order_id }}</p>
                 <p class="mt-2">Company Name: {{ props.devices.company_name }}</p>
                 <p class="mt-2">Date : {{ props.devices.date_time }}</p>
+                <p  class="mt-2"><strong>invoice_photos:</strong><img width="150" class="p-4" :src="props.devices.invoice_photos" alt="Invoice photos"></p>
                 </div>
             </div>
         </div>

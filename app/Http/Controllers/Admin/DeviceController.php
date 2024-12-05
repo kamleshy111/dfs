@@ -17,7 +17,15 @@ class DeviceController extends Controller
 {
     public function index(){
 
-        $devices = Device::paginate(10);
+        // $devices = Device::paginate(10);
+
+
+        $devices = Device::select('devices.id', 'devices.device_id', 'devices.order_id', 'devices.date_time', 'customers.first_name', 'customers.last_name')
+        ->leftJoin('customer_devices','devices.id', '=', 'customer_devices.device_id')
+        ->leftjoin('customers','customer_devices.customer_id', '=', 'customers.id')
+        ->paginate(10);
+
+
         return Inertia::render('Device/Device',[
             'user' => Auth::user(),
             'devices' => $devices,
@@ -86,6 +94,7 @@ class DeviceController extends Controller
             'order_id' => $data->order_id ?? 0,
             'company_name' => $data->company_name ?? '--',
             'date_time' => $data->date_time ?? '--',
+            'invoice_photos' => $data->invoice_photos ? asset($data->invoice_photos) : '',
         ];
 
         return Inertia::render('Device/View',[
