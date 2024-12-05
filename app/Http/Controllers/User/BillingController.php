@@ -11,15 +11,6 @@ use App\Models\Customer;
 class BillingController extends Controller
 {
     public function index(){
-
-        $userId = Auth::user()->id;
-
-        $customer = Customer::where('user_id', $userId)->select('id')->first();
-
-        if($customer){
-            return Inertia::render('User/Billing/Billing');
-        }
-        
-        return redirect()->back();
+        return Inertia::render('User/Billing/Billing');
     }
 }

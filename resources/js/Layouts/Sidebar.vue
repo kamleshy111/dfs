@@ -8,23 +8,23 @@ import axios from 'axios';
 
 // Props
 defineProps({
-  role: {
-    type: String,
-    required: true,
-  },
+    role: {
+        type: String,
+        required: true,
+    },
 });
 
 
 const showingNavigationDropdown = ref(false);
-const userDevices   = ref([]);// Initialize as a reactive array
+const userDevices = ref([]);// Initialize as a reactive array
 
 // Fetch user devices when the component is mounted
 onMounted(() => {
     axios.get('/api/customer-devices')
         .then(response => {
             userDevices.value = response.data.userDevices;
-            console.log(userDevices);
-   
+            // console.log(userDevices);
+
         })
         .catch(error => {
             console.error("There was an error fetching the user devices:", error);
@@ -62,11 +62,14 @@ onMounted(() => {
                                 <i class="bi bi-truck-front-fill mr-3"></i>Vehicle Type
                             </NavLink>
                         </li>
-                        <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-credit-card-fill mr-3"></i>Payments</a>
+                        <li class="nav-item"><a class="nav-link" href="#"><i
+                                    class="bi bi-credit-card-fill mr-3"></i>Payments</a>
                         </li>
-                        <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-file-earmark-text-fill mr-3"></i>Manage Documents</a>
+                        <li class="nav-item"><a class="nav-link" href="#"><i
+                                    class="bi bi-file-earmark-text-fill mr-3"></i>Manage Documents</a>
                         </li>
-                        <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-star-fill mr-3"></i>Review & Rating</a>
+                        <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-star-fill mr-3"></i>Review &
+                                Rating</a>
                         </li>
                         <li class="nav-item">
                             <ResponsiveNavLink :href="route('logout')" method="post" as="button" class="nav-link">
@@ -84,7 +87,8 @@ onMounted(() => {
                             </NavLink>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link collapsed" data-bs-toggle="collapse" data-bs-target="#devices-nav" href="#">
+                            <a class="nav-link collapsed" data-bs-toggle="collapse" data-bs-target="#devices-nav"
+                                href="#">
                                 <i class="bi bi-truck-front-fill mr-3"></i><span>Devices</span>
                                 <i class="bi bi-chevron-down chevron-icon ml-3"></i>
                             </a>
@@ -95,16 +99,19 @@ onMounted(() => {
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#"><i class="bi bi-person-circle mr-3"></i>Monitor</a>
+                            <NavLink :href="route('monitor', 1)" :active="route().current('monitor')" class="nav-link">
+                                <i class="bi bi-grid-fill mr-3"></i>Monitor
+                            </NavLink>
                         </li>
+
                         <li class="nav-item">
                             <NavLink :href="route('billing')" :active="route().current('billing')" class="nav-link">
                                 <i class="bi bi-credit-card-fill mr-3"></i>Billing
                             </NavLink>
                         </li>
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <a class="nav-link" href="#"><i class="bi bi-pie-chart-fill mr-3"></i>Report</a>
-                        </li>
+                        </li> -->
                         <li class="nav-item">
                             <ResponsiveNavLink :href="route('logout')" method="post" as="button" class="nav-link">
                                 <i class="bi bi-box-arrow-left mr-3"></i>Log Out
