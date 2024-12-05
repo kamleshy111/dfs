@@ -26,9 +26,12 @@ const goBack = () => {
             <div class="profile-details mt-3 row">
                 <div class="col-md-6 col-12">
                 <h4 class="mt-2">Name: {{ props.customers.first_name }} {{ props.customers.last_name }}</h4>
-                <p class="mt-2">Email: {{ props.customers.email }}</p>
-                <p class="mt-2">Quantity: {{ props.customers.quantity }}</p>
-                <p class="mt-2">Mobile: {{ props.customers.phone }}</p>
+                <p class="mt-2">Primary Email: {{ props.customers.email }}</p>
+                <p class="mt-2">Secondary Email: {{ props.customers.secondary_email }}</p>
+                <p class="mt-2">Primary Mobile: {{ props.customers.phone }}</p>invoice_number
+                <p class="mt-2">Secondary Mobile: {{ props.customers.secondary_phone }}</p>
+                <p class="mt-2">Invoice Number: {{ props.customers.invoice_number }}</p>
+                <p class="mt-2">Amount: {{ props.customers.amount }}</p>
                 <p class="mt-2">Address: {{ props.customers.address }}</p>
                 </div>
             <div class="col-md-6 col-12">

@@ -78,7 +78,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::group(['prefix' => 'devices'], function () {
         Route::get('/', [DeviceController::class, 'index'])->name('devices');
         Route::get('/create', [DeviceController::class, 'create'])->name('devices.create');
-        Route::post('/store', [DeviceController::class, 'store'])->name('devices.store');
+        Route::post('/upload-device', [DeviceController::class, 'uploadDevice'])->name('devices.upload-device');
+        Route::post('/store',[DeviceController::class, 'store'])->name('devices.store');
         Route::get('/{id}/view', [DeviceController::class, 'view'])->name('devices.view');
         Route::get('/{id}/edit', [DeviceController::class, 'edit'])->name('devices.edit');
         Route::post('/update/{id}', [DeviceController::class, 'update'])->name('devices.update');
@@ -88,11 +89,11 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     //VehicleType Routes
     Route::group(['prefix' => 'vehicle-type'], function () {
         Route::get('/', [VehicleTypeController::class, 'index'])->name('vehicle-type');
-        Route::post('/upload-vehicle', [VehicleTypeController::class, 'uploadVehicle'])->name('vehicle-type.uploadVehicle');
         Route::get('/create', [VehicleTypeController::class, 'create'])->name('vehicle-type.create');
         Route::post('/store', [VehicleTypeController::class, 'store'])->name('vehicle-type.store');
         Route::get('/{id}/view', [VehicleTypeController::class, 'view'])->name('vehicle-type.view');
-        Route::get('/{id}/edit', [VehicleTypeController::class, 'edit'])->name('vehicle-type.edit');
+        Route::get('/{id}/photos', [VehicleTypeController::class, 'photos'])->name('vehicle-type.photos');
+        Route::get('/{id}/edit',[VehicleTypeController::class, 'edit'])->name('vehicle-type.edit');
         Route::post('/update/{id}', [VehicleTypeController::class, 'update'])->name('vehicle-type.update');
         Route::delete('/destroy/{id}', [VehicleTypeController::class, 'destroy'])->name('vehicle-type.destroy');
     });

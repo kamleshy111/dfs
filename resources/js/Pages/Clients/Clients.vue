@@ -49,6 +49,7 @@ const deleteCustomer = async (id) =>  {
                   <th scope="col">S No</th>
                   <th scope="col">Name</th>
                   <th scope="col">Mobile Number</th>
+                  <th scope="col">Email</th>
                   <th scope="col">Date & Time</th>
                   <th scope="col">Action</th>
                 </tr>
@@ -57,8 +58,9 @@ const deleteCustomer = async (id) =>  {
                 
                 <tr v-for="(customer, index) in customers.data" :key="customer.id">
                   <td>{{ index + 1 }}</td>
-                  <td>{{ customer.first_name }}</td>
+                  <td>{{ customer.first_name + ' ' + customer.last_name  }}</td>
                   <td>{{ customer.phone }}</td>
+                  <td>{{ customer.email }}</td>
                   <td>{{ formatDate(customer.created_at) }}</td>
                   <td>
                     <!-- view button -->
