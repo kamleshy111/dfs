@@ -101,7 +101,6 @@ class DeviceController extends Controller
             'invoice_photos' => $data->invoice_photos ? asset($data->invoice_photos) : '',
         ];
 
-        dd($deviceDetails);
 
         return Inertia::render('Device/View',[
             'devices' => $deviceDetails,
