@@ -14,9 +14,7 @@ class AdminDashboardController extends Controller
     public function getAdminStats() {
         $customers = Customer::select('amount')->get();
         $devices = Device::select('status', 'date_time')->get();
-
         $device_sold_by_month = DB::table('devices')->selectRaw('MONTH(date_time) as month, COUNT(*) as total')->groupByRaw('MONTH(date_time)')->orderByRaw('MONTH(date_time)')->get();
-        // dd($data);
 
         $customers_amount = $customers->sum('amount');
         $customer_count = $customers->count();
