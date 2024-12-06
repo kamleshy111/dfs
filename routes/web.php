@@ -93,6 +93,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::post('/store', [VehicleTypeController::class, 'store'])->name('vehicle-type.store');
         Route::get('/{id}/view', [VehicleTypeController::class, 'view'])->name('vehicle-type.view');
         Route::get('/{id}/photos', [VehicleTypeController::class, 'photos'])->name('vehicle-type.photos');
+        Route::post('/upload-installation-photo', [VehicleTypeController::class, 'uploadInstallationPhoto'])->name('upload-installation-photo ');
+        Route::delete('/delete-installation-photo/{id}', [VehicleTypeController::class, 'deleteInstallationPhoto'])->name('delete-installation-photo');
         Route::get('/{id}/edit',[VehicleTypeController::class, 'edit'])->name('vehicle-type.edit');
         Route::post('/update/{id}', [VehicleTypeController::class, 'update'])->name('vehicle-type.update');
         Route::delete('/destroy/{id}', [VehicleTypeController::class, 'destroy'])->name('vehicle-type.destroy');
