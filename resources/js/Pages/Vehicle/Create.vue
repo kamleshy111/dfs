@@ -28,6 +28,7 @@ const form = ref({
   installationDate: "",
   startDate: "",
   duration: "",
+  durationUnit: "",
   simOperator: "",
 });
 
@@ -77,6 +78,7 @@ const submitForm = async () => {
       installationDate: "",
       startDate: "",
       duration: "",
+      durationUnit: "",
       simOperator: "",
  
     };
@@ -181,13 +183,21 @@ const submitForm = async () => {
 
           </div>
           <div class="form-row">
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-3">
               <input type="number" v-model="form.duration" class="form-control" id="duration" placeholder="" />
               <label for="duration" class="form-label">Duration</label>
             </div>
+            <div class="form-group col-md-3">
+              <select v-model="form.durationUnit" class="form-control" id="durationUnit">
+                <option value="days">Days</option>
+                <option value="months">Months</option>
+                <option value="years">Years</option>
+              </select>
+              <label for="durationUnit" class="form-label">Unit</label>
+            </div>
           </div>
           <div class="col-md-3 col-12 p-0 mt-4">
-            <PrimaryButton class="btn save-btn-custom" style="font-size: 20px !important" >
+            <PrimaryButton class="btn save-btn-custom">
               Save vehicle
             </PrimaryButton>
           </div>

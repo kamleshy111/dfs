@@ -31,6 +31,11 @@ const form = ref({
 const file = ref(null);
 const fileName = ref("");
 
+// Watch for device selection changes
+const watchDeviceSelection = () => {
+  form.value.quantity = form.value.device_id.length; // Set quantity based on selected devices count
+};
+
 //File Upload Handlers
 const handleFileUpload = (event) => {
   const uploadedFile = event.target.files[0];
@@ -242,6 +247,7 @@ const submitForm = async () => {
               label="device_id"
               placeholder="Select devices"
               class="form-control"
+              @update:model-value="watchDeviceSelection"
           />
         </div>
         <div class="form-group col-md-6">
