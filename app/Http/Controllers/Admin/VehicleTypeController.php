@@ -12,6 +12,7 @@ use App\Models\CustomerDevice;
 use App\Models\VehicleDevice;
 use App\Models\Customer;
 use App\Models\VehicleInstallationPhoto;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\VechicleImport;
 use Carbon\Carbon;
@@ -114,12 +115,39 @@ class VehicleTypeController extends Controller
 
     public function photos($id){
 
-        $vehicleInstalltionPhotos = VehicleInstallationPhoto::where('vehicle_id', $id)->get();
+        $data = VehicleInstallationPhoto::where('vehicle_id', $id)->get();
+
+        $vehicleInstalltionPhotos = $data->map(function($item) {
+            return [
+                'id' => $item->id ?? 0,
+                'vehicle_id' => $item->vehicle_id ?? 0,
+                'photo_path' => $item->photo_path ? asset($item->photo_path) : '',
+            ];
+        });
+
 
         return Inertia::render('Vehicle/InstalltionPhoto',[
             'vehicleInstalltionPhotos' => $vehicleInstalltionPhotos,
             'vehicleId' => $id,
         ]);
+    }
+
+    public function uploadInstallationPhoto(Request $request){
+
+        // Handle file upload
+        $imageUrl = null;
+        if($request->hasFile('photo')){
+            $file = $request->file('photo');
+            $path = $file->store('vehicle_installation_photo', 'public');
+            $imageUrl = Storage::url($path);
+        }
+
+        VehicleInstallationPhoto::create([
+            'vehicle_id' => $request->vehicle_id,
+            'photo_path' => $imageUrl,
+        ]);
+
+        return response()->json(['message' => 'Vehicle Installation Photo added successfully!']);
     }
 
     public function edit($id) {
@@ -198,6 +226,17 @@ class VehicleTypeController extends Controller
         } else{
 
             return response()->json(['error' => 'An error occurred while deleting the Vehicle..']);
+        }
+    }
+
+    public function deleteInstallationPhoto($id){
+
+        $photo = VehicleInstallationPhoto::findOrFail($id);
+        if($photo){
+            $photo->delete();
+            return response()->json(["message" => 'Vehic leInstallation Photo deleted successfully.']);
+        }else{
+            return response()->json(["message" => 'An error occurred while deleting the Vehicle..']);
         }
     }
 
