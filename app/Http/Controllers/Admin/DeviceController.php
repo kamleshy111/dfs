@@ -114,7 +114,7 @@ class DeviceController extends Controller
                 $formattedExpirationDate = $expirationDate->format('d-m-Y'); 
             }
 
-            if($data->duration_unit == 'yers'){
+            if($data->duration_unit == 'years'){
                 $startDate = Carbon::parse($data->start_date);
                 $duration = (int) $data->duration;
                 $expirationDate = $startDate->addYears($duration);
