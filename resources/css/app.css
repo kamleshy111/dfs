@@ -923,7 +923,11 @@ p.active-device {
 #duration_unit {
     width: 100%;
 }
-@media screen and (min-width: 768px) and (max-width: 1366px) {
+.selected_class {
+    width: 50%;
+    text-align: end;
+}
+@media screen and (min-width: 768px) and (max-width: 991px) {
 
     .header {
         width: 100%;
@@ -931,6 +935,14 @@ p.active-device {
     }
     .sidebar{
         display: none;
+    }
+    .toggle-btn {
+        display: block;
+    }
+    .right-box {
+        width: 100%;
+        margin: 0;
+        padding-right: 20px;
     }
     
     
