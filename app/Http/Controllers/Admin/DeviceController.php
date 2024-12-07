@@ -90,7 +90,7 @@ class DeviceController extends Controller
 
     public function view($id) {
 
-        $data = Device::select('devices.*', 'customers.first_name', 'customers.last_name', 'vehicles.vehicle_register_number', 'vehicles.vehicle_name', 'vehicles.vehicle_type', 'vehicles.imei_number',
+        $data = Device::select('devices.*', 'customers.first_name', 'customers.last_name', 'vehicles.vehicle_register_number', 'vehicles.vehicle_type', 'vehicles.imei_number',
                                 'vehicles.sim_card_number', 'vehicles.installation_date', 'vehicles.start_date', 'vehicles.duration', 'vehicles.duration_unit', 'vehicles.sim_operator')
                     ->leftJoin('customer_devices','devices.id', '=', 'customer_devices.device_id')
                     ->leftjoin('customers','customer_devices.customer_id', '=', 'customers.id')
@@ -132,7 +132,6 @@ class DeviceController extends Controller
             'customerFirstName' => $data->first_name ?? '',
             'customerLsatName' => $data->last_name ?? '',
             'vehicleRegisterNumber' => $data->vehicle_register_number ?? '',
-            'vehicleName' => $data->vehicle_name ?? '',
             'vehicleType' => $data->vehicle_type ?? '',
             'imeiNumber' => $data->imei_number ?? '',
             'simCardNumber' => $data->sim_card_number ?? '',
