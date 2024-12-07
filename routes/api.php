@@ -17,7 +17,6 @@ Route::get('/customer-devices', [CustomerDeviceController::class, 'getDevices'])
 
 Route::get('/customers/{customer}/devices', [CustomerDeviceController::class, 'getDevicesByCustomer']);
 
-Route::post('/addInstalltionPhoto', [CustomerDeviceController::class, 'addInstalltionPhoto']);
 # Role:User -> Devies
 Route::get('/get-devices', [DashboardController::class, 'getMapDevices'])->name('get-devices');
 

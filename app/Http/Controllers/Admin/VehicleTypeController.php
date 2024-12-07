@@ -40,6 +40,7 @@ class VehicleTypeController extends Controller
 
     public function store(Request $request){
 
+
         $validated = $request->validate([
             'customerId' => 'required',
             'vehicleType' => 'required',
@@ -47,6 +48,9 @@ class VehicleTypeController extends Controller
             'vehicleRegisterNumber' => 'required',
             'simCardNumber' => 'required',
             'imeiNumber' => 'required',
+            'duration' => 'required_with:durationUnit',
+            'durationUnit' => 'required_with:duration',
+           
         ], [
             'customerId.required' => 'Customer Name is required.',
             'vehicleRegisterNumber' => 'Vehicle Register Number id required',
@@ -54,6 +58,8 @@ class VehicleTypeController extends Controller
             'vehicleName' => 'Vehicle Name is required.',
             'simCardNumber.required' => 'SIM Card Number is required.',
             'imeiNumber.required' => 'IMEI Number is required.',
+            'duration.required' => 'durationUnit is required.',
+            'durationUnit.required' => 'duration is required.',
         ]);
 
         if (!$validated) {
@@ -72,6 +78,7 @@ class VehicleTypeController extends Controller
             'installation_date' => $request->input('installationDate')  ? Carbon::parse($request->input('installationDate'))->toDateString() : null,
             'start_date' => $request->input('startDate')  ? Carbon::parse($request->input('startDate'))->toDateString() : null,
             'duration' => $request->input("duration") ?? '',
+            'duration-unit' => $request->input("durationUnit") ?? '',
             'sim_operator' => $request->input('simOperator') ?? '',
         ]);
 
@@ -91,6 +98,42 @@ class VehicleTypeController extends Controller
                     ->where('vehicles.id', $id)
                     ->first();
 
+        $installationPhoto = VehicleInstallationPhoto::where('vehicle_id', $id)
+                            ->pluck('photo_path')
+                            ->map(function ($photoPath) {
+                                return asset($photoPath);
+                            });
+
+                    if($data->duration_unit == 'days'){
+                       $startDate =  Carbon::parse($data->start_date);
+                       $duration = (int) $data->duration;
+                       $expirationDate = $startDate->addDays($duration); 
+
+                       $formattedExpirationDate = $expirationDate->format('d-m-Y'); 
+                    }
+
+                    if($data->duration_unit == 'months'){
+                        $startDate = Carbon::parse($data->start_date);
+                        $duration = (int) $data->duration;
+                        $expirationDate = $startDate->addMonths($duration);
+
+                        $formattedExpirationDate = $expirationDate->format('d-m-Y'); 
+                    }
+
+                    if($data->duration_unit == 'yers'){
+                        $startDate = Carbon::parse($data->start_date);
+                        $duration = (int) $data->duration;
+                        $expirationDate = $startDate->addYears($duration);
+
+                        $formattedExpirationDate = $expirationDate->format('d-m-Y'); 
+                    }
+                   
+
+             $startDate =     Carbon::parse($data->start_date)->format('d-m-Y');
+
+               $installationDate =     Carbon::parse($data->installation_date)->format('d-m-Y');
+     
+
         $vehicleDetails = [
             'id' => $data->id ?? 0,
             'vehicle_register_number' => $data->vehicle_register_number ?? '--',
@@ -98,9 +141,10 @@ class VehicleTypeController extends Controller
             'vehicle_type' => $data->vehicle_type ?? '--',
             'imei_number' => $data->imei_number ?? '--',
             'sim_card_number' => $data->sim_card_number ?? '--',
-            'installation_date' => $data->installation_date ?? '',
-            'start_date' => $data->start_date ?? '--',
+            'installation_date' => $installationDate ?? '',
+            'start_date' => $startDate ?? '--',
             'duration' => $data->duration ?? '--',
+            'expirationDate' => $formattedExpirationDate ?? '--', 
             'sim_operator' => $data->sim_operator ?? '--',
             'first_name' => $data->first_name,
             'last_name' => $data->last_name,
@@ -110,6 +154,7 @@ class VehicleTypeController extends Controller
 
         return Inertia::render('Vehicle/View',[
             'Vehicles' => $vehicleDetails,
+            'installationPhotos' => $installationPhoto,
         ]);
     }
 
@@ -171,6 +216,7 @@ class VehicleTypeController extends Controller
             'installation_date' => $data->installation_date ?? '',
             'start_date' => $data->start_date ?? '',
             'duration' => $data->duration ?? '',
+            'duration_unit' => $data->duration_unit ?? '',
             'sim_operator' => $data->sim_operator ?? '',
         ];
 
@@ -189,6 +235,8 @@ class VehicleTypeController extends Controller
             'vehicle_register_number' => 'required',
             'sim_card_number' => 'required',
             'imei_number' => 'required',
+            'duration' => 'required_with:duration_unit',
+            'duration_unit' => 'required_with:duration',
         ], [
             'customer_id.required' => 'Customer Name is required.',
             'vehicle_register_number' => 'Vehicle Register Number id required',
@@ -196,6 +244,8 @@ class VehicleTypeController extends Controller
             'vehicle_name' => 'Vehicle Name is required.',
             'sim_card_number.required' => 'SIM Card Number is required.',
             'imei_number.required' => 'IMEI Number is required.',
+            'duration.required' => 'duration_unit is required.',
+            'duration_unit.required' => 'duration is required.',
         ]);
 
         if (!$validated) {
@@ -217,6 +267,7 @@ class VehicleTypeController extends Controller
             $vehicle->installation_date  = $request->input("installation_date") ? Carbon::parse($request->input('installation_date'))->toDateString() : null;
             $vehicle->start_date  = $request->input("start_date") ? Carbon::parse($request->input('start_date'))->toDateString() : null;
             $vehicle->duration  = $request->input("duration") ?? '';
+            $vehicle->duration_unit = $request->input("duration_unit") ?? '';
             $vehicle->sim_operator  = $request->input("sim_operator") ?? '';
             $vehicle->save();
 

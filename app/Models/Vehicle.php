@@ -8,7 +8,7 @@ class Vehicle extends Model
 {
     
     protected $fillable = ['customer_id', 'device_id', 'vehicle_register_number', 'vehicle_name', 'vehicle_type', 'imei_number',
-                             'sim_card_number', 'installation_date', 'start_date', 'duration', 'sim_operator', 'status' ];
+                             'sim_card_number', 'installation_date', 'start_date', 'duration', 'duration_unit', 'sim_operator', 'status' ];
 
     public function devices(){
 

@@ -6,6 +6,7 @@ import { Head } from "@inertiajs/vue3";
 
 const props = defineProps({
   Vehicles: Object,
+  installationPhotos: Array,
 });
 
 // go to back
@@ -37,12 +38,17 @@ const goBack = () => {
               <p class="mt-2">Installation Date: {{ props.Vehicles.installation_date }}</p>
 
               <p class="mt-2">Start Date: {{ props.Vehicles.start_date }}</p>
-              <p class="mt-2">Duration: {{ props.Vehicles.duration }}</p>
+              <p class="mt-2">Expiration Date: {{ props.Vehicles.expirationDate }}</p>
               <p class="mt-2">SIM Operator: {{ props.Vehicles.sim_operator }}</p>
               <p class="mt-2">Customer Name: {{ props.Vehicles.first_name ? props.Vehicles.first_name + ' ' + (props.Vehicles.last_name ?? '') : '---' }}</p>
               <p class="mt-2">Device Name: {{ props.Vehicles.deviceName }}</p>
-
             </div>
+            <div class="profile-details mt-3 px-3">
+              <div v-for="(photo, index) in installationPhotos" :key="index">
+                <img :src="photo" alt="Vehicle Installation Photo" />
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
