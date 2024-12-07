@@ -28,21 +28,17 @@ const goBack = () => {
                 <h4 class="mt-2">Name: {{ props.customers.first_name }} {{ props.customers.last_name }}</h4>
                 <p class="mt-2">Primary Email: {{ props.customers.email }}</p>
                 <p class="mt-2">Secondary Email: {{ props.customers.secondary_email }}</p>
-                <p class="mt-2">Primary Mobile: {{ props.customers.phone }}</p>invoice_number
+                <p class="mt-2">Primary Mobile: {{ props.customers.phone }}</p>
                 <p class="mt-2">Secondary Mobile: {{ props.customers.secondary_phone }}</p>
-                <p class="mt-2">Invoice Number: {{ props.customers.invoice_number }}</p>
-                <p class="mt-2">Amount: {{ props.customers.amount }}</p>
                 <p class="mt-2">Address: {{ props.customers.address }}</p>
                 </div>
             <div class="col-md-6 col-12">
-                <p class="mt-2">Devices:</p>
+                <p class="mt-2">Devices</p>
                 <ul class="mt-2">
-                    <!-- Loop through the devices and display their device IDs -->
-                    <li v-for="device in props.customers.devices" :key="device.id">
-                        <p>Device ID: {{ device.device_id }}</p>
-                        <p>Order ID: {{ device.order_id }}</p>
-                        <p>Company Name: {{ device.company_name }}</p><br>
-                    </li>
+                  <p class="mt-2">active Count: {{ props.customers.activeCount }}</p>
+                <p class="mt-2">InActive Count: {{ props.customers.inActiveCount }}</p>
+                <p class="mt-2">ExpiredCount: {{ props.customers.expiredCount }}</p>
+
                 </ul>
             </div>
             </div>

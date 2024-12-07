@@ -210,33 +210,6 @@ const submitForm = async () => {
           <label for="secondary_phone" class="form-label">Secondary Mobile Number</label>
         </div>
       </div>
-
-      <div class="form-row">
-        <div class="form-group col-md-6">
-          <TextInput
-            id="invoice_number"
-            type="text"
-            class="mt-1 block w-full form-control"
-            v-model="form.invoice_number"
-            autofocus
-            autocomplete="invoice_number"
-          />
-          <label for="invoice_number" class="form-label">Invoice Number</label>
-        </div>
-        <div class="form-group col-md-6">
-          <TextInput
-            id="amount"
-            type="number"
-            step="0.01"
-            class="mt-1 block w-full form-control"
-            v-model="form.amount"
-            autofocus
-            autocomplete="amount"
-          />
-          <label for="amount" class="form-label">Amount</label>
-        </div>
-      </div>
-
       <div class="form-row">
         <div class="form-group col-md-6">
           <Multiselect
@@ -249,37 +222,6 @@ const submitForm = async () => {
               class="form-control"
               @update:model-value="watchDeviceSelection"
           />
-        </div>
-        <div class="form-group col-md-6">
-          <div class="form-quantity">
-            <label class="form-label">Add Quantity</label>
-            <div class="input-group">
-              <div class="input-group-prepend">
-                <button
-                  class="btn btn-outline-secondary"
-                  type="button"
-                  @click="decrementQuantity"
-                >
-                  -
-                </button>
-              </div>
-              <input
-                type="text"
-                v-model="form.quantity"
-                class="form-control text-center"
-                readonly
-              />
-              <div class="input-group-append">
-                <button
-                  class="btn btn-outline-secondary"
-                  type="button"
-                  @click="incrementQuantity"
-                >
-                  +
-                </button>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 

@@ -100,10 +100,7 @@ class ClientsController extends Controller
             $customer->secondary_email = $request->input("secondary_email");
             $customer->phone  = $request->input("phone");
             $customer->secondary_phone = $request->input("secondary_phone");
-            $customer->invoice_number = $request->input("invoice_number");
-            $customer->amount = $request->input("amount");
             $customer->address  = $request->input("address");
-            $customer->quantity  = $request->input("quantity") ?? '0';
             $customer->save();
     
             $customerId = $customer->id;
@@ -136,7 +133,17 @@ class ClientsController extends Controller
 
     public function view($id) {
         
-        $data = Customer::with('devices')->find($id);
+        // $data = Customer::with('devices')->find($id);
+
+        $data = Customer::with(['devices' => function ($query) {
+            $query->select('status'); // Include only the status field for optimization
+        }])->find($id);
+        
+        // Count active and inactive devices
+        $inActiveCount = $data->devices->where('status', '0')->count();
+        $activeCount = $data->devices->where('status', '1')->count();
+        $expiredCount = $data->devices->where('status', '2')->count();
+
 
         $customerDetails = [
             'id' => $data->id ?? '0',
@@ -145,12 +152,12 @@ class ClientsController extends Controller
             'email' => $data->email ?? '--',
             'secondary_email' => $data->secondary_email ?? '--',
             'address' => $data->address ?? '--',
-            'quantity' => $data->quantity ?? '',
             'phone' => $data->phone ?? '--',
             'secondary_phone' => $data->secondary_phone ?? '--',
-            'invoice_number' => $data->invoice_number  ?? '',
-            'amount'    => $data->amount ?? 0.00,
             'devices' => $data->devices->toArray(),
+            'activeCount' => $activeCount,
+            'inActiveCount' => $inActiveCount,
+            'expiredCount'  => $expiredCount,
         ];
         return Inertia::render('Clients/View',[
             'customers' => $customerDetails,
@@ -172,11 +179,8 @@ class ClientsController extends Controller
             'last_name' => $data->last_name ?? '',
             'email' => $data->email ?? '',
             'secondary_email' => $data->secondary_email ?? '',
-            'quantity' => $data->quantity ?? '',
             'phone' => $data->phone ?? '',
             'secondary_phone' => $data->secondary_phone ?? '',
-            'invoice_number'    => $data->invoice_number ?? '',
-            'amount'    => $data->amount ?? 0,
             'address' => $data->address ?? '',
             'device_id' => $data->devices->select('id','device_id')->toArray(),
         ];
@@ -245,10 +249,7 @@ class ClientsController extends Controller
             $customer->secondary_email = $request->input("secondary_email");
             $customer->phone  = $request->input("phone");
             $customer->secondary_phone = $request->input("secondary_phone");
-            $customer->invoice_number = $request->input("invoice_number");
-            $customer->amount   = $request->input("amount");
             $customer->address  = $request->input("address");
-            $customer->quantity  = $request->input("quantity") ?? '0';
             $customer->save(); // Save the updated customer
     
             $customerId = $customer->id;
@@ -306,10 +307,6 @@ class ClientsController extends Controller
                 Customer::where('id', $id)->delete();
 
                 CustomerDevice::where('customer_id', $id)->delete();
-
-                $allVehicleId = Vehicle::where('customer_id', $id)->pluck('id')->toArray();
-
-                VehicleDevice::whereIn('vehicle_id', $allVehicleId)->delete();
 
                 Vehicle::where('customer_id', $id)->delete();
 
