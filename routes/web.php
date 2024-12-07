@@ -72,6 +72,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::post('/update/{id}', [ClientsController::class, 'update'])->name('clients.update');
 
         Route::delete('/destroy/{id}', [ClientsController::class, 'destroy'])->name('clients.destroy');
+
+        Route::get('/map', [ClientsController::class, 'viewMap'])->name('clients.map');
     });
 
     //Device Routes

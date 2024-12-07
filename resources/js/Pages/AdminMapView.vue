@@ -75,6 +75,7 @@ import { GoogleMap, AdvancedMarker, InfoWindow } from 'vue3-google-map';
 var locations = ref([]);
 let selectedInfoWindow = ref(null);
 const center = { lat: 23.60094962562435, lng: 79.36667068131638 };
+
 const apiKey = import.meta.env.VITE_GOOGLE_MAP_API_KEY;
 
 onMounted(() => {

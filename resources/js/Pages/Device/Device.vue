@@ -40,11 +40,17 @@ const deleteDevice = async (id) => {
                 <i class="bi bi-cloud-upload mr-2"></i>Add New devices file
               </button>
             </a>
-            <a :href="route('devices.create')">
+            <a class="mr-2" :href="route('devices.create')">
               <button class="btn btn-primary btn-custom">
                 <i class="bi bi-plus-circle-fill mr-2"></i>Add New Device
               </button>
             </a>
+            <a :href="route('clients.map')">
+              <button class="btn btn-primary btn-custom">
+                <i class="bi bi-geo-alt-fill mr-2"></i>View on Map
+              </button>
+            </a>
+
           </div>
         </div>
 
@@ -459,4 +465,4 @@ export default {
     padding: 8px;
   }
 }
-</style> 
+</style>
