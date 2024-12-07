@@ -2,24 +2,24 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
 import { Inertia } from "@inertiajs/inertia";
-import { toast } from 'vue3-toastify';
-import 'vue3-toastify/dist/index.css';
-import axios from 'axios';
-
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
+import axios from "axios";
 
 // Delete device
-const deleteDevice = async (id) =>  {
+const deleteDevice = async (id) => {
   try {
-      const response = await axios.delete(`devices/destroy/${id}`);
-          toast.success(response.data.message);
-            // Reload the page
-            setTimeout(function(){
-              window.location.reload();
-            }, 3000);
-    } catch (error) {
-      const errorMessage = error.response?.data?.message || 'An error occurred. Please try again.';
-      toast.error(errorMessage);
-    }
+    const response = await axios.delete(`devices/destroy/${id}`);
+    toast.success(response.data.message);
+    // Reload the page
+    setTimeout(function () {
+      window.location.reload();
+    }, 3000);
+  } catch (error) {
+    const errorMessage =
+      error.response?.data?.message || "An error occurred. Please try again.";
+    toast.error(errorMessage);
+  }
 };
 </script>
 
@@ -28,126 +28,160 @@ const deleteDevice = async (id) =>  {
 
   <AuthenticatedLayout>
     <div class="mt-5">
-        <div class="table-container">
-            <div class="d-flex justify-content-between align-items-center">
-                <h4><i class="bi bi-truck-front-fill mr-2"></i>All Devices</h4>
-                <div class="text-end">
-                  <a class="mr-2">
-                    <button class="btn btn-primary btn-custom" @click="showPopup = true"><i class="bi bi-cloud-upload mr-2"></i>Add New
-                      devices file</button>
-                  </a>
-                  <a :href="route('devices.create')">
-                      <button class="btn btn-primary btn-custom"><i class="bi bi-plus-circle-fill mr-2"></i>Add New Device</button>
-                  </a>
-                </div>  
-              </div>
-
-            <table class="table table-hover table-bordered mt-3">
-                <thead class="thead-light">
-                    <tr>
-                        <th scope="col">S No</th>
-                        <th scope="col">Device ID</th>
-                        <th scope="col">Order ID</th>
-                        <th scope="col">Customers Name</th>
-                        <th scope="col">Date &amp; Time</th>
-                        <th scope="col">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-if="devices.data.length === 0">
-                        <td colspan="6" class="text-center">No devices found.</td>
-                    </tr>
-                    <tr v-for="(device, index) in devices.data" :key="device.id">
-                        <td>{{ index + 1 }}</td>
-                        <td>{{ device.device_id }}</td>
-                        <td>{{ device.order_id }}</td>
-                        <td>{{ device.first_name ? device.first_name + ' ' + (device.last_name ?? '') : '---' }}</td>
-                        <td>{{ formatDate(device.date_time ) }}</td>
-                        <td>
-
-                        <!-- view button -->
-                        <button class="btn btn-light action-btn" @click="viewDevice(device.id)">
-                        <i class="bi bi-eye-fill"></i>
-                        </button>
-
-                        <!-- Edit button -->
-                        <button class="btn btn-warning text-white action-btn" @click="editDevice(device.id)">
-                        <i class="bi bi-pencil-fill"></i>
-                        </button>
-
-                        <!-- Delete button -->
-                        <button class="btn btn-danger action-btn" @click="deleteDevice(device.id)">
-                          <i class="bi bi-trash-fill"></i>
-                        </button>
-                        </td>
-                    </tr>
-                    
-                </tbody>
-            </table>
-
-            <!-- Pagination -->
-            <div class="pagination-container">
-                <nav aria-label="Page navigation">
-                    <ul class="pagination">
-                        <!-- Previous Button -->
-                        <li class="page-item" :class="{ disabled: devices.current_page === 1 }">
-                            <a class="page-link" :href="`?page=${devices.current_page - 1}`">Previous</a>
-                        </li>
-
-                        <!-- Page Numbers -->
-                        <li v-for="page in totalPages" :key="page" class="page-item" :class="{ active: page === devices.current_page }">
-                            <a class="page-link" :href="`?page=${page}`">{{ page }}</a>
-                        </li>
-
-                        <!-- Next Button -->
-                        <li class="page-item" :class="{ disabled: devices.current_page === devices.last_page }">
-                            <a class="page-link" :href="`?page=${devices.current_page + 1}`">Next</a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-        <!-- Popup -->
-        <div v-if="showPopup" class="popup-overlay">
-          <div class="popup">
-            <header>
-              <h2>Upload</h2>
-              <button @click="closePopup">✖</button>
-            </header>
-            <p>A single file does not exceed 2MB</p>
-
-            <!-- Buttons -->
-            <div>
-              <button @click="downloadTemplate">Download template</button>
-              <input type="file" @change="selectFile" />
-            </div>
-
-            <!-- File list -->
-            <table>
-              <thead>
-                <tr>
-                  <th>File Name</th>
-                  <th>File Size</th>
-                  <th>Status</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-if="file">
-                  <td>{{ file.name }}</td>
-                  <td>{{ (file.size / 1024).toFixed(2) }} KB</td>
-                  <td>{{ uploadStatus }}</td>
-                  <td><button @click="uploadFile">Start Upload</button></td>
-                </tr>
-              </tbody>
-            </table>
-
-            <!-- Footer -->
-            <footer>
-              <button @click="closePopup">Cancel</button>
-            </footer>
+      <div class="table-container">
+        <div class="d-flex justify-content-between align-items-center">
+          <h4><i class="bi bi-truck-front-fill mr-2"></i>All Devices</h4>
+          <div class="text-end">
+            <a class="mr-2">
+              <button
+                class="btn btn-primary btn-custom"
+                @click="showPopup = true"
+              >
+                <i class="bi bi-cloud-upload mr-2"></i>Add New devices file
+              </button>
+            </a>
+            <a :href="route('devices.create')">
+              <button class="btn btn-primary btn-custom">
+                <i class="bi bi-plus-circle-fill mr-2"></i>Add New Device
+              </button>
+            </a>
           </div>
         </div>
+
+        <table class="table table-hover table-bordered mt-3">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col">S No</th>
+              <th scope="col">Device ID</th>
+              <th scope="col">Order ID</th>
+              <th scope="col">Customers Name</th>
+              <th scope="col">Date &amp; Time</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-if="devices.data.length === 0">
+              <td colspan="6" class="text-center">No devices found.</td>
+            </tr>
+            <tr v-for="(device, index) in devices.data" :key="device.id">
+              <td>{{ index + 1 }}</td>
+              <td>{{ device.device_id }}</td>
+              <td>{{ device.order_id }}</td>
+              <td>
+                {{
+                  device.first_name
+                    ? device.first_name + " " + (device.last_name ?? "")
+                    : "---"
+                }}
+              </td>
+              <td>{{ formatDate(device.date_time) }}</td>
+              <td class="d-flex">
+                <!-- view button -->
+                <button
+                  class="btn btn-light action-btn"
+                  @click="viewDevice(device.id)"
+                >
+                  <i class="bi bi-eye-fill"></i>
+                </button>
+
+                <!-- Edit button -->
+                <button
+                  class="btn btn-warning text-white action-btn"
+                  @click="editDevice(device.id)"
+                >
+                  <i class="bi bi-pencil-fill"></i>
+                </button>
+
+                <!-- Delete button -->
+                <button
+                  class="btn btn-danger action-btn"
+                  @click="deleteDevice(device.id)"
+                >
+                  <i class="bi bi-trash-fill"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <div class="pagination-container">
+          <nav aria-label="Page navigation">
+            <ul class="pagination">
+              <!-- Previous Button -->
+              <li
+                class="page-item"
+                :class="{ disabled: devices.current_page === 1 }"
+              >
+                <a class="page-link" :href="`?page=${devices.current_page - 1}`"
+                  >Previous</a
+                >
+              </li>
+
+              <!-- Page Numbers -->
+              <li
+                v-for="page in totalPages"
+                :key="page"
+                class="page-item"
+                :class="{ active: page === devices.current_page }"
+              >
+                <a class="page-link" :href="`?page=${page}`">{{ page }}</a>
+              </li>
+
+              <!-- Next Button -->
+              <li
+                class="page-item"
+                :class="{
+                  disabled: devices.current_page === devices.last_page,
+                }"
+              >
+                <a class="page-link" :href="`?page=${devices.current_page + 1}`"
+                  >Next</a
+                >
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+      <!-- Popup -->
+      <div v-if="showPopup" class="popup-overlay">
+        <div class="popup">
+          <header class="popup-header">
+            <h2>Upload</h2>
+            <button @click="closePopup" class="close-btn">✖</button>
+          </header>
+          <p class="popup-description">A single file does not exceed 2MB</p>
+
+          <!-- Buttons -->
+          <div class="popup-actions">
+            <input type="file" @change="selectFile" class="file-input" />
+          </div>
+
+          <!-- File list -->
+          <table class="file-table">
+            <thead>
+              <tr>
+                <th>File Name</th>
+                <th>File Size</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-if="file">
+                <td>{{ file.name }}</td>
+                <td>{{ (file.size / 1024).toFixed(2) }} KB</td>
+                <td>{{ uploadStatus }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Footer -->
+          <footer class="popup-footer">
+            <button @click="uploadFile" class="upload-btn">Start Upload</button>
+            <button @click="closePopup" class="cancel-btn">Cancel</button>
+          </footer>
+        </div>
+      </div>
     </div>
   </AuthenticatedLayout>
 </template>
@@ -155,31 +189,33 @@ const deleteDevice = async (id) =>  {
 <script>
 export default {
   data() {
-      return {
-        showPopup: false,
-        file: null,
-        uploadStatus: "Pending",
-      };
-    },
+    return {
+      showPopup: false,
+      file: null,
+      uploadStatus: "Pending",
+    };
+  },
   props: {
     user: Object,
     devices: Object, // Paginated device data
   },
   computed: {
     totalPages() {
-      return Array.from({ length: this.devices.last_page }, (_, index) => index + 1);
+      return Array.from(
+        { length: this.devices.last_page },
+        (_, index) => index + 1
+      );
     },
   },
   methods: {
-    
     closePopup() {
-        this.showPopup = false;
-        this.file = null;
-        this.uploadStatus = "Pending";
+      this.showPopup = false;
+      this.file = null;
+      this.uploadStatus = "Pending";
     },
     downloadTemplate() {
       // Replace with your template file's URL
-      window.open('/devices', '_blank');
+      window.open("/devices", "_blank");
     },
     selectFile(event) {
       this.file = event.target.files[0];
@@ -210,26 +246,26 @@ export default {
     },
 
     formatDate(value) {
-      if (!value) return '---';
-      
+      if (!value) return "---";
+
       // Create a new Date object from the ISO 8601 string
       const date = new Date(value);
-      
+
       // Define the format options
       const dateOptions = {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
+        year: "numeric",
+        month: "short",
+        day: "numeric",
       };
       const timeOptions = {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
       };
 
       // Format the date and time separately and combine them
-      const formattedDate = date.toLocaleDateString('en-GB', dateOptions);
-      const formattedTime = date.toLocaleTimeString('en-GB', timeOptions);
+      const formattedDate = date.toLocaleDateString("en-GB", dateOptions);
+      const formattedTime = date.toLocaleTimeString("en-GB", timeOptions);
 
       // Return the formatted string in the desired format
       return `${formattedDate} at ${formattedTime}`;
@@ -237,56 +273,190 @@ export default {
 
     // Redirect to the edit page
     editDevice(id) {
-      window.location.href = `/devices/${id}/edit`; 
+      window.location.href = `/devices/${id}/edit`;
     },
 
     // Redirect to the view page
     viewDevice(id) {
       window.location.href = `/devices/${id}/view`;
     },
-  }
-
+  },
 };
 </script>
 
 <style>
-  .popup-overlay {
+.popup-overlay {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* Dark overlay */
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
+  z-index: 1000;
 }
 
 .popup {
-  background: #fff;
-  padding: 20px;
-  width: 500px;
-  border-radius: 8px;
+  background-color: #fff;
+  border-radius: 10px;
+  width: 450px;
+  max-width: 90%;
+  padding: 30px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
 }
 
-.popup header {
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 10px;
+}
+
+.popup-header h2 {
+  font-size: 20px;
+  margin: 0;
+  color: #333;
+}
+
+.close-btn {
+  background-color: transparent;
+  border: none;
+  font-size: 1.6em;
+  cursor: pointer;
+  color: #333;
+  padding: 0;
+  line-height: 1;
+}
+
+.popup-description {
+  font-size: 1em;
+  color: #777;
+  margin: 20px 0;
+}
+
+.popup-actions {
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
 }
 
-.popup table {
+.download-btn, .upload-btn, .cancel-btn {
+    background-color: var(--light-color);
+    color: white;
+    border: none;
+    padding: 6px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background-color 0.3s;
+}
+
+.download-btn:hover,
+.upload-btn:hover,
+.cancel-btn:hover {
+  background-color: #2239c3ab;
+}
+
+.file-input {
+  padding: 10px;
+  font-size: 1em;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.file-table {
   width: 100%;
   border-collapse: collapse;
+  margin-bottom: 20px;
+  font-size: 0.9em;
 }
 
-.popup table th,
-.popup table td {
-  padding: 10px;
+.file-table th,
+.file-table td {
+  padding: 12px;
   text-align: left;
-  border: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
 }
 
+.file-table th {
+  background-color: #f4f4f4;
+  font-weight: normal;
+}
+
+.file-table tr:hover {
+  background-color: #f9f9f9;
+}
+
+.popup-footer {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.cancel-btn {
+  background-color: #e0e0e0;
+  color: #333;
+  padding: 12px 20px;
+  border-radius: 5px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.cancel-btn:hover {
+  background-color: #ccc;
+}
+.popup .close-btn {
+  background: #fff;
+  padding: 8px;
+  font-size: 16px;
+  position: absolute;
+  right: -10px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  top: -18px;
+  border-radius: 18%;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .popup {
+    width: 95%;
+    padding: 20px;
+  }
+
+  .popup-header h2 {
+    font-size: 1.4em;
+  }
+
+  .popup-description {
+    font-size: 0.9em;
+  }
+
+  .download-btn,
+  .upload-btn,
+  .cancel-btn {
+    padding: 10px 18px;
+    font-size: 0.9em;
+  }
+
+  .file-input {
+    font-size: 0.9em;
+  }
+
+  .file-table th,
+  .file-table td {
+    padding: 8px;
+  }
+}
 </style> 

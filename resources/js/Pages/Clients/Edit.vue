@@ -325,12 +325,7 @@ const submitForm = async () => {
         </div>
       </div>
 
-      <PrimaryButton
-        class="btn save-btn-custom"
-        style="background-color: var(--light-color); color: #fff; font-size: 20px;"
-      >
-        Update Customer
-      </PrimaryButton>
+      <PrimaryButton class="btn save-btn-custom"> Update Customer</PrimaryButton>
     </form>
   </AuthenticatedLayout>
 </template>
