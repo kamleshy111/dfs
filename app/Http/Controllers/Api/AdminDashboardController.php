@@ -18,9 +18,9 @@ class AdminDashboardController extends Controller
 
         $customers_amount = $customers->sum('amount');
         $customer_count = $customers->count();
-        $active_device_count = $devices->where('status', 'active')->count();
-        $expired_device_count = $devices->where('status', 'expired')->count();
-        $inactive_device_count = $devices->where('status', 'inactive')->count();
+        $active_device_count = $devices->where('status', 1)->count();
+        $expired_device_count = $devices->where('status', 2)->count();
+        $inactive_device_count = $devices->where('status', 0)->count();
         $all_device_count = $devices->count();
 
         return response()->json([
