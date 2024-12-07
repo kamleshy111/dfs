@@ -328,7 +328,9 @@ class ClientsController extends Controller
         }
     }
 
-    public function viewMap() {
-        return Inertia::render('AdminMapView',[]);
+    public function viewMap(Request $request) {
+        return Inertia::render('AdminMapView',[
+            'customer_id' => $request->id
+        ]);
     }
 }

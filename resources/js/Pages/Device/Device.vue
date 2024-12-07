@@ -45,7 +45,7 @@ const deleteDevice = async (id) => {
                 <i class="bi bi-plus-circle-fill mr-2"></i>Add New Device
               </button>
             </a>
-            <a :href="route('clients.map')">
+            <a :href="route('devices.map')">
               <button class="btn btn-primary btn-custom">
                 <i class="bi bi-geo-alt-fill mr-2"></i>View on Map
               </button>
@@ -105,6 +105,13 @@ const deleteDevice = async (id) => {
                 >
                   <i class="bi bi-trash-fill"></i>
                 </button>
+
+                <a
+                  class="btn btn-warning action-btn"
+                  :href="route('devices.map', {id: device.id})"
+                >
+                  <i class="bi bi-geo-alt-fill"></i>
+                </a>
               </td>
             </tr>
           </tbody>

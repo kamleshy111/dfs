@@ -37,7 +37,7 @@ class DeviceController extends Controller
         return Inertia::render('Device/Create');
     }
 
-    
+
     public function uploadDevice(Request $request){
 
 
@@ -47,7 +47,7 @@ class DeviceController extends Controller
     }
 
     public function store(Request $request){
-      
+
         $validated = $request->validate([
             'deviceId' => 'required|string|max:255|unique:devices,device_id',
             'orderId' => 'required|numeric',
@@ -69,8 +69,8 @@ class DeviceController extends Controller
             $file = $request->file('invoicePhotos');
             $path = $file->store('InvoicePhotos', 'public');
             $imageUrl = Storage::url($path);
-        }    
-       
+        }
+
         $date_string = $request->input('purchaseDate');
         $date_string = preg_replace('/\s\([^)]+\)$/', '', $date_string);
         $formatted_date = Carbon::parse($date_string)->format('Y-m-d H:i:s');
@@ -101,9 +101,9 @@ class DeviceController extends Controller
         if($data->duration_unit == 'days'){
             $startDate =  Carbon::parse($data->start_date);
             $duration = (int) $data->duration;
-            $expirationDate = $startDate->addDays($duration); 
+            $expirationDate = $startDate->addDays($duration);
 
-            $formattedExpirationDate = $expirationDate->format('d-m-Y'); 
+            $formattedExpirationDate = $expirationDate->format('d-m-Y');
             }
 
             if($data->duration_unit == 'months'){
@@ -111,7 +111,7 @@ class DeviceController extends Controller
                 $duration = (int) $data->duration;
                 $expirationDate = $startDate->addMonths($duration);
 
-                $formattedExpirationDate = $expirationDate->format('d-m-Y'); 
+                $formattedExpirationDate = $expirationDate->format('d-m-Y');
             }
 
             if($data->duration_unit == 'yers'){
@@ -119,7 +119,7 @@ class DeviceController extends Controller
                 $duration = (int) $data->duration;
                 $expirationDate = $startDate->addYears($duration);
 
-                $formattedExpirationDate = $expirationDate->format('d-m-Y'); 
+                $formattedExpirationDate = $expirationDate->format('d-m-Y');
             }
 
         $deviceDetails = [
@@ -140,7 +140,7 @@ class DeviceController extends Controller
             'startDate' => $data->start_date ?? '',
             'duration' => $data->duration ?? '',
             'durationUnit' => $data->duration_unit ?? '',
-            'expirationDate' => $formattedExpirationDate ?? '', 
+            'expirationDate' => $formattedExpirationDate ?? '',
             'simOperator' => $data->sim_operator ?? '',
 
         ];
@@ -155,7 +155,7 @@ class DeviceController extends Controller
     public function edit($id) {
 
         $data = Device::where('id',$id)->first();
-   
+
         if (!$data) {
             return response()->json(["message" => 'Device not found.']);
         }
@@ -200,7 +200,7 @@ class DeviceController extends Controller
             $file = $request->file('invoice_photos');
             $path = $file->store('InvoicePhotos', 'public');
             $device->invoice_photos = Storage::url($path);
-        }   
+        }
         $device->save();
 
         return response()->json(['message' => 'Device updated successfully.']);
@@ -214,5 +214,9 @@ class DeviceController extends Controller
             return response()->json(["message" => 'Devicwe deleted successfully.']);
         }
         return response()->json(['message' => 'An error occurred while deleting the device.']);
+    }
+
+    public function viewMap() {
+        return Inertia::render('AdminMapView',[]);
     }
 }

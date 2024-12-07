@@ -73,7 +73,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
         Route::delete('/destroy/{id}', [ClientsController::class, 'destroy'])->name('clients.destroy');
 
-        Route::get('/map', [ClientsController::class, 'viewMap'])->name('clients.map');
+        Route::get('/map/{id?}', [ClientsController::class, 'viewMap'])->name('clients.map');
     });
 
     //Device Routes
@@ -86,6 +86,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/{id}/edit', [DeviceController::class, 'edit'])->name('devices.edit');
         Route::post('/update/{id}', [DeviceController::class, 'update'])->name('devices.update');
         Route::delete('/destroy/{id}', [DeviceController::class, 'destroy'])->name('devices.destroy');
+
+        Route::get('/map/{id?}', [DeviceController::class, 'viewMap'])->name('devices.map');
     });
 
     //VehicleType Routes
