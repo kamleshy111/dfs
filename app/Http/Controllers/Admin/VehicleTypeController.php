@@ -22,7 +22,10 @@ class VehicleTypeController extends Controller
 {
     public function index(){
 
-        $vehicles = Vehicle::paginate(10);
+        $vehicles = Vehicle::select('vehicles.*','customers.first_name', 'customers.last_name')
+                            ->join('customers', 'vehicles.customer_id', '=', 'customers.id')
+                            ->paginate(10);
+
         return Inertia::render('Vehicle/Vehicle',[
             'user' => Auth::user(),
             'vehicles' => $vehicles,
@@ -120,7 +123,7 @@ class VehicleTypeController extends Controller
                         $formattedExpirationDate = $expirationDate->format('d-m-Y'); 
                     }
 
-                    if($data->duration_unit == 'yers'){
+                    if($data->duration_unit == 'years'){
                         $startDate = Carbon::parse($data->start_date);
                         $duration = (int) $data->duration;
                         $expirationDate = $startDate->addYears($duration);
