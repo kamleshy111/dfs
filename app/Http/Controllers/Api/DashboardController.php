@@ -24,7 +24,7 @@ class DashboardController extends Controller
     {
         $locations = [
             [
-                "position" => ["lat" => 40.689247, "lng" => -74.044502],
+                "position" => ["lat" => 26.58438493088465, "lng" => 75.5223685841688],
                 "title" => 'LADY LIBERTY',
                 "content" => [
                     "device_id" => 1,
@@ -42,7 +42,7 @@ class DashboardController extends Controller
                 ]
             ],
             [
-                "position" => ["lat" => 40.62201182900588, "lng" =>  -74.19500694401374],
+                "position" => ["lat" => 23.884151095659767, "lng" =>  78.80170558707565],
                 "title" => 'MARKER 2',
                 "content" => [
                     "device_id" => 2,
@@ -60,7 +60,7 @@ class DashboardController extends Controller
                 ]
             ],
             [
-                "position" => ["lat" => 40.710247, "lng" => -74.034502],
+                "position" => ["lat" => 20.34289749781598, "lng" => 77.52729166478011],
                 "title" => 'MARKER 3',
                 "content" => [
                     "device_id" => 3,

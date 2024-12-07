@@ -63,13 +63,13 @@ class ClientsController extends Controller
             // Return validation errors as a JSON response
             return response()->json(["message" => $validated]);
         }
-        
+
 
         /*------- Start DB Transaction --------*/
         DB::beginTransaction();
-    
+
         try {
-    
+
             $password = rand(10000000, 99999999);
 
            $user = User::create([
@@ -105,10 +105,10 @@ class ClientsController extends Controller
             $customer->address  = $request->input("address");
             $customer->quantity  = $request->input("quantity") ?? '0';
             $customer->save();
-    
+
             $customerId = $customer->id;
 
-    
+
             $devices = $request->input("device_id", []);
 
             if($devices){
@@ -123,7 +123,7 @@ class ClientsController extends Controller
             if ($request->file('file')) {
                 Excel::import(new CustomerDeviceImport($customerId), $request->file('file'));
             }
-    
+
             DB::commit();
             return response()->json(["message" => 'Client added successfully.']);
         } catch (\Exception $e) {
@@ -135,7 +135,7 @@ class ClientsController extends Controller
     }
 
     public function view($id) {
-        
+
         $data = Customer::with('devices')->find($id);
 
         $customerDetails = [
@@ -161,7 +161,7 @@ class ClientsController extends Controller
     public function edit($id) {
 
         $data = Customer::with('devices')->find($id);
-   
+
         if (!$data) {
             return response()->json(["message" => 'Customer not found.']);
         }
@@ -194,7 +194,7 @@ class ClientsController extends Controller
                             ->select('id', 'device_id')
                             ->get();
 
-       
+
         $currentDevicesList = Device::whereIn('id', $currentCustomerDevice)
                              ->select('id', 'device_id')
                              ->get();
@@ -232,12 +232,12 @@ class ClientsController extends Controller
 
         /*------- Start DB Transaction --------*/
         DB::beginTransaction();
-    
+
         try {
 
             // Retrieve the customer to be updated
             $customer = Customer::findOrFail($id);
-    
+
             // Update customer information
             $customer->first_name = $request->input("first_name");
             $customer->last_name = $request->input("last_name");
@@ -250,7 +250,7 @@ class ClientsController extends Controller
             $customer->address  = $request->input("address");
             $customer->quantity  = $request->input("quantity") ?? '0';
             $customer->save(); // Save the updated customer
-    
+
             $customerId = $customer->id;
 
             $userID = $customer->user_id;
@@ -277,12 +277,12 @@ class ClientsController extends Controller
             if ($request->file('file')) {
                 Excel::import(new CustomerDeviceImport($customerId), $request->file('file'));
             }
-     
+
             DB::commit();
-    
+
             // Redirect with success message
             return response()->json(['message' => 'Client updated successfully..']);
-           
+
         } catch (\Exception $e) {
             /*-------- Rollback Database Entry --------*/
             DB::rollback();
@@ -296,11 +296,11 @@ class ClientsController extends Controller
         DB::beginTransaction();
 
         try {
-            
+
             $userId = Customer::where('id', $id)->value('user_id');
 
             if ($userId) {
-            
+
                 User::where('id', $userId)->delete();
 
                 Customer::where('id', $id)->delete();
@@ -327,6 +327,8 @@ class ClientsController extends Controller
             return response()->json(['message' => 'An error occurred while deleting the Client.', 'error' => $e->getMessage()], 500);
         }
     }
-    
-    
+
+    public function viewMap() {
+        return Inertia::render('AdminMapView',[]);
+    }
 }
