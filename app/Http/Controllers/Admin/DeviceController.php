@@ -90,7 +90,37 @@ class DeviceController extends Controller
 
     public function view($id) {
 
-        $data = Device::where('id',$id)->first();
+        $data = Device::select('devices.*', 'customers.first_name', 'customers.last_name', 'vehicles.vehicle_register_number', 'vehicles.vehicle_name', 'vehicles.vehicle_type', 'vehicles.imei_number',
+                                'vehicles.sim_card_number', 'vehicles.installation_date', 'vehicles.start_date', 'vehicles.duration', 'vehicles.duration_unit', 'vehicles.sim_operator')
+                    ->leftJoin('customer_devices','devices.id', '=', 'customer_devices.device_id')
+                    ->leftjoin('customers','customer_devices.customer_id', '=', 'customers.id')
+                    ->leftjoin('vehicles','devices.id', '=', 'vehicles.device_id')
+                    ->where('devices.id', $id)
+                    ->first();
+
+        if($data->duration_unit == 'days'){
+            $startDate =  Carbon::parse($data->start_date);
+            $duration = (int) $data->duration;
+            $expirationDate = $startDate->addDays($duration); 
+
+            $formattedExpirationDate = $expirationDate->format('d-m-Y'); 
+            }
+
+            if($data->duration_unit == 'months'){
+                $startDate = Carbon::parse($data->start_date);
+                $duration = (int) $data->duration;
+                $expirationDate = $startDate->addMonths($duration);
+
+                $formattedExpirationDate = $expirationDate->format('d-m-Y'); 
+            }
+
+            if($data->duration_unit == 'yers'){
+                $startDate = Carbon::parse($data->start_date);
+                $duration = (int) $data->duration;
+                $expirationDate = $startDate->addYears($duration);
+
+                $formattedExpirationDate = $expirationDate->format('d-m-Y'); 
+            }
 
         $deviceDetails = [
             'id' => $data->id ?? 0,
@@ -99,6 +129,20 @@ class DeviceController extends Controller
             'company_name' => $data->company_name ?? '--',
             'date_time' => $data->date_time ?? '--',
             'invoice_photos' => $data->invoice_photos ? asset($data->invoice_photos) : '',
+            'customerFirstName' => $data->first_name ?? '',
+            'customerLsatName' => $data->last_name ?? '',
+            'vehicleRegisterNumber' => $data->vehicle_register_number ?? '',
+            'vehicleName' => $data->vehicle_name ?? '',
+            'vehicleType' => $data->vehicle_type ?? '',
+            'imeiNumber' => $data->imei_number ?? '',
+            'simCardNumber' => $data->sim_card_number ?? '',
+            'installationDate' => $data->installation_date ?? '',
+            'startDate' => $data->start_date ?? '',
+            'duration' => $data->duration ?? '',
+            'durationUnit' => $data->duration_unit ?? '',
+            'expirationDate' => $formattedExpirationDate ?? '', 
+            'simOperator' => $data->sim_operator ?? '',
+
         ];
 
 
