@@ -47,7 +47,6 @@ const deleteVehicle = async (id) => {
               <th scope="col">S No</th>
               <th scope="col">Customers Name</th>
               <th scope="col">Vehicle Register Number</th>
-              <th scope="col">Vehicle Name</th>
               <th scope="col">Vehicle Type</th>
               <th scope="col">Installation Date</th>
               <th scope="col">Action</th>
@@ -61,7 +60,6 @@ const deleteVehicle = async (id) => {
               <td>{{ index + 1 }}</td>
               <td>{{ vehicle.first_name+ ' '+vehicle.last_name }}</td>
               <td>{{ vehicle.vehicle_register_number }}</td>
-              <td>{{ vehicle.vehicle_name }}</td>
               <td>{{ vehicle.vehicle_type }}</td>
               <td>{{ vehicle.installation_date }}</td>
               <td>
