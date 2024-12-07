@@ -64,7 +64,7 @@
               <i class="bi bi-bar-chart-line-fill mr-2"></i>Drivers Status
             </h5>
             <div
-              class="d-flex align-items-center justify-content-between box-chart-main"
+              class="d-flex align-items-center justify-content-between box-chart-main" style="height: 326px;"
             >
               <div class="rounded-chart">
                 <canvas
@@ -74,10 +74,9 @@
                 ></canvas>
               </div>
               <div class="ms-3">
-                <p class="active-device">Active Devices : 51</p>
-                <p>Active : {{ adminStats.active_device_count }}</p>
-                <p>Inactive : {{ adminStats.inactive_device_count }}</p>
-                <p>Expired : {{ adminStats.expired_device_count }}</p>
+                <p class="active-device">Active Devices: {{ adminStats.active_device_count }}</p>
+                <p>Inactive Devices: {{ adminStats.inactive_device_count }}</p>
+                <p>Expired Devices: {{ adminStats.expired_device_count }}</p>
               </div>
             </div>
           </div>
