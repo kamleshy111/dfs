@@ -1,5 +1,5 @@
 <template>
-  <Head title="Dashboard" />
+  <Head title="Dashboards" />
 
   <AuthenticatedLayout>
     <div class="container my-3">
@@ -25,8 +25,8 @@
         </div>
         <div class="col-12 col-md-6 col-lg-3">
           <div class="card-summary">
-            <i class="bi bi-currency-dollar"></i>
-            <div class="icon-box">
+              <i class="bi" style="padding: 8px 19px;">₹</i>
+              <div class="icon-box">
               <h4>{{ adminStats.customer_amounts }}</h4>
               <p>Total Earning</p>
             </div>
@@ -49,7 +49,7 @@
           <div class="dashboard-card bg-white">
             <div class="d-flex justify-content-between align-items-center mb-3">
               <h5>
-                <i class="bi bi-bar-chart-line-fill mr-2"></i>Sale This Year
+                <i class="bi bi-bar-chart-line-fill mr-2"></i>Sales This Year
               </h5>
               <span>This Year</span>
             </div>
