@@ -22,7 +22,10 @@ class VehicleTypeController extends Controller
 {
     public function index(){
 
-        $vehicles = Vehicle::paginate(10);
+        $vehicles = Vehicle::select('vehicles.*','customers.first_name', 'customers.last_name')
+                            ->join('customers', 'vehicles.customer_id', '=', 'customers.id')
+                            ->paginate(10);
+
         return Inertia::render('Vehicle/Vehicle',[
             'user' => Auth::user(),
             'vehicles' => $vehicles,
