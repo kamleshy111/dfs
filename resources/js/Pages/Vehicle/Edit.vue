@@ -172,22 +172,20 @@ const submitForm = async () => {
                             <label for="start_date" class="form-label">Start Date</label>
                         </div>
                     </div>
-                    <div class="form-row"> 
-                        <div class="form-group col-md-3">
-                            <input type="number" v-model="form.duration" class="form-control" id="duration"
-                                placeholder="" />
-                            <label for="duration" class="form-label">Duration</label>
-                        </div>
-                        <div class="form-group col-md-3">
-                            <select v-model="form.duration_unit" class="form-control" id="duration_unit">
-                                <option value="days">Days</option>
-                                <option value="months">Months</option>
-                                <option value="years">Years</option>
-                            </select>
-                            <label for="duration_unit" class="form-label">Unit</label>
-                        </div>
 
-                    </div>
+                    <div class="form-row duration-unit">
+                        <div class="form-group m-0 duration-select">
+                        <input type="number" v-model="form.duration" class="form-control" id="duration" placeholder="" />
+                        <label for="duration" class="form-label">Duration</label>
+                        </div>
+                        <div class="form-group m-0 duration-option">
+                        <select v-model="form.duration_unit" class="form-control" id="duration_unit">
+                            <option value="days">Days</option>
+                            <option value="months">Months</option>
+                            <option value="years">Years</option>
+                        </select>
+                        </div>
+                   </div>
                     <div class="col-md-3 col-12 p-0 mt-4">
                         <PrimaryButton class="btn save-btn-custom">
                             Update Vehicle
