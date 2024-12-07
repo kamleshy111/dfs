@@ -70,8 +70,8 @@ const goBack = () => {
         <div class="col-12">
           <div class="card">
             <div class="card-body">
-              <div class="d-flex justify-content-between align-items-center pb-3">
-                <h5 class="card-title mt-3">Installation Photo List</h5>
+              <div class="d-flex justify-content-between align-items-center">
+                <h5 class="card-title m-0">Installation Photo List</h5>
                 <button class="btn btn-primary" @click="openFileInput">Add Photo</button>
                 <input type="file" ref="fileInput" style="display: none" @change="handleFileChange" />
               </div>
