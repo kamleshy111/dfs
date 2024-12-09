@@ -22,7 +22,6 @@ const form = ref({
   deviceId: "",
   vehicleRegisterNumber: "",
   vehicleType: "",
-  vehicleName: "",
   imeiNumber: "",
   simCardNumber: "",
   installationDate: "",
@@ -72,7 +71,6 @@ const submitForm = async () => {
       deviceId: "",
       vehicleRegisterNumber: "",
       vehicleType: "",
-      vehicleName: "",
       imeiNumber: "",
       simCardNumber: "",
       installationDate: "",
@@ -144,56 +142,52 @@ const submitForm = async () => {
               <label for="vehicleType" class="form-label">Select Vehicle type</label>
             </div>
             <div class="form-group col-md-6">
-              <input type="text" v-model="form.vehicleName" class="form-control" id="vehicleName" placeholder="" />
-              <label for="vehicleName" class="form-label">Vehicle Name</label>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group col-md-6">
               <input type="text" v-model="form.vehicleRegisterNumber" class="form-control" id="vehicleRegisterNumber" placeholder="" />
               <label for="vehicleRegisterNumber" class="form-label">Vehicle Register Number</label>
             </div>
+          </div>
+          <div class="form-row">
             <div class="form-group col-md-6">
               <input type="text" v-model="form.simOperator" class="form-control" id="simOperator" placeholder="" />
               <label for="simOperator" class="form-label">SIM Operator</label>
             </div>
-            
-          </div>
-          <div class="form-row">
             <div class="form-group col-md-6">
               <input type="text" v-model="form.simCardNumber" class="form-control" id="simCardNumber" placeholder="" />
               <label for="simCardNumber" class="form-label">SIM Card Number</label>
             </div>
+          </div>
+          <div class="form-row">
+
             <div class="form-group col-md-6">
               <input type="text" v-model="form.imeiNumber" class="form-control" id="imeiNumber" placeholder="" />
               <label for="imeiNumber" class="form-label">IMEI Number</label>
             </div>
-
-          </div>
-          <div class="form-row">
             <div class="form-group col-md-6">
-              <!-- <input type="date" v-model="form.installationDate" class="form-control" id="installationDate" placeholder="" /> -->
               <Datepicker v-model="form.installationDate" class="form-control" id="installationDate" :format="dateFormat" placeholder="" />
               <label for="installationDate" class="form-label">Installation Date</label>
             </div>
+          </div>
+          <div class="form-row">
             <div class="form-group col-md-6">
               <Datepicker v-model="form.startDate" class="form-control" id="startDate" :format="dateFormat" placeholder="" />
               <label for="startDate" class="form-label">Start Date</label>
             </div>
 
+            <div class="col-md-6 col-12">
+              <div class="form-row duration-unit">
+              <div class="form-group m-0 duration-select">
+                <input type="number" v-model="form.duration" class="form-control" id="duration" placeholder="" />
+                <label for="duration" class="form-label">Duration</label>
+              </div>
+              <div class="form-group m-0 duration-option">
+                <select v-model="form.durationUnit" class="form-control" id="durationUnit">
+                  <option value="days">Days</option>
+                  <option value="months">Months</option>
+                  <option value="years">Years</option>
+                </select>
+              </div>
+            </div>            
           </div>
-          <div class="form-row duration-unit">
-            <div class="form-group m-0 duration-select">
-              <input type="number" v-model="form.duration" class="form-control" id="duration" placeholder="" />
-              <label for="duration" class="form-label">Duration</label>
-            </div>
-            <div class="form-group m-0 duration-option">
-              <select v-model="form.durationUnit" class="form-control" id="durationUnit">
-                <option value="days">Days</option>
-                <option value="months">Months</option>
-                <option value="years">Years</option>
-              </select>
-            </div>
           </div>
 
           <div class="col-md-3 col-12 p-0 mt-4">

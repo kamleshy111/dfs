@@ -47,7 +47,6 @@ class VehicleTypeController extends Controller
         $validated = $request->validate([
             'customerId' => 'required',
             'vehicleType' => 'required',
-            'vehicleName' => 'required',
             'vehicleRegisterNumber' => 'required',
             'simCardNumber' => 'required',
             'imeiNumber' => 'required',
@@ -58,7 +57,6 @@ class VehicleTypeController extends Controller
             'customerId.required' => 'Customer Name is required.',
             'vehicleRegisterNumber' => 'Vehicle Register Number id required',
             'vehicleType.required' => 'Vehicle Type is required.',
-            'vehicleName' => 'Vehicle Name is required.',
             'simCardNumber.required' => 'SIM Card Number is required.',
             'imeiNumber.required' => 'IMEI Number is required.',
             'duration.required' => 'durationUnit is required.',
@@ -74,7 +72,6 @@ class VehicleTypeController extends Controller
             'customer_id' => $request->input('customerId'),
             'device_id' => $request->input('deviceId') ?? 0,
             'vehicle_register_number' => $request->input('vehicleRegisterNumber'),
-            'vehicle_name' => $request->input('vehicleName') ?? '',
             'vehicle_type' => $request->input('vehicleType'),
             'imei_number' => $request->input('imeiNumber'),
             'sim_card_number' => $request->input('simCardNumber'),
@@ -140,7 +137,6 @@ class VehicleTypeController extends Controller
         $vehicleDetails = [
             'id' => $data->id ?? 0,
             'vehicle_register_number' => $data->vehicle_register_number ?? '--',
-            'vehicle_name' => $data->vehicle_name ?? '--',
             'vehicle_type' => $data->vehicle_type ?? '--',
             'imei_number' => $data->imei_number ?? '--',
             'sim_card_number' => $data->sim_card_number ?? '--',
@@ -212,7 +208,6 @@ class VehicleTypeController extends Controller
             'customer_id' => $data->customer_id ?? 0,
             'device_id' => $data->device_id ?? 0,
             'vehicle_register_number' => $data->vehicle_register_number ?? '',
-            'vehicle_name' => $data->vehicle_name ?? '',
             'vehicle_type' => $data->vehicle_type ?? '',
             'imei_number' => $data->imei_number ?? '',
             'sim_card_number' => $data->sim_card_number ?? '',
@@ -234,7 +229,6 @@ class VehicleTypeController extends Controller
         $validated = $request->validate([
             'customer_id' => 'required',
             'vehicle_type' => 'required',
-            'vehicle_name' => 'required',
             'vehicle_register_number' => 'required',
             'sim_card_number' => 'required',
             'imei_number' => 'required',
@@ -244,7 +238,6 @@ class VehicleTypeController extends Controller
             'customer_id.required' => 'Customer Name is required.',
             'vehicle_register_number' => 'Vehicle Register Number id required',
             'vehicle_type.required' => 'Vehicle Type is required.',
-            'vehicle_name' => 'Vehicle Name is required.',
             'sim_card_number.required' => 'SIM Card Number is required.',
             'imei_number.required' => 'IMEI Number is required.',
             'duration.required' => 'duration_unit is required.',
@@ -263,7 +256,6 @@ class VehicleTypeController extends Controller
             $vehicle->customer_id = $request->input("customer_id");
             $vehicle->device_id = $request->input("device_id") ?? 0;
             $vehicle->vehicle_register_number = $request->input('vehicle_register_number');
-            $vehicle->vehicle_name = $request->input("vehicle_name");
             $vehicle->vehicle_type  = $request->input("vehicle_type");
             $vehicle->imei_number  = $request->input("imei_number");
             $vehicle->sim_card_number  = $request->input("sim_card_number");

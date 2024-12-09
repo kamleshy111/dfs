@@ -32,7 +32,6 @@ const goBack = () => {
             <div class="profile-details mt-3 d-flex justify-content-between px-3">
               <div>
               <h4 class="mt-3">Vehicle Register Number: {{ props.Vehicles.vehicle_register_number }}</h4>
-              <h4 class="mt-3">Vehicle Name: {{ props.Vehicles.vehicle_name }}</h4>
               <p class="mt-3">Vehicle Type : {{ props.Vehicles.vehicle_type }}</p>
               <h4 class="mt-3">IMEI Number: {{ props.Vehicles.imei_number }}</h4>
               <p class="mt-3">SIM Card Number: {{ props.Vehicles.sim_card_number }}</p>
