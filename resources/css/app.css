@@ -29,7 +29,7 @@ body {
 
 .right-box {
     width: 83%;
-    margin: 0 0 0 auto;
+    margin: 0 0 40px auto;
     padding-right: 20px;
 }
 
@@ -655,7 +655,11 @@ p.active-device {
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    margin: 0 auto;
+    height: 100%;
+    width: 100%;
+}
+.profile-device {
+    width: 70%;
 }
 
 .profile-image {
@@ -883,18 +887,62 @@ p.active-device {
 .icon-box {
     margin-left: 22px;
 }
-@media screen and (min-width: 768px) and (max-width: 1366px) {
-    .right-box {
-        width: 100%;
-        margin: 0 5px;
-        padding-right: 0px;
-    }
+.dp__pointer {
+    border: 0 !important;
+}
+.duration-unit .form-control {
+    border: 0;
+}
+.duration-unit .form-control {
+    border: 0;
+    width: unset;
+}
+.duration-unit {
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    width: 32%;
+}
+.duration-unit .duration-option {
+    width: 30%;
+}
+.duration-unit .duration-select {
+    position: relative;
+    width: 70%;
+}
+.duration-unit {
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    width: 32%;
+}
+#duration {
+    width: 100%;
+}
+#durationUnit {
+    width: 100%;
+}
+#duration_unit {
+    width: 100%;
+}
+.selected_class {
+    width: 50%;
+    text-align: end;
+}
+@media screen and (min-width: 768px) and (max-width: 991px) {
+
     .header {
         width: 100%;
         margin: 0 15px;
     }
     .sidebar{
         display: none;
+    }
+    .toggle-btn {
+        display: block;
+    }
+    .right-box {
+        width: 100%;
+        margin: 0;
+        padding-right: 20px;
     }
     
     
@@ -953,11 +1001,6 @@ p.active-device {
         display: none;
     }
 
-    .right-box {
-        width: 100%;
-        margin: 0 5px;
-        padding-right: 0px;
-    }
 
     .dashboard-card {
         width: 100%;

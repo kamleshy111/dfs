@@ -26,22 +26,24 @@ const goBack = () => {
 
     <div class="py-3">
       <div class="row">
-        <div class="col-md-12 col-12 mt-2">
+        <div class="col-md-6 profile-device col-12 mt-2">
+          <h2 class="fs-4 mb-2 fw-bold text-[#2239c3cc]">Vehicle Information</h2>
           <div class="profile-card">
-            <div class="profile-details mt-3 px-3">
-              <h2 class="fs-4 mb-4 fw-bold text-center text-[#2239c3cc]">Vehicle Information</h2>
-              <h4 class="mt-2">Vehicle Register Number: {{ props.Vehicles.vehicle_register_number }}</h4>
-              <h4 class="mt-2">Vehicle Name: {{ props.Vehicles.vehicle_name }}</h4>
-              <p class="mt-2">Vehicle Type : {{ props.Vehicles.vehicle_type }}</p>
-              <h4 class="mt-2">IMEI Number: {{ props.Vehicles.imei_number }}</h4>
-              <p class="mt-2">SIM Card Number: {{ props.Vehicles.sim_card_number }}</p>
-              <p class="mt-2">Installation Date: {{ props.Vehicles.installation_date }}</p>
-
-              <p class="mt-2">Start Date: {{ props.Vehicles.start_date }}</p>
-              <p class="mt-2">Expiration Date: {{ props.Vehicles.expirationDate }}</p>
-              <p class="mt-2">SIM Operator: {{ props.Vehicles.sim_operator }}</p>
-              <p class="mt-2">Customer Name: {{ props.Vehicles.first_name ? props.Vehicles.first_name + ' ' + (props.Vehicles.last_name ?? '') : '---' }}</p>
-              <p class="mt-2">Device Name: {{ props.Vehicles.deviceName }}</p>
+            <div class="profile-details mt-3 d-flex justify-content-between px-3">
+              <div>
+              <h4 class="mt-3">Vehicle Register Number: {{ props.Vehicles.vehicle_register_number }}</h4>
+              <p class="mt-3">Vehicle Type : {{ props.Vehicles.vehicle_type }}</p>
+              <h4 class="mt-3">IMEI Number: {{ props.Vehicles.imei_number }}</h4>
+              <p class="mt-3">SIM Card Number: {{ props.Vehicles.sim_card_number }}</p>
+              <p class="mt-3">Installation Date: {{ props.Vehicles.installation_date }}</p>
+              </div>
+            <div>
+              <p class="mt-3">Start Date: {{ props.Vehicles.start_date }}</p>
+              <p class="mt-3">Expiration Date: {{ props.Vehicles.expirationDate }}</p>
+              <p class="mt-3">SIM Operator: {{ props.Vehicles.sim_operator }}</p>
+              <p class="mt-3">Customer Name: {{ props.Vehicles.first_name ? props.Vehicles.first_name + ' ' + (props.Vehicles.last_name ?? '') : '---' }}</p>
+              <p class="mt-3">Device Name: {{ props.Vehicles.deviceName }}</p>
+            </div>
             </div>
             <div class="profile-details mt-3 px-3">
               <div v-for="(photo, index) in installationPhotos" :key="index">

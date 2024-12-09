@@ -3,7 +3,6 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { Head, useForm, usePage } from "@inertiajs/vue3";
 import TextInput from "@/Components/TextInput.vue";
-import InputError from "@/Components/InputError.vue";
 import { ref } from "vue";
 import Multiselect from "vue-multiselect";
 
@@ -21,22 +20,14 @@ const form = ref({
   secondary_email: "",
   phone: "",
   secondary_phone: "",
-  invoice_number: "",
-  amount: "",
   address: "",
   device_id: [],
-  quantity: 0,
   file: null,
 });
 
 
 const file = ref(null);
 const fileName = ref("");
-
-// Watch for device selection changes
-const watchDeviceSelection = () => {
-  form.value.quantity = form.value.device_id.length; // Set quantity based on selected devices count
-};
 
 const handleFileUpload = (event) => {
   const uploadedFile = event.target.files[0];
@@ -67,16 +58,6 @@ const clearFile = () => {
   fileName.value = "";
 };
 
-// Increase quantity
-const incrementQuantity = () => {
-  form.value.quantity++;
-};
-
-// Decrease quantity
-const decrementQuantity = () => {
-  if (form.value.quantity > 1) form.value.quantity--;
-};
-
 // go to back
 const goBack = () => {
   window.location.href = "/clients"; // Redirect to the desired Laravel route
@@ -93,13 +74,10 @@ const submitForm = async () => {
     formData.append("secondary_email",form.value.secondary_email);
     formData.append("phone", form.value.phone);
     formData.append("secondary_phone", form.value.secondary_phone);
-    formData.append("invoice_number", form.value.invoice_number);
-    formData.append("amount", form.value.amount)
     formData.append("address", form.value.address);
     form.value.device_id.forEach((deviceId) => {
       formData.append('device_id[]', deviceId.id);
     });
-    formData.append("quantity", form.value.quantity);
     formData.append("file", form.value.file);
 
     // Send form data to the server
@@ -113,11 +91,8 @@ const submitForm = async () => {
     form.value.secondary_email = '',
     form.value.phone = '';
     form.value.secondary_phone = '',
-    form.value.invoice_number = '',
-    form.value.amount = '',
     form.value.address = '';
     form.value.device_id = [];
-    form.value.quantity = '';
     form.value.file = '';
 
     // Reload the window
@@ -224,33 +199,6 @@ const submitForm = async () => {
       </div>
       <div class="form-row">
         <div class="form-group col-md-6">
-          <TextInput
-            id="invoice_number"
-            type="text"
-            class="mt-1 block w-full form-control"
-            placeholder=""
-            v-model="form.invoice_number"
-            autofocus
-            autocomplete="invoice_number"
-          />
-          <label for="invoice_number" class="form-label">Invoice Number</label>
-        </div>
-        <div class="form-group col-md-6">
-          <TextInput
-            id="amount"
-            type="number"
-            step="0.01"
-            class="mt-1 block w-full form-control"
-            placeholder=""
-            v-model="form.amount"
-            autofocus
-            autocomplete="amount"
-          />
-          <label for="amount" class="form-label">Amount</label>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group col-md-6">
           <multiselect
             v-model="form.device_id"
             :options="devices"
@@ -262,37 +210,6 @@ const submitForm = async () => {
             class="form-control"
              @update:model-value="watchDeviceSelection"
           ></multiselect>
-        </div>
-        <div class="form-group col-md-6">
-          <div class="form-quantity">
-            <label class="form-label">Add Quantity</label>
-            <div class="input-group">
-              <div class="input-group-prepend">
-                <button
-                  class="btn btn-outline-secondary"
-                  type="button"
-                  @click="decrementQuantity"
-                >
-                  -
-                </button>
-              </div>
-              <input
-                type="text"
-                v-model="form.quantity"
-                class="form-control text-center"
-                readonly
-              />
-              <div class="input-group-append">
-                <button
-                  class="btn btn-outline-secondary"
-                  type="button"
-                  @click="incrementQuantity"
-                >
-                  +
-                </button>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
       <div class="form-group relative">

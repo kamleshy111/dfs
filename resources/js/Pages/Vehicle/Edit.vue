@@ -23,7 +23,6 @@ const form = ref({
     customer_id: vehicleDetail.customer_id || 0,
     device_id: vehicleDetail.device_id || 0,
     vehicle_register_number: vehicleDetail.vehicle_register_number || "",
-    vehicle_name: vehicleDetail.vehicle_name || "",
     vehicle_type: vehicleDetail.vehicle_type || "",
     imei_number: vehicleDetail.imei_number || "",
     sim_card_number: vehicleDetail.sim_card_number || "",
@@ -132,61 +131,52 @@ const submitForm = async () => {
                             <label for="vehicle_type" class="form-label">Select Vehicle type</label>
                         </div>
                         <div class="form-group col-md-6">
-                            <input type="text" v-model="form.vehicle_name" class="form-control" id="vehicle_name"
-                                placeholder="" />
-                            <label for="vehicle_name" class="form-label">Vehicle Name</label>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
                             <input type="text" v-model="form.vehicle_register_number" class="form-control" id="vehicle_register_number"
                                 placeholder="" />
                             <label for="vehicle_register_number" class="form-label">Vehicle Rregister Number</label>
                         </div>
+                    </div>
+                    <div class="form-row">
                         <div class="form-group col-md-6">
                             <input type="text" v-model="form.sim_operator" class="form-control" id="sim_operator"
                                 placeholder="" />
                             <label for="sim_operator" class="form-label">SIM Operator</label>
                         </div>
-
-                    </div>
-                    <div class="form-row">
                         <div class="form-group col-md-6">
                             <input type="text" v-model="form.sim_card_number" class="form-control" id="sim_card_number"
                                 placeholder="" />
                             <label for="sim_card_number" class="form-label">SIM Card Number</label>
                         </div>
+                    </div>
+                    <div class="form-row">
                         <div class="form-group col-md-6">
                             <input type="text" v-model="form.imei_number" class="form-control" id="imei_number"
                                 placeholder="" />
                             <label for="imei_number" class="form-label">IMEI Number</label>
                         </div>
-                    </div>
-                    <div class="form-row">
                         <div class="form-group col-md-6">
                             <Datepicker v-model="form.installation_date" class="form-control" id="installation_date" :format="dateFormat" placeholder="" />
                             <label for="installation_date" class="form-label">Installation Date</label>
                         </div>
+                    </div>
+                    <div class="form-row">
                         <div class="form-group col-md-6">
                             <Datepicker v-model="form.start_date" class="form-control" id="start_date" :format="dateFormat" placeholder="" />
                             <label for="start_date" class="form-label">Start Date</label>
                         </div>
-                    </div>
-                    <div class="form-row"> 
-                        <div class="form-group col-md-3">
-                            <input type="number" v-model="form.duration" class="form-control" id="duration"
-                                placeholder="" />
-                            <label for="duration" class="form-label">Duration</label>
+                        <div class="form-row duration-unit">
+                        <div class="form-group m-0 duration-select">
+                        <input type="number" v-model="form.duration" class="form-control" id="duration" placeholder="" />
+                        <label for="duration" class="form-label">Duration</label>
                         </div>
-                        <div class="form-group col-md-3">
-                            <select v-model="form.duration_unit" class="form-control" id="duration_unit">
-                                <option value="days">Days</option>
-                                <option value="months">Months</option>
-                                <option value="years">Years</option>
-                            </select>
-                            <label for="duration_unit" class="form-label">Unit</label>
+                        <div class="form-group m-0 duration-option">
+                        <select v-model="form.duration_unit" class="form-control" id="duration_unit">
+                            <option value="days">Days</option>
+                            <option value="months">Months</option>
+                            <option value="years">Years</option>
+                        </select>
                         </div>
-
+                   </div>
                     </div>
                     <div class="col-md-3 col-12 p-0 mt-4">
                         <PrimaryButton class="btn save-btn-custom">
