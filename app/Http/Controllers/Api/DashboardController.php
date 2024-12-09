@@ -36,7 +36,7 @@ class DashboardController extends Controller
         }
 
         if( ! empty( $request->customer_id ) ) {
-            $customer = Customer::where("id",$request->customer_id);
+            $customer = Customer::find($request->customer_id);
             $devices = $customer->devices;
         }
 
