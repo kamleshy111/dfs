@@ -15,6 +15,7 @@
 
                 <!-- Page Content -->
                 <main class="right-box">
+                    {{ header }}
                     <header class="text-center w-100" v-if="$slots.header">
                         <slot name="header" />
                     </header>
@@ -32,6 +33,12 @@ import { computed } from 'vue';
 import { usePage } from '@inertiajs/vue3'; // For Inertia.js
 
 export default {
+    props: {
+        header: {
+            type: String,
+            required: false, // Make it optional
+        },
+    },
     components: { Sidebar, Header },
     setup() {
         const { props } = usePage(); // Get props from Inertia

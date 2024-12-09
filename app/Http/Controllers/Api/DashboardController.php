@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
-use Inertia\Inertia;
+use App\Models\Device;
 use App\Models\Customer;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 
 class DashboardController extends Controller
@@ -20,68 +19,72 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function getMapDevices()
+    public function getMapDevices(Request $request)
     {
-        $locations = [
-            [
-                "position" => ["lat" => 26.58438493088465, "lng" => 75.5223685841688],
-                "title" => 'LADY LIBERTY',
-                "content" => [
-                    "device_id" => 1,
-                    'device_name' => 'Device Name',
-                    'message' => 'This is test device',
-                    'url' => '',
-                    'message_type' => 'normal',
-                    'last_active' => date("Y-m-d h:i:s a", time()),
-                    'photo' => 'https://img.freepik.com/free-vector/truck_53876-34798.jpg',
-                    'lat_lng' => [
-                        ["lat" => 40.62201182900588, "lng" =>  -74.19500694401374],
-                        ["lat" => 40.62201182900588, "lng" =>  -74.19500694401374],
-                        ["lat" => 40.62201182900588, "lng" =>  -74.19500694401374]
+        if ($request->status != '' && in_array($request->status, [0, 1, 2])) {
+            $status = $request->status;
+        } else {
+            $status = 'all';
+        }
+
+        $devices = [];
+
+        if( ! empty( $request->device_id ) ) {
+            $devices = Device::where('id', $request->device_id)->get();
+        } else {
+            $devices = Device::get();
+        }
+
+        if( ! empty( $request->customer_id ) ) {
+            $customer = Customer::where("id",$request->customer_id);
+            $devices = $customer->devices;
+        }
+
+        $locations = [];
+        foreach ($devices as $index => $device) {
+            if( $status == 'all' || $status == $device->status ) {
+                $locations[] = [
+                    "position" => $this->getRandomCoordinatesInIndia(),
+                    "title" => 'LADY LIBERTY',
+                    "content" => [
+                        "device_id" => mt_rand(1000000, 9999999),
+                        'device_name' => 'Device Name' . $index,
+                        'message' => 'This is test device' . $index,
+                        'url' => '',
+                        'message_type' => 'normal',
+                        'last_active' => date("Y-m-d h:i:s a", time()),
+                        'photo' => 'https://img.freepik.com/free-vector/truck_53876-34798.jpg',
+                        'lat_lng' => [
+                            ["lat" => 40.62201182900588, "lng" =>  -74.19500694401374],
+                            ["lat" => 40.62201182900588, "lng" =>  -74.19500694401374],
+                            ["lat" => 40.62201182900588, "lng" =>  -74.19500694401374]
+                        ]
                     ]
-                ]
-            ],
-            [
-                "position" => ["lat" => 23.884151095659767, "lng" =>  78.80170558707565],
-                "title" => 'MARKER 2',
-                "content" => [
-                    "device_id" => 2,
-                    'device_name' => 'Device Name',
-                    'message' => 'This is test device',
-                    'url' => '',
-                    'message_type' => 'normal',
-                    'last_active' => date("Y-m-d h:i:s a", time()),
-                    'photo' => 'https://img.freepik.com/free-vector/truck_53876-34798.jpg',
-                    'lat_lng' => [
-                        ["lat" => 40.62201182900588, "lng" =>  -74.19500694401374],
-                        ["lat" => 40.62201182900588, "lng" =>  -74.19500694401374],
-                        ["lat" => 40.62201182900588, "lng" =>  -74.19500694401374]
-                    ]
-                ]
-            ],
-            [
-                "position" => ["lat" => 20.34289749781598, "lng" => 77.52729166478011],
-                "title" => 'MARKER 3',
-                "content" => [
-                    "device_id" => 3,
-                    'device_name' => 'Device Name',
-                    'message' => 'This is test device',
-                    'url' => '',
-                    'message_type' => 'normal',
-                    'last_active' => date("Y-m-d h:i:s a", time()),
-                    'photo' => 'https://img.freepik.com/free-vector/truck_53876-34798.jpg',
-                    'lat_lng' => [
-                        ["lat" => 40.62201182900588, "lng" =>  -74.19500694401374],
-                        ["lat" => 40.62201182900588, "lng" =>  -74.19500694401374],
-                        ["lat" => 40.62201182900588, "lng" =>  -74.19500694401374]
-                    ]
-                ]
-            ]
-        ];
+                ];
+            }
+        }
 
         return response()->json([
             'locations' => $locations,
             'customer_id' => 1
         ]);
+    }
+
+    public function getRandomCoordinatesInIndia()
+    {
+        // Define India's approximate latitude and longitude bounds
+        $minLat = 20.0;  // Approximate southern bound of central India
+        $maxLat = 25.0;  // Approximate northern bound of central India
+        $minLng = 75.0;  // Approximate western bound of central India
+        $maxLng = 85.0;  // Approximate eastern bound of central India
+
+        // Generate random latitude and longitude within the bounds
+        $latitude = $minLat + mt_rand() / mt_getrandmax() * ($maxLat - $minLat);
+        $longitude = $minLng + mt_rand() / mt_getrandmax() * ($maxLng - $minLng);
+
+        return [
+            'lat' => $latitude,
+            'lng' => $longitude
+        ];
     }
 }
