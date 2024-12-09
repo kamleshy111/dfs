@@ -12,12 +12,11 @@ use Illuminate\Support\Facades\DB;
 class AdminDashboardController extends Controller
 {
     public function getAdminStats() {
-        $customers = Customer::select('amount')->get();
         $devices = Device::select('status', 'date_time')->get();
         $device_sold_by_month = DB::table('devices')->selectRaw('MONTH(date_time) as month, COUNT(*) as total')->groupByRaw('MONTH(date_time)')->orderByRaw('MONTH(date_time)')->get();
 
-        $customers_amount = $customers->sum('amount');
-        $customer_count = $customers->count();
+        $customers_amount = 0;
+        $customer_count = 0;
         $active_device_count = $devices->where('status', 1)->count();
         $expired_device_count = $devices->where('status', 2)->count();
         $inactive_device_count = $devices->where('status', 0)->count();
