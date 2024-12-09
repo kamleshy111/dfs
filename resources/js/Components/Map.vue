@@ -12,7 +12,6 @@
         v-for="(location, index) in locations"
         :key="index"
         :options="{ position: location.position, title: location.title }"
-        :pin-options="getMarkerOptions(location)"
         @click="selectedInfoWindow = selectedInfoWindow ? null : location.content"
       />
 
