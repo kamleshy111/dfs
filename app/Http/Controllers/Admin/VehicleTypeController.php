@@ -78,7 +78,7 @@ class VehicleTypeController extends Controller
             'installation_date' => $request->input('installationDate')  ? Carbon::parse($request->input('installationDate'))->toDateString() : null,
             'start_date' => $request->input('startDate')  ? Carbon::parse($request->input('startDate'))->toDateString() : null,
             'duration' => $request->input("duration") ?? '',
-            'duration-unit' => $request->input("durationUnit") ?? '',
+            'duration_unit' => $request->input("durationUnit") ?? '',
             'sim_operator' => $request->input('simOperator') ?? '',
         ]);
 
