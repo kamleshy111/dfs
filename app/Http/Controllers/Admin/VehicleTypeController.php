@@ -94,7 +94,7 @@ class VehicleTypeController extends Controller
 
         $data = Vehicle::select('vehicles.*','customers.first_name', 'customers.last_name', 'devices.device_id as deviceName')
                     ->join('customers', 'vehicles.customer_id', '=', 'customers.id')
-                    ->join('devices', 'vehicles.device_id', '=', 'devices.id')
+                    ->leftjoin('devices', 'vehicles.device_id', '=', 'devices.id')
                     ->where('vehicles.id', $id)
                     ->first();
 
