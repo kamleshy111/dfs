@@ -21,20 +21,31 @@ const openFileInput = () => {
 
 // Handle file selection and upload
 const handleFileChange = async (event) => {
-    const file = event.target.files[0];
-    if (file) {
-        const formData = new FormData();
-        formData.append('photo', file);
-        formData.append('vehicle_id', props.vehicleId);
+    const files = Array.from(event.target.files); // Get all selected files
+    if (files.length > 0 && files.length == 2) {
+        const promises = files.map(async (file) => {
+            const formData = new FormData();
+            formData.append('photo', file);
+            formData.append('vehicle_id', props.vehicleId);
+
+            try {
+                const response = await axios.post('/vehicle-type/upload-installation-photo', formData);
+                photoList.value.push(response.data); // Update the photo list
+            } catch (error) {
+                console.error('Failed to upload photo:', error);
+                toast.error('Failed to upload some photos. Please try again.');
+            }
+        });
 
         try {
-            const response = await axios.post('/vehicle-type/upload-installation-photo', formData);
-            photoList.value.push(response.data); // Update the photo list
-            toast.success('Photo uploaded successfully!');
-        } catch (error) {
-            toast.error('Failed to upload photo. Please try again.');
-            console.error(error);
+            await Promise.all(promises); // Wait for all uploads to complete
+            toast.success('All photos uploaded successfully!');
+        } catch {
+            toast.error('Some photos failed to upload.');
         }
+    } else {
+
+      toast.error('Maximum of two photos uploaded!');
     }
 };
 
@@ -44,7 +55,7 @@ const handleDeleteClick = async (photoId) => {
         try {
          
             await axios.delete(`/vehicle-type/delete-installation-photo/${photoId}`);
-            photoList.value = photoList.value.filter((photo) => photo.id !== photoId); // Remove from the list
+            photoList.value = photoList.value.filter((photo) => photo.id !== photoId);
             toast.success('Photo deleted successfully!');
         } catch (error) {
             toast.error('Failed to delete photo. Please try again.');
@@ -72,8 +83,8 @@ const goBack = () => {
             <div class="card-body">
               <div class="d-flex justify-content-between align-items-center">
                 <h5 class="card-title m-0">Installation Photo List</h5>
-                <button class="btn btn-primary" @click="openFileInput">Add Photo</button>
-                <input type="file" ref="fileInput" style="display: none" @change="handleFileChange" />
+                <button class="btn btn-primary" @click="openFileInput">Add Photos</button>
+                <input type="file" ref="fileInput" style="display: none" @change="handleFileChange" multiple />
               </div>
               <div class="container">
                 <div class="row vehicle-gallery">

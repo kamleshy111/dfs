@@ -6,23 +6,32 @@ import { useRouter } from 'vue-router';
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 import axios from 'axios';
+import { ref } from "vue";
 
 
 const router = useRouter();
+const loadingButtons = ref({});
 
 // Delete Clients
 const deleteCustomer = async (id) =>  {
-  try {
-      const response = await axios.delete(`clients/destroy/${id}`);
-          toast.success(response.data.message);
-            // Reload the page
-            setTimeout(function(){
-              window.location.reload();
-            }, 3000);
-    } catch (error) {
-      const errorMessage = error.response?.data?.message || 'An error occurred. Please try again.';
-      toast.error(errorMessage);
-    }
+  if (confirm("Are you sure you want to delete this client?")) {
+    loadingButtons.value[id] = true;
+      try {
+          const response = await axios.delete(`clients/destroy/${id}`);
+              toast.success(response.data.message);
+                // Reload the page
+                setTimeout(function(){
+                  window.location.reload();
+                }, 3000);
+        } catch (error) {
+          const errorMessage = error.response?.data?.message || 'An error occurred. Please try again.';
+          toast.error(errorMessage);
+        }
+        setTimeout(() => {
+          loadingButtons.value[id] = false; // Reset the loading state
+          window.location.reload(); // Reload the page
+        }, 4000);
+  }
 };
 </script>
 
@@ -72,10 +81,23 @@ const deleteCustomer = async (id) =>  {
                     <button class="btn btn-warning text-white action-btn" @click="editCustomer(customer.id)">
                       <i class="bi bi-pencil-fill"></i>
                     </button>
-
+                    
                     <!-- Delete button -->
-                    <button class="btn btn-danger action-btn" @click="deleteCustomer(customer.id)">
-                      <i class="bi bi-trash-fill"></i>
+                    <button
+                        class="btn btn-danger action-btn"
+                        :disabled="loadingButtons[customer.id]"
+                        @click="deleteCustomer(customer.id)"
+                      >
+                      <!-- Show trash icon if not loading -->
+                      <span v-if="!loadingButtons[customer.id]">
+                        <i class="bi bi-trash-fill"></i>
+                      </span>
+                      
+                      <!-- Show spinner and Deleting text if loading -->
+                      <span v-else>
+                        <i class="spinner-border spinner-border-sm" role="status"></i>
+                        Deleting...
+                      </span>
                     </button>
                   </td>
                 </tr>
