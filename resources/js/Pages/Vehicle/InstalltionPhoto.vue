@@ -30,7 +30,8 @@ const handleFileChange = async (event) => {
 
             try {
                 const response = await axios.post('/vehicle-type/upload-installation-photo', formData);
-                photoList.value.push(response.data); // Update the photo list
+                // photoList.value.push(response.data); // Update the photo list
+                window.location.reload();
             } catch (error) {
                 console.error('Failed to upload photo:', error);
                 toast.error('Failed to upload some photos. Please try again.');
