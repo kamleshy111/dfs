@@ -10,28 +10,41 @@ import axios from "axios";
 
 const loadingButtons = ref({});
 
-// Delete device
-const deleteDevice = async (id) => {
-  if (confirm("Are you sure you want to delete this device?")) {
-    loadingButtons.value[id] = true;
-    try {
-      const response = await axios.delete(`devices/destroy/${id}`);
-      toast.success(response.data.message);
-      // Reload the page
-      setTimeout(function () {
-        window.location.reload();
-      }, 3000);
-    } catch (error) {
-      const errorMessage =
-        error.response?.data?.message || "An error occurred. Please try again.";
-      toast.error(errorMessage);
+// Define props
+defineProps({
+  devices: {
+    type: Array, // Corrected type: Array for table data
+    required: true,
+  },
+});
+
+// Column definitions for DataTable
+const columns = [
+//   { data: 'id', title: 'S No' },
+    { 
+    data: null,
+    title: 'S No',
+    render: (data, type, row, meta) => meta.row + 1,
+    },
+    { data: 'deviceId' },
+    { data: 'orderId'},
+    { data: 'customerName'},
+    { data: 'startData' },
+    {
+        title: 'Actions',
+        data: null,
+        render: (data, type, row) => {
+            return `
+            <div class="icon-all-dflex">
+              <a href="/devices/${data.id}/view" class="btn btn-light action-btn"><i class="bi bi-eye-fill"></i> </a>
+              <a class="btn btn-warning text-white action-btn" href="devices/${data.id}/edit" ><i class="bi bi-pencil-fill"></i> </a>
+              <button class="btn-danger  action-btn delete-btn" data-id="${data.id}"><i class="bi bi-trash-fill"></i></button>
+              <a class="btn btn-warning action-btn" href="devices/map/${data.id}"> <i class="bi bi-geo-alt-fill"></i></a>
+              </div>
+            `;
+        }
     }
-    setTimeout(() => {
-      loadingButtons.value[id] = false; // Reset the loading state
-      window.location.reload(); // Reload the page
-    }, 4000);
-  }
-};
+]
 </script>
 
 <template>
@@ -65,116 +78,22 @@ const deleteDevice = async (id) => {
           </div>
         </div>
 
-        <table class="table table-hover table-bordered mt-3">
-          <thead class="thead-light">
-            <tr>
-              <th scope="col">S No</th>
-              <th scope="col">Device ID</th>
-              <th scope="col">Order ID</th>
-              <th scope="col">Customers Name</th>
-              <th scope="col">Date &amp; Time</th>
-              <th scope="col">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-if="devices.data.length === 0">
-              <td colspan="6" class="text-center">No devices found.</td>
-            </tr>
-            <tr v-for="(device, index) in devices.data" :key="device.id">
-              <td>{{ index + 1 }}</td>
-              <td>{{ device.device_id }}</td>
-              <td>{{ device.order_id }}</td>
-              <td>
-                {{
-                  device.first_name
-                    ? device.first_name + " " + (device.last_name ?? "")
-                    : "---"
-                }}
-              </td>
-              <td>{{ formatDate(device.date_time) }}</td>
-              <td class="d-flex">
-                <!-- view button -->
-                <button
-                  class="btn btn-light action-btn"
-                  @click="viewDevice(device.id)"
-                >
-                  <i class="bi bi-eye-fill"></i>
-                </button>
+        <div class="table-responsive">
+            <!-- DataTable Component -->
+            <DataTable :data="devices" :columns="columns" id="devices">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col">S No</th>
+                  <th scope="col">Device ID</th>
+                  <th scope="col">Order ID</th>
+                  <th scope="col">Customer Name</th>
+                  <th scope="col">Start Data</th>
+                  <th scope="col">Action</th>
+                </tr>
+              </thead>
+            </DataTable>
+          </div>
 
-                <!-- Edit button -->
-                <button
-                  class="btn btn-warning text-white action-btn"
-                  @click="editDevice(device.id)"
-                >
-                  <i class="bi bi-pencil-fill"></i>
-                </button>
-
-                <!-- Delete button -->
-                <button
-                    class="btn btn-danger action-btn"
-                    :disabled="loadingButtons[device.id]"
-                    @click="deleteDevice(device.id)"
-                  >
-                    <!-- Show trash icon if not loading -->
-                    <span v-if="!loadingButtons[device.id]">
-                      <i class="bi bi-trash-fill"></i>
-                    </span>
-
-                    <!-- Show spinner and Deleting text if loading -->
-                    <span v-else>
-                      <i class="spinner-border spinner-border-sm" role="status"></i>
-                      Deleting...
-                    </span>
-                  </button>
-                  <a
-                      class="btn btn-warning action-btn"
-                      :href="route('devices.map', {id: device.id})"
-                  >
-                      <i class="bi bi-geo-alt-fill"></i>
-                  </a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
-        <!-- Pagination -->
-        <div class="pagination-container">
-          <nav aria-label="Page navigation">
-            <ul class="pagination">
-              <!-- Previous Button -->
-              <li
-                class="page-item"
-                :class="{ disabled: devices.current_page === 1 }"
-              >
-                <a class="page-link" :href="`?page=${devices.current_page - 1}`"
-                  >Previous</a
-                >
-              </li>
-
-              <!-- Page Numbers -->
-              <li
-                v-for="page in totalPages"
-                :key="page"
-                class="page-item"
-                :class="{ active: page === devices.current_page }"
-              >
-                <a class="page-link" :href="`?page=${page}`">{{ page }}</a>
-              </li>
-
-              <!-- Next Button -->
-              <li
-                class="page-item"
-                :class="{
-                  disabled: devices.current_page === devices.last_page,
-                }"
-              >
-                <a class="page-link" :href="`?page=${devices.current_page + 1}`"
-                  >Next</a
-                >
-              </li>
-            </ul>
-          </nav>
-        </div>
       </div>
       <!-- Popup -->
       <div v-if="showPopup" class="popup-overlay">
@@ -230,17 +149,35 @@ export default {
   },
   props: {
     user: Object,
-    devices: Object, // Paginated device data
   },
-  computed: {
-    totalPages() {
-      return Array.from(
-        { length: this.devices.last_page },
-        (_, index) => index + 1
-      );
-    },
+  mounted() {
+    this.setupDeleteButton();
   },
   methods: {
+    setupDeleteButton() {
+      const self = this;
+      $(document).on('click', '.delete-btn', (event) => {
+        const deviceId = $(event.target).closest('button').data('id');
+        self.deleteDevice(deviceId);
+      });
+    },
+
+    deleteDevice(deviceId) {
+      if (confirm('Are you sure you want to delete this device?')) {
+        axios.delete(`/devices/destroy/${deviceId}`)
+          .then((response) => {
+            toast.success('Device deleted successfully!');
+            const index = this.devices.findIndex(device => device.id === deviceId);
+            if (index !== -1) {
+              this.devices.splice(index, 1);
+            }
+          })
+          .catch((error) => {
+            toast.error('Failed to delete device.');
+            console.error(error);
+          });
+      }
+    },
     closePopup() {
       this.showPopup = false;
       this.file = null;
@@ -276,42 +213,6 @@ export default {
           this.uploadStatus = "Upload failed";
           console.error("Upload Error:", error);
         });
-    },
-
-    formatDate(value) {
-      if (!value) return "---";
-
-      // Create a new Date object from the ISO 8601 string
-      const date = new Date(value);
-
-      // Define the format options
-      const dateOptions = {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      };
-      const timeOptions = {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-      };
-
-      // Format the date and time separately and combine them
-      const formattedDate = date.toLocaleDateString("en-GB", dateOptions);
-      const formattedTime = date.toLocaleTimeString("en-GB", timeOptions);
-
-      // Return the formatted string in the desired format
-      return `${formattedDate} at ${formattedTime}`;
-    },
-
-    // Redirect to the edit page
-    editDevice(id) {
-      window.location.href = `/devices/${id}/edit`;
-    },
-
-    // Redirect to the view page
-    viewDevice(id) {
-      window.location.href = `/devices/${id}/view`;
     },
   },
 };
