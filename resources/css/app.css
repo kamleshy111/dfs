@@ -896,23 +896,27 @@ p.active-device {
 .duration-unit .form-control {
     border: 0;
     width: unset;
+    height: auto;
 }
 .duration-unit {
     border: 1px solid #d1d5db;
     border-radius: 4px;
-    width: 32%;
 }
 .duration-unit .duration-option {
-    width: 30%;
+    width: 40%;
 }
 .duration-unit .duration-select {
     position: relative;
-    width: 70%;
+    width: 60%;
 }
 .duration-unit {
     border: 1px solid #d1d5db;
     border-radius: 4px;
-    width: 32%;
+    height: 50px;
+    align-items: center;
+    margin-top: 5px;
+    margin-left: -2px;
+    width: 50%;
 }
 #duration {
     width: 100%;

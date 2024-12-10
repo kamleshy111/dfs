@@ -58,6 +58,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    //Device billing
+    Route::group(['prefix' => 'billing'], function () {
+        Route::get('/', [BillingController::class, 'index'])->name('billing');
+    });
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
@@ -122,9 +127,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
 Route::middleware(['auth', 'role:user'])->group(function () {
     //Device Routes
-    Route::group(['prefix' => 'billing'], function () {
-        Route::get('/', [BillingController::class, 'index'])->name('billing');
-    });
 
     # Monitor
     Route::group(['prefix' => 'monitor'], function () {

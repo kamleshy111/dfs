@@ -25,25 +25,26 @@ const goBack = () => {
       <h2 class="fs-4 mb-2 fw-bold text-[#2239c3cc]">Client Information</h2>
         <div class="profile-card  profile-device">
             <div class="profile-details mt-3 d-flex justify-content-between">
-                <div class="">
+                <div class="w-2/3	">
                 <h4 class="mt-3">Name: {{ props.customers.first_name }} {{ props.customers.last_name }}</h4>
                 <p class="mt-3">Primary Email: {{ props.customers.email }}</p>
                 <p class="mt-3">Secondary Email: {{ props.customers.secondary_email }}</p>
-                <p class="mt-3">Primary Mobile: {{ props.customers.phone }}</p>invoice_number
-                <p class="mt-3">Secondary Mobile: {{ props.customers.secondary_phone }}</p>
-                <p class="mt-3">Invoice Number: {{ props.customers.invoice_number }}</p>
-                <p class="mt-3">Amount: {{ props.customers.amount }}</p>
-                <p class="mt-3">Address: {{ props.customers.address }}</p>
+                <p class="mt-3">Primary Mobile: {{ props.customers.phone }}</p>
+              <p class="mt-3">Address: {{ props.customers.address }}</p>
+
+                
                 </div>
-            <div class="">
+            <div class="w-1/3	">
+              <p class="mt-3">Secondary Mobile: {{ props.customers.secondary_phone }}</p>
+
                 <p class="mt-2">Devices:</p>
                 <ul class="mt-3">
                     <!-- Loop through the devices and display their device IDs -->
-                    <li v-for="device in props.customers.devices" :key="device.id">
-                        <p class="mt-3">Device ID: {{ device.device_id }}</p>
-                        <p class="mt-3">Order ID: {{ device.order_id }}</p>
-                        <p class="mt-3">Company Name: {{ device.company_name }}</p><br>
-                    </li>
+                    
+                        <p class="mt-3">Active : {{ props.customers.activeCount }}</p>
+                        <p class="mt-3">InActive : {{ props.customers.inActiveCount }}</p>
+                        <p class="mt-3">Expired : {{ props.customers.expiredCount }}</p><br>
+    
                 </ul>
             </div>
             </div>

@@ -16,7 +16,6 @@ Route::get('/user', function (Request $request) {
 
 Route::middleware('auth:sanctum')->group(function(){
     Route::get('/dashboard', [DashboardController::class, 'getDashboardData'])->name('dashboard');
-    Route::get('/customer-devices', [CustomerDeviceController::class, 'getDevices']);
 
 #Customer Create select devices
     Route::get('/customers/{customer}/devices', [CustomerDeviceController::class, 'getDevicesByCustomer']);
