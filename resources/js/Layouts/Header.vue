@@ -61,7 +61,7 @@ onMounted(() => {
                <!-- <h2 class="d-flex align-items-center">
                     {{ heading }}<img src="/storage/heand.png" class="ml-2" />
                 </h2>-->
-                <p class="d-none d-md-block">Today is {{ currentDate }}</p>
+                <p class="header-date">Today is {{ currentDate }}</p>
             </div>
             <div class="d-flex align-items-center w-50 justify-content-end">
                 <!-- <div class="position-relative mr-4 search-desktop">
@@ -126,7 +126,7 @@ onMounted(() => {
                 <h2 class="d-flex align-items-center">
                     Dashboard<img src="/storage/heand.png" class="ml-2" />
                 </h2>
-                <p class="d-none d-md-block">Today is {{ currentDate }}</p>
+                <p class="header-date">Today is {{ currentDate }}</p>
             </div>
             <div class="d-flex align-items-center w-50 justify-content-end">
                 <!-- <div class="position-relative mr-4 search-desktop">

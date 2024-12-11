@@ -66,75 +66,77 @@ const deleteDevice = async (id) => {
         </div>
 
         <table class="table table-hover table-bordered mt-3">
-          <thead class="thead-light">
-            <tr>
-              <th scope="col">S No</th>
-              <th scope="col">Device ID</th>
-              <th scope="col">Order ID</th>
-              <th scope="col">Customers Name</th>
-              <th scope="col">Date &amp; Time</th>
-              <th scope="col">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-if="devices.data.length === 0">
-              <td colspan="6" class="text-center">No devices found.</td>
-            </tr>
-            <tr v-for="(device, index) in devices.data" :key="device.id">
-              <td>{{ index + 1 }}</td>
-              <td>{{ device.device_id }}</td>
-              <td>{{ device.order_id }}</td>
-              <td>
-                {{
-                  device.first_name
-                    ? device.first_name + " " + (device.last_name ?? "")
-                    : "---"
-                }}
-              </td>
-              <td>{{ formatDate(device.date_time) }}</td>
-              <td class="d-flex">
-                <!-- view button -->
-                <button
-                  class="btn btn-light action-btn"
-                  @click="viewDevice(device.id)"
-                >
-                  <i class="bi bi-eye-fill"></i>
-                </button>
-
-                <!-- Edit button -->
-                <button
-                  class="btn btn-warning text-white action-btn"
-                  @click="editDevice(device.id)"
-                >
-                  <i class="bi bi-pencil-fill"></i>
-                </button>
-
-                <!-- Delete button -->
-                <button
-                    class="btn btn-danger action-btn"
-                    :disabled="loadingButtons[device.id]"
-                    @click="deleteDevice(device.id)"
+          <div class="table-responsive">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">S No</th>
+                <th scope="col">Device ID</th>
+                <th scope="col">Order ID</th>
+                <th scope="col">Customers Name</th>
+                <th scope="col">Date &amp; Time</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-if="devices.data.length === 0">
+                <td colspan="6" class="text-center">No devices found.</td>
+              </tr>
+              <tr v-for="(device, index) in devices.data" :key="device.id">
+                <td>{{ index + 1 }}</td>
+                <td>{{ device.device_id }}</td>
+                <td>{{ device.order_id }}</td>
+                <td>
+                  {{
+                    device.first_name
+                      ? device.first_name + " " + (device.last_name ?? "")
+                      : "---"
+                  }}
+                </td>
+                <td>{{ formatDate(device.date_time) }}</td>
+                <td class="d-flex">
+                  <!-- view button -->
+                  <button
+                    class="btn btn-light action-btn"
+                    @click="viewDevice(device.id)"
                   >
-                    <!-- Show trash icon if not loading -->
-                    <span v-if="!loadingButtons[device.id]">
-                      <i class="bi bi-trash-fill"></i>
-                    </span>
-
-                    <!-- Show spinner and Deleting text if loading -->
-                    <span v-else>
-                      <i class="spinner-border spinner-border-sm" role="status"></i>
-                      Deleting...
-                    </span>
+                    <i class="bi bi-eye-fill"></i>
                   </button>
-                  <a
-                      class="btn btn-warning action-btn"
-                      :href="route('devices.map', {id: device.id})"
+
+                  <!-- Edit button -->
+                  <button
+                    class="btn btn-warning text-white action-btn"
+                    @click="editDevice(device.id)"
                   >
-                      <i class="bi bi-geo-alt-fill"></i>
-                  </a>
-              </td>
-            </tr>
-          </tbody>
+                    <i class="bi bi-pencil-fill"></i>
+                  </button>
+
+                  <!-- Delete button -->
+                  <button
+                      class="btn btn-danger action-btn"
+                      :disabled="loadingButtons[device.id]"
+                      @click="deleteDevice(device.id)"
+                    >
+                      <!-- Show trash icon if not loading -->
+                      <span v-if="!loadingButtons[device.id]">
+                        <i class="bi bi-trash-fill"></i>
+                      </span>
+
+                      <!-- Show spinner and Deleting text if loading -->
+                      <span v-else>
+                        <i class="spinner-border spinner-border-sm" role="status"></i>
+                        Deleting...
+                      </span>
+                    </button>
+                    <a
+                        class="btn btn-warning action-btn"
+                        :href="route('devices.map', {id: device.id})"
+                    >
+                        <i class="bi bi-geo-alt-fill"></i>
+                    </a>
+                </td>
+              </tr>
+            </tbody>
+          </div>
         </table>
 
         <!-- Pagination -->

@@ -885,7 +885,7 @@ p.active-device {
     border: 0;
 }
 .icon-box {
-    margin-left: 22px;
+    margin-left: 15px;
 }
 .dp__pointer {
     border: 0 !important;
@@ -928,9 +928,83 @@ p.active-device {
     width: 100%;
 }
 .selected_class {
-    width: 50%;
+    width: 24%;
     text-align: end;
 }
+.card-summary-icon {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+.action-btn .bi-geo-alt-fill {
+    color: #fff;
+}
+
+
+.client-info-card {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    width: 80%;
+}
+  .client-info-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Section Title */
+  .section-title {
+    font-size: 1.8rem;
+    color: var(--light-color);
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 30px;
+  }
+
+  /* Client Info Section */
+  .client-info-section {
+    margin-bottom: 20px;
+  }
+
+  .client-name, .client-email, .client-phone, .client-address, .client-devices {
+    font-size: 1rem;
+    margin-bottom: 12px;
+    color: #000000d6;
+    font-weight: 600;
+}
+
+  .client-name span, .client-email span, .client-phone span, .client-address span {
+    color: #495057;
+    font-weight: 400;
+}
+    
+  .device-title {
+    font-size: 1.1rem;
+    color: #000000e3;
+    font-weight: 700;
+  }
+
+  .device-status-list {
+    list-style-type: none;
+    padding-left: 0;
+  }
+
+  .device-status-list li {
+    font-size: 1rem;
+    margin-bottom: 8px;
+    color: #000000e3;
+  }
+
+  .device-status-list li span {
+    color: #495057;
+    font-weight: 400;
+}
+.table a.action-btn {
+    margin: 0 5px;
+}
+
 @media screen and (min-width: 768px) and (max-width: 991px) {
 
     .header {
@@ -945,15 +1019,61 @@ p.active-device {
     }
     .right-box {
         width: 100%;
-        margin: 0;
-        padding-right: 20px;
+        margin-left: 18px;
+        padding-right: 8px;
     }
+    .action-btn{
+        margin-bottom: 10px !important;
+    }
+    
     
     
 }
 
 
 @media (max-width: 767px) {
+    .btn-custom {
+        margin-top: 5px;
+    }
+    .table-container h4 {
+        width: 60%;
+        font-size: 16px;
+    }
+    .right-box{
+        margin: 0;
+        width: 100%;
+        padding: 0;
+    }
+
+    .client-info-card {
+        padding: 20px;
+      }
+  
+      .row {
+        flex-direction: column;
+      }
+  
+      .col-md-8,
+      .col-md-4 {
+        width: 100%;
+        margin-bottom: 20px;
+      }
+  
+      .section-title {
+        font-size: 1.5rem;
+      }
+  
+      .client-name,
+      .client-email,
+      .client-phone,
+      .client-address {
+        font-size: 0.9rem;
+      }
+  
+      .device-status-list li {
+        font-size: 0.9rem;
+      }
+    
 
     .sidebar{
         display: none;
@@ -965,7 +1085,7 @@ p.active-device {
 
     .img-header {
         width: 40px;
-        margin-left: 20px;
+        margin-left: 12px;
     }
 
     .profile-design {

@@ -16,6 +16,13 @@ defineProps({
 
 const showingNavigationDropdown = ref(false);
 
+$(document).ready(function() {
+      $('.sidebar .nav-link').click(function() {
+        $('.sidebar .nav-link').removeClass('active');
+        $(this).addClass('active');
+      });
+    });
+
 </script>
 <template>
   <!-- Sidebar -->

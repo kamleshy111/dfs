@@ -85,7 +85,7 @@ const deleteVehicle = async (id) => {
                 </button>
 
                 <!-- Installtion photos button -->
-                <button class="btn btn-dark text-white action-btn" @click="InstalltionPhotos(vehicle.id)">
+                <button class="btn btn-light action-btn" @click="InstalltionPhotos(vehicle.id)">
                   <i class="bi bi-cloud-upload"></i>
                 </button>
 
