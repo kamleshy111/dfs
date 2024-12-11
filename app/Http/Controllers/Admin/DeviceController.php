@@ -215,7 +215,9 @@ class DeviceController extends Controller
         return response()->json(['message' => 'An error occurred while deleting the device.']);
     }
 
-    public function viewMap() {
-        return Inertia::render('AdminMapView',[]);
+    public function viewMap(Request $request) {
+        return Inertia::render('AdminMapView',[
+            'device_id' => $request->id
+        ]);
     }
 }

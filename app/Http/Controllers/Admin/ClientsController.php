@@ -136,7 +136,7 @@ class ClientsController extends Controller
         $data = Customer::with(['devices' => function ($query) {
             $query->select('status');
         }])->find($id);
-        
+
         // Count active and inactive devices
         $inActiveCount = $data->devices->where('status', '0')->count();
         $activeCount = $data->devices->where('status', '1')->count();
