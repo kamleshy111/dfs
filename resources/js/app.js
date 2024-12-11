@@ -10,6 +10,11 @@ import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 
+import DataTablesLib from 'datatables.net'; 
+import DataTable from 'datatables.net-vue3';
+ 
+DataTable.use(DataTablesLib);
+
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 createInertiaApp({
@@ -31,6 +36,10 @@ createInertiaApp({
 
         // Register VueDatePicker globally
         vueApp.component('VueDatePicker', VueDatePicker);
+
+
+        //Datatable use
+        vueApp.component('DataTable', DataTable) 
 
         // Mount the app
         vueApp.mount(el);

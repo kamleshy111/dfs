@@ -22,13 +22,25 @@ class VehicleTypeController extends Controller
 {
     public function index(){
 
-        $vehicles = Vehicle::select('vehicles.*','customers.first_name', 'customers.last_name')
+        $data = Vehicle::select('vehicles.*','customers.first_name', 'customers.last_name')
                             ->join('customers', 'vehicles.customer_id', '=', 'customers.id')
-                            ->paginate(10);
+                            ->get();
+
+        $vehicles = $data->map(function($item) {
+            return [
+                'id' => $item->id ?? 0,
+                'customerName' => ($item->first_name ?? '') . ' ' . ($item->last_name ?? ''),
+                'vehicleType' => $item->vehicle_type ?? '',
+                'vehicleRegisterNumber' => $item->vehicle_register_number ?? '',
+                'installationDate' => \Carbon\Carbon::parse($item->installation_date)->format('d/m/Y') ?? '',
+    
+            ];
+        });
 
         return Inertia::render('Vehicle/Vehicle',[
             'user' => Auth::user(),
-            'vehicles' => $vehicles,
+            // 'vehicles' => $vehicles,
+            'vehicles' => $vehicles->toArray(),
         ]);
 
     }

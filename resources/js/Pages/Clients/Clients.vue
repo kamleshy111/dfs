@@ -8,31 +8,45 @@ import 'vue3-toastify/dist/index.css';
 import axios from 'axios';
 import { ref } from "vue";
 
+// Define props
+defineProps({
+    customers: {
+    type: Array, 
+    required: true,
+  },
+  user: {
+    type: Object,
+    required: true,
+  },
+});
 
-const router = useRouter();
-const loadingButtons = ref({});
-
-// Delete Clients
-const deleteCustomer = async (id) =>  {
-  if (confirm("Are you sure you want to delete this client?")) {
-    loadingButtons.value[id] = true;
-      try {
-          const response = await axios.delete(`clients/destroy/${id}`);
-              toast.success(response.data.message);
-                // Reload the page
-                setTimeout(function(){
-                  window.location.reload();
-                }, 3000);
-        } catch (error) {
-          const errorMessage = error.response?.data?.message || 'An error occurred. Please try again.';
-          toast.error(errorMessage);
+// Column definitions for DataTable
+const columns = [
+//   { data: 'id', title: 'S No' },
+    { 
+    data: null,
+    title: 'S No',
+    render: (data, type, row, meta) => meta.row + 1,
+    },
+    { data: 'customerName' },
+    { data: 'email'},
+    { data: 'phone'},
+    { data: 'created_at' },
+    {
+        title: 'Actions',
+        data: null,
+        render: (data, type, row) => {
+            return `
+            <div class="icon-all-dflex">
+              <a href="/clients/${data.id}/view" class="btn btn-light action-btn"><i class="bi bi-eye-fill"></i> </a>
+              <a class="btn btn-warning text-white action-btn" href="clients/${data.id}/edit" ><i class="bi bi-pencil-fill"></i> </a>
+              <button class="btn-danger  action-btn delete-btn" data-id="${data.id}"><i class="bi bi-trash-fill"></i></button>
+              <a class="btn btn-warning action-btn" href="clients/map/${data.id}"> <i class="bi bi-geo-alt-fill"></i></a>
+              </div>
+            `;
         }
-        setTimeout(() => {
-          loadingButtons.value[id] = false; // Reset the loading state
-          window.location.reload(); // Reload the page
-        }, 4000);
-  }
-};
+    }
+]
 </script>
 
 <template>
@@ -59,87 +73,21 @@ const deleteCustomer = async (id) =>  {
                         </div>
                     </div>
                     <div class="table-responsive">
-                        <table class="table table-hover table-bordered mt-3">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th scope="col">S No</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Mobile Number</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Date & Time</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                                <tr v-for="(customer, index) in customers.data" :key="customer.id">
-                                    <td>{{ index + 1 }}</td>
-                                    <td>{{ customer.first_name + ' ' + customer.last_name }}</td>
-                                    <td>{{ customer.phone }}</td>
-                                    <td>{{ customer.email }}</td>
-                                    <td>{{ formatDate(customer.created_at) }}</td>
-                                    <td>
-                                        <!-- view button -->
-                                        <button class="btn btn-light action-btn" @click="viewCustomer(customer.id)">
-                                            <i class="bi bi-eye-fill"></i>
-                                        </button>
-
-                                        <!-- Edit button -->
-                                        <button class="btn btn-warning text-white action-btn" @click="editCustomer(customer.id)">
-                                            <i class="bi bi-pencil-fill"></i>
-                                        </button>
-
-                                        <!-- Delete button -->
-                                        <button
-                                            class="btn btn-danger action-btn"
-                                            :disabled="loadingButtons[customer.id]"
-                                            @click="deleteCustomer(customer.id)"
-                                        >
-                                            <!-- Show trash icon if not loading -->
-                                            <span v-if="!loadingButtons[customer.id]">
-                                            <i class="bi bi-trash-fill"></i>
-                                          </span>
-
-                                                                <!-- Show spinner and Deleting text if loading -->
-                                                                <span v-else>
-                                            <i class="spinner-border spinner-border-sm" role="status"></i>
-                                            Deleting...
-                                          </span>
-                                        </button>
-
-                                        <a class="btn btn-warning action-btn" :href="route('clients.map', {id: customer.id})">
-                                            <i class="bi bi-geo-alt-fill"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-
-                                <!-- Repeat the above row as needed -->
-                            </tbody>
-                        </table>
+                        <!-- DataTable Component -->
+                        <DataTable :data="customers" :columns="columns" id="customers">
+                        <thead class="thead-light">
+                            <tr>
+                            <th scope="col">S No</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Mobile Number</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Date & Time</th>
+                            <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        </DataTable>
                     </div>
-                    <!-- Pagination -->
-                    <div class="pagination-container">
-                        <nav aria-label="Page navigation">
-                            <ul class="pagination">
-                                <!-- Previous Button -->
-                                <li class="page-item" :class="{ disabled: customers.current_page === 1 }">
-                                    <a class="page-link" :href="`?page=${customers.current_page - 1}`">Previous</a>
-                                </li>
 
-                                <!-- Page Numbers -->
-                                <li v-for="page in totalPages" :key="page" class="page-item"
-                                    :class="{ active: page === customers.current_page }">
-                                    <a class="page-link" :href="`?page=${page}`">{{ page }}</a>
-                                </li>
-
-                                <!-- Next Button -->
-                                <li class="page-item"
-                                    :class="{ disabled: customers.current_page === customers.last_page }">
-                                    <a class="page-link" :href="`?page=${customers.current_page + 1}`">Next</a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
                 </div>
             </div>
         </div>
@@ -148,52 +96,37 @@ const deleteCustomer = async (id) =>  {
 
 <script>
 export default {
-    props: {
-        user: Object,
-        customers: Object, // Paginated customer data
+  props: {
+    user: Object,
+  },
+  mounted() {
+    this.setupDeleteButton();
+  },
+  methods: {
+    setupDeleteButton() {
+      const self = this;
+      $(document).on('click', '.delete-btn', (event) => {
+        const customerId = $(event.target).closest('button').data('id');
+        self.deleteDevice(customerId);
+      });
     },
-    computed: {
-        totalPages() {
-            return Array.from({ length: this.customers.last_page }, (_, index) => index + 1);
-        }
+
+    deleteDevice(customerId) {
+      if (confirm('Are you sure you want to delete this client?')) {
+        axios.delete(`/clients/destroy/${customerId}`)
+          .then((response) => {
+            toast.success('client deleted successfully!');
+            const index = this.customers.findIndex(customer => customer.id === customerId);
+            if (index !== -1) {
+              this.customers.splice(index, 1);
+            }
+          })
+          .catch((error) => {
+            toast.error('Failed to delete client.');
+            console.error(error);
+          });
+      }
     },
-    methods: {
-        formatDate(value) {
-            if (!value) return '';
-
-            // Create a new Date object from the ISO 8601 string
-            const date = new Date(value);
-
-            // Define the format options
-            const dateOptions = {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric'
-            };
-            const timeOptions = {
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: true
-            };
-
-            // Format the date and time separately and combine them
-            const formattedDate = date.toLocaleDateString('en-GB', dateOptions);
-            const formattedTime = date.toLocaleTimeString('en-GB', timeOptions);
-
-            // Return the formatted string in the desired format
-            return `${formattedDate} at ${formattedTime}`;
-        },
-
-        // Redirect to the edit page
-        editCustomer(id) {
-            window.location.href = `/clients/${id}/edit`;
-        },
-
-        // Redirect to the view page
-        viewCustomer(id) {
-            window.location.href = `/clients/${id}/view`;
-        },
-    }
-
+  },
 };
 </script>
