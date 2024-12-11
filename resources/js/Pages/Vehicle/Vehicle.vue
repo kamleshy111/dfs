@@ -37,37 +37,15 @@ const columns = [
         render: (data, type, row) => {
             return `
             <div class="icon-all-dflex">
-              <a href="/clients/${data.id}/view" class="btn btn-light action-btn"><i class="bi bi-eye-fill"></i> </a>
-              <a class="btn btn-warning text-white action-btn" href="clients/${data.id}/edit" ><i class="bi bi-pencil-fill"></i> </a>
+              <a href="/vehicle-type/${data.id}/view" class="btn btn-light action-btn"><i class="bi bi-eye-fill"></i> </a>
+              <a class="btn btn-warning text-white action-btn" href="vehicle-type/${data.id}/edit" ><i class="bi bi-pencil-fill"></i> </a>
+               <a class="btn btn-dark text-white action-btn" href="vehicle-type/${data.id}/photos" ><i class="bi bi-cloud-upload"></i></a>
               <button class="btn-danger  action-btn delete-btn" data-id="${data.id}"><i class="bi bi-trash-fill"></i></button>
-              <a class="btn btn-warning action-btn" href="clients/map/${data.id}"> <i class="bi bi-geo-alt-fill"></i></a>
               </div>
             `;
         }
     }
 ]
-
-// Delete Vehicle
-const deleteVehicle = async (id) => {
-  if (confirm("Are you sure you want to delete this vehicle?")) {
-    loadingButtons.value[id] = true;
-    try {
-      const response = await axios.delete(`vehicle-type/destroy/${id}`);
-      toast.success(response.data.message);
-      // Reload the page
-      setTimeout(function (){
-        window.location.reload();
-      }, 3000);
-    } catch (error) {
-      const errorMessage = error.response?.data?.message || 'An error occurred. Please try again.';
-      toast.error(errorMessage);
-    }
-    setTimeout(() => {
-      loadingButtons.value[id] = false; // Reset the loading state
-      window.location.reload(); // Reload the page
-    }, 4000);
-  }
-};
 </script>
 
 <template>
@@ -108,39 +86,37 @@ const deleteVehicle = async (id) => {
 
 <script>
 export default {
-  data() {
-      return {
-        showPopup: false,
-        file: null,
-        uploadStatus: "Pending",
-      };
-    },
   props: {
     user: Object,
-    // vehicles: Object, // Paginated vehicle data
   },
-  computed: {
-    totalPages() {
-      return Array.from({ length: this.vehicles.last_page }, (_, index) => index + 1);
-    },
+  mounted() {
+    this.setupDeleteButton();
   },
   methods: {
-    // Redirect to the edit page
-    editVehicle(id) {
-      window.location.href = `/vehicle-type/${id}/edit`;
+    setupDeleteButton() {
+      const self = this;
+      $(document).on('click', '.delete-btn', (event) => {
+        const vehicleId = $(event.target).closest('button').data('id');
+        self.deleteVehicle(vehicleId);
+      });
     },
 
-    // Redirect to the view page
-    viewDevice(id) {
-      window.location.href = `/vehicle-type/${id}/view`;
+    deleteVehicle(vehicleId) {
+      if (confirm('Are you sure you want to delete this vehicle?')) {
+        axios.delete(`/vehicle-type/destroy/${vehicleId}`)
+          .then((response) => {
+            toast.success('vehicle deleted successfully!');
+            const index = this.vehicles.findIndex(vehicle => vehicle.id === vehicleId);
+            if (index !== -1) {
+              this.vehicles.splice(index, 1);
+            }
+          })
+          .catch((error) => {
+            toast.error('Failed to delete vehicle.');
+            console.error(error);
+          });
+      }
     },
-
-    // Installtion photos
-    InstalltionPhotos(id) {
-      window.location.href = `/vehicle-type/${id}/photos`;
-    }
-
-  }
-
+  },
 };
 </script>

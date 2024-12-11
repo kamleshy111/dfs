@@ -39,6 +39,7 @@ const goBack = () => {
               </div>
             <div class="col-md-4">
               <p class="mt-3">Start Date: {{ props.Vehicles.start_date }}</p>
+              <p class="mt-3">Duration : {{ props.Vehicles.duration }}</p>
               <p class="mt-3">Expiration Date: {{ props.Vehicles.expirationDate }}</p>
               <p class="mt-3">SIM Operator: {{ props.Vehicles.sim_operator }}</p>
               <p class="mt-3">Customer Name: {{ props.Vehicles.first_name ? props.Vehicles.first_name + ' ' + (props.Vehicles.last_name ?? '') : '---' }}</p>
