@@ -58,11 +58,11 @@ const columns = [
             <div class="form-container shadow">
                 <div class="table-container">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h4 class="responsive-btn"><i class="bi bi-people-fill mr-2"></i>All Customers</h4>
+                        <h4 class="responsive-btn"><i class="bi bi-people-fill mr-2"></i>All Clients</h4>
                         <div class="text-end">
                             <a class="mr-2" :href="route('clients.create')">
                                 <button class="btn btn-primary btn-custom responsive-btn">
-                                    <i class="bi bi-plus-circle-fill mr-2 "></i>Add New Customer
+                                    <i class="bi bi-plus-circle-fill mr-2 "></i>Add New Client
                                 </button>
                             </a>
                             <a :href="route('clients.map')">

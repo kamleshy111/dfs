@@ -39,7 +39,6 @@ class VehicleTypeController extends Controller
 
         return Inertia::render('Vehicle/Vehicle',[
             'user' => Auth::user(),
-            // 'vehicles' => $vehicles,
             'vehicles' => $vehicles->toArray(),
         ]);
 
@@ -154,7 +153,7 @@ class VehicleTypeController extends Controller
             'sim_card_number' => $data->sim_card_number ?? '--',
             'installation_date' => $installationDate ?? '',
             'start_date' => $startDate ?? '--',
-            'duration' => $data->duration ?? '--',
+            'duration' => ($data->duration ?? '') . ' ' . ($data->duration_unit ?? ''),
             'expirationDate' => $formattedExpirationDate ?? '--', 
             'sim_operator' => $data->sim_operator ?? '--',
             'first_name' => $data->first_name,
