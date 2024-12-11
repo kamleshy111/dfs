@@ -1,3 +1,4 @@
+@import 'datatables.net-dt'; 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -156,7 +157,7 @@ form {
 }
 
 
-button.btn.btn-light.action-btn {
+.btn.btn-light.action-btn {
     background: var(--light-color);
     color: #fff;
 }
@@ -1004,6 +1005,29 @@ p.active-device {
 .table a.action-btn {
     margin: 0 5px;
 }
+
+
+div.dt-container select.dt-input {
+    padding: 4px;
+    width: 60px;
+    margin-right: 5px;
+}
+
+.dt-layout-full td {
+    text-align: center !important;
+}
+.dt-layout-table th {
+    text-align: center !important;
+}
+.icon-all-dflex {
+    display: flex;
+    gap: 10px;
+}
+.icon-all-dflex a {
+    display: flex;
+    align-items: center;
+}
+
 
 @media screen and (min-width: 768px) and (max-width: 991px) {
 

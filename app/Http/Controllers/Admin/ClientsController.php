@@ -24,11 +24,23 @@ class ClientsController extends Controller
 {
     public function index() {
 
-        $customers = Customer::select('id','first_name','last_name','email','phone','created_at')->paginate(10);
+        $data = Customer::select('id','first_name','last_name','email','phone','created_at')->get();
+
+
+        $customers = $data->map(function($item) {
+            return [
+                'id' => $item->id ?? 0,
+                'customerName' => ($item->first_name ?? '') . ' ' . ($item->last_name ?? ''),
+                'email' => $item->email ?? '',
+                'phone' => $item->phone ?? '',
+                'created_at' => \Carbon\Carbon::parse($item->created_at)->format('d/m/Y h:i a') ?? '',
+    
+            ];
+        });
 
         return Inertia::render('Clients/Clients',[
             'user' => Auth::user(),
-            'customers' => $customers,
+            'customers' => $customers->toArray(),
         ]);
     }
 

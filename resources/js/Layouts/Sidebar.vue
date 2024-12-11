@@ -70,6 +70,16 @@ $(document).ready(function() {
                 <i class="bi bi-truck-front-fill mr-3"></i>Vehicle Type
               </NavLink>
             </li>
+
+            <li class="nav-item">
+              <NavLink
+                :href="route('all-billing')"
+                :active="route().current('all-billing')"
+                class="nav-link"
+              >
+                <i class="bi bi-credit-card-fill mr-3"></i>Billing
+              </NavLink>
+            </li>
             <!-- <li class="nav-item"><a class="nav-link" href="#"><i
                                     class="bi bi-credit-card-fill mr-3"></i>Payments</a>
                         </li>
@@ -113,11 +123,7 @@ $(document).ready(function() {
                             </NavLink>
                         </li> -->
 
-            <!-- <li class="nav-item">
-                            <a class="nav-link" href="#"><i class="bi bi-pie-chart-fill mr-3"></i>Report</a>
-                        </li> -->
-          </template>
-          <li class="nav-item">
+            <li class="nav-item">
               <NavLink
                 :href="route('billing')"
                 :active="route().current('billing')"
@@ -126,6 +132,10 @@ $(document).ready(function() {
                 <i class="bi bi-credit-card-fill mr-3"></i>Billing
               </NavLink>
             </li>
+            <!-- <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="bi bi-pie-chart-fill mr-3"></i>Report</a>
+                        </li> -->
+          </template>
           <li class="nav-item">
               <ResponsiveNavLink
                 :href="route('logout')"
