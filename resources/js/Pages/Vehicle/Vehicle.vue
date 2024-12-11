@@ -11,6 +11,42 @@ import axios from 'axios';
 const loadingButtons = ref({});
 
 
+// Define props
+defineProps({
+  vehicles: {
+    type: Array, // Corrected type: Array for table data
+    required: true,
+  },
+});
+
+// Column definitions for DataTable
+const columns = [
+//   { data: 'id', title: 'S No' },
+    { 
+    data: null,
+    title: 'S No',
+    render: (data, type, row, meta) => meta.row + 1,
+    },
+    { data: 'customerName' },
+    { data: 'vehicleType'},
+    { data: 'vehicleRegisterNumber'},
+    { data: 'installationDate' },
+    {
+        title: 'Actions',
+        data: null,
+        render: (data, type, row) => {
+            return `
+            <div class="icon-all-dflex">
+              <a href="/clients/${data.id}/view" class="btn btn-light action-btn"><i class="bi bi-eye-fill"></i> </a>
+              <a class="btn btn-warning text-white action-btn" href="clients/${data.id}/edit" ><i class="bi bi-pencil-fill"></i> </a>
+              <button class="btn-danger  action-btn delete-btn" data-id="${data.id}"><i class="bi bi-trash-fill"></i></button>
+              <a class="btn btn-warning action-btn" href="clients/map/${data.id}"> <i class="bi bi-geo-alt-fill"></i></a>
+              </div>
+            `;
+        }
+    }
+]
+
 // Delete Vehicle
 const deleteVehicle = async (id) => {
   if (confirm("Are you sure you want to delete this vehicle?")) {
@@ -50,8 +86,7 @@ const deleteVehicle = async (id) => {
                 vehicle</button>
             </a>
         </div>
-
-        <table class="table table-hover table-bordered mt-3">
+          <DataTable :data="vehicles" :columns="columns" id="vehicles">
           <thead class="thead-light">
             <tr>
               <th scope="col">S No</th>
@@ -62,79 +97,10 @@ const deleteVehicle = async (id) => {
               <th scope="col">Action</th>
             </tr>
           </thead>
-          <tbody>
-            <tr v-if="vehicles.data.length === 0">
-              <td colspan="6" class="text-center">No vehicles found.</td>
-            </tr>
-            <tr v-for="(vehicle, index) in vehicles.data" :key="vehicle.id">
-              <td>{{ index + 1 }}</td>
-              <td>{{ vehicle.first_name+ ' '+vehicle.last_name }}</td>
-              <td>{{ vehicle.vehicle_register_number }}</td>
-              <td>{{ vehicle.vehicle_type }}</td>
-              <td>{{ vehicle.installation_date }}</td>
-              <td>
+        </DataTable>
 
-                <!-- view button -->
-                <button class="btn btn-light action-btn" @click="viewDevice(vehicle.id)">
-                  <i class="bi bi-eye-fill"></i>
-                </button>
 
-                <!-- Edit button -->
-                <button class="btn btn-warning text-white action-btn" @click="editVehicle(vehicle.id)">
-                  <i class="bi bi-pencil-fill"></i>
-                </button>
-
-                <!-- Installtion photos button -->
-                <button class="btn btn-dark text-white action-btn" @click="InstalltionPhotos(vehicle.id)">
-                  <i class="bi bi-cloud-upload"></i>
-                </button>
-
-                <!-- Delete button -->
-                <button
-                    class="btn btn-danger action-btn"
-                    :disabled="loadingButtons[vehicle.id]"
-                    @click="deleteVehicle(vehicle.id)"
-                  >
-                  <!-- Show trash icon if not loading -->
-                  <span v-if="!loadingButtons[vehicle.id]">
-                    <i class="bi bi-trash-fill"></i>
-                  </span>
-                  
-                  <!-- Show spinner and Deleting text if loading -->
-                  <span v-else>
-                    <i class="spinner-border spinner-border-sm" role="status"></i>
-                    Deleting...
-                  </span>
-                </button>
-
-              </td>
-            </tr>
-
-          </tbody>
-        </table>
-
-        <!-- Pagination -->
-        <div class="pagination-container">
-          <nav aria-label="Page navigation">
-            <ul class="pagination">
-              <!-- Previous Button -->
-              <li class="page-item" :class="{ disabled: vehicles.current_page === 1 }">
-                <a class="page-link" :href="`?page=${vehicles.current_page - 1}`">Previous</a>
-              </li>
-
-              <!-- Page Numbers -->
-              <li v-for="page in totalPages" :key="page" class="page-item"
-                :class="{ active: page === vehicles.current_page }">
-                <a class="page-link" :href="`?page=${page}`">{{ page }}</a>
-              </li>
-
-              <!-- Next Button -->
-              <li class="page-item" :class="{ disabled: vehicles.current_page === vehicles.last_page }">
-                <a class="page-link" :href="`?page=${vehicles.current_page + 1}`">Next</a>
-              </li>
-            </ul>
-          </nav>
-        </div>
+ 
       </div>
     </div>
   </AuthenticatedLayout>
@@ -151,7 +117,7 @@ export default {
     },
   props: {
     user: Object,
-    vehicles: Object, // Paginated vehicle data
+    // vehicles: Object, // Paginated vehicle data
   },
   computed: {
     totalPages() {

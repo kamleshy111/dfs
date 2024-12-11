@@ -21,15 +21,24 @@ class DeviceController extends Controller
         // $devices = Device::paginate(10);
 
 
-        $devices = Device::select('devices.id', 'devices.device_id', 'devices.order_id', 'devices.date_time', 'customers.first_name', 'customers.last_name')
-        ->leftJoin('customer_devices','devices.id', '=', 'customer_devices.device_id')
-        ->leftjoin('customers','customer_devices.customer_id', '=', 'customers.id')
-        ->paginate(10);
+        $data = Device::select('devices.id', 'devices.device_id', 'devices.order_id', 'devices.date_time', 'customers.first_name', 'customers.last_name')
+                        ->leftJoin('customer_devices','devices.id', '=', 'customer_devices.device_id')
+                        ->leftjoin('customers','customer_devices.customer_id', '=', 'customers.id')
+                        ->get();
 
+        $devices = $data->map(function($item) {
+            return [
+                'id' => $item->id ?? 0,
+                'deviceId' => $item->device_id ?? '',
+                'orderId' => $item->order_id ?? '',
+                'customerName' => ($item->first_name ?? '') . ' ' . ($item->last_name ?? ''),
+               'startData' => \Carbon\Carbon::parse($item->start_data)->format('d/m/Y h:i A'),
+            ];
+        });
 
         return Inertia::render('Device/Device',[
             'user' => Auth::user(),
-            'devices' => $devices,
+            'devices' => $devices->toArray(),
         ]);
     }
 

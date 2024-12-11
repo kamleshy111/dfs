@@ -13,8 +13,9 @@ use App\Http\Controllers\Admin\ManageDocumentsController;
 use App\Http\Controllers\Admin\PaymentsController;
 use App\Http\Controllers\Admin\ReviewRatingController;
 use App\Http\Controllers\Admin\VehicleTypeController;
+use App\Http\Controllers\Admin\BillingController;
 use App\Http\Controllers\Api\DashboardController;
-use App\Http\Controllers\User\BillingController;
+use App\Http\Controllers\User\BillingController as UserBillingController;
 
 
 // Route::get('/', function () {
@@ -104,6 +105,11 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::delete('/destroy/{id}', [VehicleTypeController::class, 'destroy'])->name('vehicle-type.destroy');
     });
 
+    //Billing Route
+    Route::group(['prefix' => 'all-billing'], function () {
+        Route::get('/', [BillingController::class, 'index'])->name('all-billing');
+    });
+
     //Payments Routes
     Route::group(['prefix' => 'payments'], function () {
         Route::get('/', [PaymentsController::class, 'index'])->name('payments');
@@ -123,7 +129,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 Route::middleware(['auth', 'role:user'])->group(function () {
     //Device Routes
     Route::group(['prefix' => 'billing'], function () {
-        Route::get('/', [BillingController::class, 'index'])->name('billing');
+        Route::get('/', [UserBillingController::class, 'index'])->name('billing');
     });
 
     # Monitor

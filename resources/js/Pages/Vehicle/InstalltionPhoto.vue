@@ -22,7 +22,7 @@ const openFileInput = () => {
 // Handle file selection and upload
 const handleFileChange = async (event) => {
     const files = Array.from(event.target.files); // Get all selected files
-    if (files.length > 0 && files.length == 2) {
+    if (files.length > 0 && files.length <= 2) {
         const promises = files.map(async (file) => {
             const formData = new FormData();
             formData.append('photo', file);
@@ -30,7 +30,8 @@ const handleFileChange = async (event) => {
 
             try {
                 const response = await axios.post('/vehicle-type/upload-installation-photo', formData);
-                photoList.value.push(response.data); // Update the photo list
+                // photoList.value.push(response.data); // Update the photo list
+                window.location.reload();
             } catch (error) {
                 console.error('Failed to upload photo:', error);
                 toast.error('Failed to upload some photos. Please try again.');

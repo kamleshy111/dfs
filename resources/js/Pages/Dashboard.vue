@@ -8,11 +8,13 @@
             <div class="row">
                 <div class="col-12 col-md-6 col-lg-3 filter-div" @click="reloadMarkers('all')">
                     <div class="card-summary">
+                      <div class="card-summary-icon">
                         <i class="bi bi-car-front"></i>
                         <div class="icon-box">
                             <h4>{{ adminStats.all_device_count }}</h4>
                             <p>All Devices</p>
                         </div>
+                      </div>
                         <div class="selected_class">
                             <i v-if="selected_filter == 'all'" class="bi bi-check-circle-fill"></i>
                         </div>
@@ -20,11 +22,13 @@
                 </div>
                 <div class="col-12 col-md-6 col-lg-3 filter-div"  @click="reloadMarkers(1)">
                     <div class="card-summary">
+                      <div class="card-summary-icon">
                         <i class="bi bi-car-front"></i>
                         <div class="icon-box">
                             <h4>{{ adminStats.active_device_count }}</h4>
                             <p>Active Devices</p>
                         </div>
+                      </div>
                         <div class="selected_class">
                             <i v-if="selected_filter == 1" class="bi bi-check-circle-fill"></i>
                         </div>
@@ -32,12 +36,14 @@
                 </div>
                 <div class="col-12 col-md-6 col-lg-3 filter-div"  @click="reloadMarkers(0)">
                     <div class="card-summary">
+                      <div class="card-summary-icon">
                         <i class="bi bi-car-front"></i>
                         <div class="icon-box">
                             <h4>{{ adminStats.inactive_device_count }}</h4>
                             <p>Inactive Devices</p>
 
                         </div>
+                      </div>
                         <div class="selected_class">
                             <i v-if="selected_filter == 0" class="bi bi-check-circle-fill"></i>
                         </div>
@@ -45,18 +51,20 @@
                 </div>
                 <div class="col-12 col-md-6 col-lg-3 filter-div"  @click="reloadMarkers(2)">
                     <div class="card-summary">
+                      <div class="card-summary-icon">
                         <i class="bi bi-car-front"></i>
                         <div class="icon-box">
                             <h4>{{ adminStats.expired_device_count }}</h4>
                             <p>Expired Devices</p>
                         </div>
+                      </div>
                         <div class="selected_class">
                             <i v-if="selected_filter == 2" class="bi bi-check-circle-fill"></i>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row table-container">
+            <div class="row table-container m-0">
                 <Map :locations="locations" :zoom="5" />
             </div>
         </div>

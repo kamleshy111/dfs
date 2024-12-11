@@ -22,13 +22,25 @@ class VehicleTypeController extends Controller
 {
     public function index(){
 
-        $vehicles = Vehicle::select('vehicles.*','customers.first_name', 'customers.last_name')
+        $data = Vehicle::select('vehicles.*','customers.first_name', 'customers.last_name')
                             ->join('customers', 'vehicles.customer_id', '=', 'customers.id')
-                            ->paginate(10);
+                            ->get();
+
+        $vehicles = $data->map(function($item) {
+            return [
+                'id' => $item->id ?? 0,
+                'customerName' => ($item->first_name ?? '') . ' ' . ($item->last_name ?? ''),
+                'vehicleType' => $item->vehicle_type ?? '',
+                'vehicleRegisterNumber' => $item->vehicle_register_number ?? '',
+                'installationDate' => \Carbon\Carbon::parse($item->installation_date)->format('d/m/Y') ?? '',
+    
+            ];
+        });
 
         return Inertia::render('Vehicle/Vehicle',[
             'user' => Auth::user(),
-            'vehicles' => $vehicles,
+            // 'vehicles' => $vehicles,
+            'vehicles' => $vehicles->toArray(),
         ]);
 
     }
@@ -78,7 +90,7 @@ class VehicleTypeController extends Controller
             'installation_date' => $request->input('installationDate')  ? Carbon::parse($request->input('installationDate'))->toDateString() : null,
             'start_date' => $request->input('startDate')  ? Carbon::parse($request->input('startDate'))->toDateString() : null,
             'duration' => $request->input("duration") ?? '',
-            'duration-unit' => $request->input("durationUnit") ?? '',
+            'duration_unit' => $request->input("durationUnit") ?? '',
             'sim_operator' => $request->input('simOperator') ?? '',
         ]);
 
@@ -94,7 +106,7 @@ class VehicleTypeController extends Controller
 
         $data = Vehicle::select('vehicles.*','customers.first_name', 'customers.last_name', 'devices.device_id as deviceName')
                     ->join('customers', 'vehicles.customer_id', '=', 'customers.id')
-                    ->join('devices', 'vehicles.device_id', '=', 'devices.id')
+                    ->leftjoin('devices', 'vehicles.device_id', '=', 'devices.id')
                     ->where('vehicles.id', $id)
                     ->first();
 

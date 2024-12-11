@@ -15,20 +15,14 @@ defineProps({
 });
 
 const showingNavigationDropdown = ref(false);
-const userDevices = ref([]); // Initialize as a reactive array
 
-// Fetch user devices when the component is mounted
-onMounted(() => {
-  axios
-    .get("/api/customer-devices")
-    .then((response) => {
-      userDevices.value = response.data.userDevices;
-      // console.log(userDevices);
-    })
-    .catch((error) => {
-      console.error("There was an error fetching the user devices:", error);
+$(document).ready(function() {
+      $('.sidebar .nav-link').click(function() {
+        $('.sidebar .nav-link').removeClass('active');
+        $(this).addClass('active');
+      });
     });
-});
+
 </script>
 <template>
   <!-- Sidebar -->
@@ -76,6 +70,16 @@ onMounted(() => {
                 <i class="bi bi-truck-front-fill mr-3"></i>Vehicle Type
               </NavLink>
             </li>
+
+            <li class="nav-item">
+              <NavLink
+                :href="route('all-billing')"
+                :active="route().current('all-billing')"
+                class="nav-link"
+              >
+                <i class="bi bi-credit-card-fill mr-3"></i>Billing
+              </NavLink>
+            </li>
             <!-- <li class="nav-item"><a class="nav-link" href="#"><i
                                     class="bi bi-credit-card-fill mr-3"></i>Payments</a>
                         </li>
@@ -85,17 +89,7 @@ onMounted(() => {
                         <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-star-fill mr-3"></i>Review &
                                 Rating</a>
                         </li> -->
-            <li class="nav-item">
-              <ResponsiveNavLink
-                :href="route('logout')"
-                method="post"
-                as="button"
-                class="nav-link"
-              >
-                <i class="bi bi-box-arrow-left mr-3"></i>
-                Log Out
-              </ResponsiveNavLink>
-            </li>
+
           </template>
 
           <!-- User Sidebar -->
@@ -122,11 +116,6 @@ onMounted(() => {
               >
                 <i class="bi bi-truck-front-fill mr-3"></i>Devices
               </NavLink>
-              <ul id="devices-nav" class="nav-content collapse list-unstyled">
-                <li v-for="device in userDevices" :key="device.id">
-                  <a href="#" class="nav-link">{{ device.deviceId }}</a>
-                </li>
-              </ul>
             </li>
             <!-- <li class="nav-item">
                             <NavLink :href="route('monitor', 1)" :active="route().current('monitor')" class="nav-link">
@@ -146,7 +135,8 @@ onMounted(() => {
             <!-- <li class="nav-item">
                             <a class="nav-link" href="#"><i class="bi bi-pie-chart-fill mr-3"></i>Report</a>
                         </li> -->
-            <li class="nav-item">
+          </template>
+          <li class="nav-item">
               <ResponsiveNavLink
                 :href="route('logout')"
                 method="post"
@@ -156,7 +146,6 @@ onMounted(() => {
                 <i class="bi bi-box-arrow-left mr-3"></i>Log Out
               </ResponsiveNavLink>
             </li>
-          </template>
         </ul>
       </div>
     </nav>

@@ -20,21 +20,13 @@ const form = ref({
   secondary_email: customerDetail.secondary_email || "",
   phone: customerDetail.phone || "",
   secondary_phone: customerDetail.secondary_phone || "",
-  invoice_number: customerDetail.invoice_number || "",
-  amount: customerDetail.amount || 0.00,
   address: customerDetail.address || "",
   device_id: customerDetail.device_id || [],
-  quantity: customerDetail.quantity || 0,
   file: null,
 });
 
 const file = ref(null);
 const fileName = ref("");
-
-// Watch for device selection changes
-const watchDeviceSelection = () => {
-  form.value.quantity = form.value.device_id.length; // Set quantity based on selected devices count
-};
 
 //File Upload Handlers
 const handleFileUpload = (event) => {
@@ -67,15 +59,6 @@ const clearFile = () => {
   fileName.value = "";
 };
 
-// Increment/Decrement Quantity
-const incrementQuantity = () => {
-  form.value.quantity++;
-};
-
-const decrementQuantity = () => {
-  if (form.value.quantity > 1) form.value.quantity--;
-};
-
 // Go Back Function
 const goBack = () => {
   window.location.href = "/clients"; // Redirect to the desired Laravel route
@@ -93,13 +76,10 @@ const submitForm = async () => {
     formData.append("secondary_email", form.value.secondary_email);
     formData.append("phone", form.value.phone);
     formData.append("secondary_phone", form.value.secondary_phone);
-    formData.append("invoice_number", form.value.invoice_number);
-    formData.append("amount", form.value.amount);
     formData.append("address", form.value.address);
     form.value.device_id.forEach((deviceId) => {
       formData.append('device_id[]', deviceId.id);
     });
-    formData.append("quantity", form.value.quantity);
 
     if (form.value.file) {
       formData.append("file", form.value.file);
