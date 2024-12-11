@@ -15,7 +15,7 @@
 
                 <!-- Page Content -->
                 <main class="right-box">
-                    {{ header }}
+                    <!-- {{ header }} -->
                     <header class="text-center w-100" v-if="$slots.header">
                         <slot name="header" />
                     </header>
