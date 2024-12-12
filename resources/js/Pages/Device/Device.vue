@@ -6,6 +6,7 @@ import { ref } from "vue";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 import axios from "axios";
+import Swal from 'sweetalert2';
 
 
 const loadingButtons = ref({});
@@ -163,21 +164,48 @@ export default {
     },
 
     deleteDevice(deviceId) {
-      if (confirm('Are you sure you want to delete this device?')) {
-        axios.delete(`/devices/destroy/${deviceId}`)
-          .then((response) => {
-            toast.success('Device deleted successfully!');
-            const index = this.devices.findIndex(device => device.id === deviceId);
-            if (index !== -1) {
-              this.devices.splice(index, 1);
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'Do you want to delete this device?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Send Axios request if confirmed
+                axios
+                    .delete(`/devices/destroy/${deviceId}`)
+                    .then(response => {
+                        Swal.fire(
+                            'Deleted!',
+                            'Your device has been deleted.',
+                            'success'
+                        );
+
+                        const index = this.devices.findIndex(device => device.id === deviceId);
+                        if (index !== -1) {
+                           this.devices.splice(index, 1);
+                         }
+                        // Optional: Update the UI or refresh data
+                        console.log(response.data);
+                    })
+                    .catch(error => {
+                        Swal.fire(
+                            'Error!',
+                            'Failed to delete the device. Please try again.',
+                            'error'
+                        );
+                        location.reload();
+                        console.error(error);
+                    });
+            } else {
+                console.log('device canceled the delete action.');
             }
-          })
-          .catch((error) => {
-            toast.error('Failed to delete device.');
-            console.error(error);
-          });
-      }
+        });
     },
+
     closePopup() {
       this.showPopup = false;
       this.file = null;

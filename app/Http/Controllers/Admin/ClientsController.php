@@ -33,7 +33,7 @@ class ClientsController extends Controller
                 'customerName' => ($item->first_name ?? '') . ' ' . ($item->last_name ?? ''),
                 'email' => $item->email ?? '',
                 'phone' => $item->phone ?? '',
-                'created_at' => \Carbon\Carbon::parse($item->created_at)->format('d/m/Y h:i a') ?? '',
+                'created_at' => \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') ?? '',
     
             ];
         });

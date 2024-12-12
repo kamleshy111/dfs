@@ -6,6 +6,7 @@ import { ref } from "vue";
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 
 const loadingButtons = ref({});
@@ -102,20 +103,46 @@ export default {
     },
 
     deleteVehicle(vehicleId) {
-      if (confirm('Are you sure you want to delete this vehicle?')) {
-        axios.delete(`/vehicle-type/destroy/${vehicleId}`)
-          .then((response) => {
-            toast.success('vehicle deleted successfully!');
-            const index = this.vehicles.findIndex(vehicle => vehicle.id === vehicleId);
-            if (index !== -1) {
-              this.vehicles.splice(index, 1);
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'Do you want to delete this vehicle?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Send Axios request if confirmed
+                axios
+                    .delete(`/vehicle-type/destroy/${vehicleId}`)
+                    .then(response => {
+                        Swal.fire(
+                            'Deleted!',
+                            'Your vehicle has been deleted.',
+                            'success'
+                        );
+
+                        const index = this.vehicles.findIndex(device => device.id === vehicleId);
+                        if (index !== -1) {
+                           this.vehicles.splice(index, 1);
+                         }
+                        // Optional: Update the UI or refresh data
+                        console.log(response.data);
+                    })
+                    .catch(error => {
+                        Swal.fire(
+                            'Error!',
+                            'Failed to delete the vehicle. Please try again.',
+                            'error'
+                        );
+                        location.reload();
+                        console.error(error);
+                    });
+            } else {
+                console.log('vehicle canceled the delete action.');
             }
-          })
-          .catch((error) => {
-            toast.error('Failed to delete vehicle.');
-            console.error(error);
-          });
-      }
+        });
     },
   },
 };

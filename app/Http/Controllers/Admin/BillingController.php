@@ -52,7 +52,7 @@ class BillingController extends Controller
                 'customerName' => ($item->first_name ?? '') . ' ' . ($item->last_name ?? ''),
                 'deviceName' => $item->deviceName ?? '',
                 'startData' => $startDate ?? '',
-                'duration' => ($item->duration ?? '') . ' ' . ($item->durationUnit ?? ''),
+                'duration' => ($item->duration ?? '') . ' ' . ($item->duration_unit ?? ''),
                 'expiresDate' => $formattedExpirationDate ?? '',  
             ];
         });
