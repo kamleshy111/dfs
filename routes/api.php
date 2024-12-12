@@ -20,6 +20,9 @@ Route::middleware('auth:sanctum')->group(function(){
 #Customer Create select devices
     Route::get('/customers/{customer}/devices', [CustomerDeviceController::class, 'getDevicesByCustomer']);
 
+#Customer Edite select devices
+    Route::get('/editCustomers/{customerID}/devices/{deviceId?}', [CustomerDeviceController::class, 'getDevicesByEditCustomer']);
+
 # Role:User -> Devies
     Route::get('/get-devices', [DashboardController::class, 'getMapDevices'])->name('get-devices');
 
