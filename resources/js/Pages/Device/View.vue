@@ -27,13 +27,13 @@ const goBack = () => {
      <h2 class="section-title">Device Information</h2>
         <div class="mb-2">
             <div class="profile-details mt-3 row">
-              <div class="w-75">
+              <div class="col-md-8">
                 <h4 class="mt-2 client-name">Device Id: <span>{{ props.devices.device_id }}</span></h4>
                 <p class="mt-2 client-email">Order Id: <span>{{ props.devices.order_id }}</span></p>
                 <p class="mt-2 client-email">Company Name: <span>{{ props.devices.company_name }}</span></p>
                 <p class="mt-2 client-phone">Date : <span>{{ props.devices.date_time }}</span></p>
               </div>
-              <div class="w-25">
+              <div class="col-md-4">
                 <p  class="mt-2"><strong>Invoice Photos:</strong><img width="150px" class="p-4" :src="props.devices.invoice_photos" alt="Invoice photos"></p>
               </div>
             </div>
@@ -44,7 +44,7 @@ const goBack = () => {
         <div class="mr-4">
            <h2 class="section-title">Vehicle Information</h2>
             <div class="profile-details mt-3 d-flex justify-content-between">
-              <div>
+              <div class="col-md-8">
                 <h4 class="mt-2 client-name">Customer Name:  <span>{{ props.devices.customerFirstName }} {{ props.devices.customerLsatName }}</span></h4>
              
                 <p class="mt-2 client-name">Vehicle Type :  <span>{{ props.devices.vehicleType }}</span></p>
@@ -53,7 +53,7 @@ const goBack = () => {
             
                 <p class="mt-2 client-name">SIM Operator :  <span>{{ props.devices.simOperator }}</span></p>
               </div>
-              <div>
+              <div class="col-md-4">
                 <p class="mt-2 client-name">SIM Card Number :  <span>{{ props.devices.simCardNumber }}</span></p>
                 <p class="mt-2 client-name">IMEI Number :  <span>{{ props.devices.imeiNumber }}</span></p>
             

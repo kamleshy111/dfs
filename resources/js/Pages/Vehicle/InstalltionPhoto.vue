@@ -88,9 +88,9 @@ const goBack = () => {
                 <input type="file" ref="fileInput" style="display: none" @change="handleFileChange" multiple />
               </div>
               <div class="container">
-                <div class="row vehicle-gallery">
+                <div class="row vehicle-gallery mt-4">
                   <div v-for="(image, index) in photoList" :key="index" class="col-md-4">
-                    <div class="card mb-4 box-shadow"> 
+                    <div class="card mb-4 card-gallery-box box-shadow"> 
                       <img class="card-img-top" :src="image.photo_path" alt="Installation Photo" />
                       <div class="card-body">
                         <button @click="handleDeleteClick(image.id)" class="btn btn-danger delete-btn">Delete</button>

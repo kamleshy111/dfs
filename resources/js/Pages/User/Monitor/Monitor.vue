@@ -8,12 +8,13 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <h4><i class="bi bi-bell-fill mr-2"></i>Notifications</h4>
                 </div>
-
+            
+            <div class="d-flex align-items-center my-2">
                 <label for="devices">Device: </label>
-                <select name="devices" id="devices">
+                <select name="devices" id="devices" class="user-select-icon-box ml-2">
                     <option v-for="d in device_select" :value="d.device_id" :key="d.device_id">{{d.device_id}}</option>
                 </select>
-
+            </div>
                 <DataTable class="display" :data="devices">
                     <thead class="thead-light">
                         <tr>
