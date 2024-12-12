@@ -32,7 +32,7 @@ class VehicleTypeController extends Controller
                 'customerName' => ($item->first_name ?? '') . ' ' . ($item->last_name ?? ''),
                 'vehicleType' => $item->vehicle_type ?? '',
                 'vehicleRegisterNumber' => $item->vehicle_register_number ?? '',
-                'installationDate' => \Carbon\Carbon::parse($item->installation_date)->format('d/m/Y') ?? '',
+                'installationDate' => \Carbon\Carbon::parse($item->installation_date)->format('d-m-Y') ?? '',
     
             ];
         });

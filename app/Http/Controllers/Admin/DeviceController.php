@@ -32,7 +32,7 @@ class DeviceController extends Controller
                 'deviceId' => $item->device_id ?? '',
                 'orderId' => $item->order_id ?? '',
                 'customerName' => ($item->first_name ?? '') . ' ' . ($item->last_name ?? ''),
-               'startData' => \Carbon\Carbon::parse($item->start_data)->format('d/m/Y h:i A'),
+               'startData' => \Carbon\Carbon::parse($item->start_data)->format('d-m-Y h:i a'),
             ];
         });
 
@@ -136,7 +136,7 @@ class DeviceController extends Controller
             'device_id' => $data->device_id ?? '--',
             'order_id' => $data->order_id ?? 0,
             'company_name' => $data->company_name ?? '--',
-            'date_time' => $data->date_time ?? '--',
+            'date_time' =>  \Carbon\Carbon::parse($data->date_time)->format('d-m-Y') ?? '',
             'invoice_photos' => $data->invoice_photos ? asset($data->invoice_photos) : '',
             'customerFirstName' => $data->first_name ?? '',
             'customerLsatName' => $data->last_name ?? '',
@@ -144,8 +144,8 @@ class DeviceController extends Controller
             'vehicleType' => $data->vehicle_type ?? '',
             'imeiNumber' => $data->imei_number ?? '',
             'simCardNumber' => $data->sim_card_number ?? '',
-            'installationDate' => $data->installation_date ?? '',
-            'startDate' => $data->start_date ?? '',
+            'installationDate' => \Carbon\Carbon::parse($data->installation_date)->format('d-m-Y') ?? '',
+            'startDate' => \Carbon\Carbon::parse($data->start_data)->format('d-m-Y') ?? '',
             'duration' => $data->duration ?? '',
             'durationUnit' => $data->duration_unit ?? '',
             'expirationDate' => $formattedExpirationDate ?? '',

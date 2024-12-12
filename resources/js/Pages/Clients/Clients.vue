@@ -7,6 +7,7 @@ import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 import axios from 'axios';
 import { ref } from "vue";
+import Swal from 'sweetalert2';
 
 // Define props
 defineProps({
@@ -107,25 +108,51 @@ export default {
       const self = this;
       $(document).on('click', '.delete-btn', (event) => {
         const customerId = $(event.target).closest('button').data('id');
-        self.deleteDevice(customerId);
+        self.deleteClient(customerId);
       });
     },
 
-    deleteDevice(customerId) {
-      if (confirm('Are you sure you want to delete this client?')) {
-        axios.delete(`/clients/destroy/${customerId}`)
-          .then((response) => {
-            toast.success('client deleted successfully!');
-            const index = this.customers.findIndex(customer => customer.id === customerId);
-            if (index !== -1) {
-              this.customers.splice(index, 1);
-            }
-          })
-          .catch((error) => {
-            toast.error('Failed to delete client.');
-            console.error(error);
-          });
-      }
+    deleteClient(customerId) {
+      Swal.fire({
+          title: 'Are you sure?',
+          text: 'Do you want to delete this client?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+          if (result.isConfirmed) {
+              // Send Axios request if confirmed
+              axios
+                .delete(`/clients/destroy/${customerId}`)
+                .then(response => {
+                    Swal.fire(
+                        'Deleted!',
+                        'Your client has been deleted.',
+                        'success'
+                    );
+
+                    const index = this.customers.findIndex(customer => customer.id === customerId);
+                    if (index !== -1) {
+                        this.customers.splice(index, 1);
+                      }
+                    // Optional: Update the UI or refresh data
+                    console.log(response.data);
+                })
+                .catch(error => {
+                    Swal.fire(
+                        'Error!',
+                        'Failed to delete the client. Please try again.',
+                        'error'
+                    );
+                    location.reload();
+                    console.error(error);
+                });
+          } else {
+              console.log('client canceled the delete action.');
+          }
+      });
     },
   },
 };
