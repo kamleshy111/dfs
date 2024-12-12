@@ -40,14 +40,14 @@ const devices = ref([]);
 
 // Fetch devices when the component is mounted or when customer_id changes
 onMounted(() => {
-    if (vehicleDetail.customer_id) {
-        fetchDevices(vehicleDetail.customer_id);
+    if (vehicleDetail.customer_id || vehicleDetail.device_id) {
+        fetchDevices(vehicleDetail.customer_id, vehicleDetail.device_id );
     }
 });
 
-const fetchDevices = async (customerId) => {
+const fetchDevices = async (customerId, deviceId = '' ) => {
     try {
-        const response = await axios.get(`/api/customers/${customerId}/devices`);
+        const response = await axios.get(`/api/editCustomers/${customerId}/devices/${deviceId}`);
         devices.value = response.data.devices;
         console.log("Devices fetched:", devices.value);
     } catch (error) {

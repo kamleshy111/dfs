@@ -34,7 +34,10 @@ const goBack = () => {
                 <p class="mt-2 client-phone">Date : <span>{{ props.devices.date_time }}</span></p>
               </div>
               <div class="w-25">
-                <p  class="mt-2"><strong>Invoice Photos:</strong><img width="150px" class="p-4" :src="props.devices.invoice_photos" alt="Invoice photos"></p>
+                <p  class="mt-2"><strong>Invoice Photos:</strong>
+                  <img v-if="props.devices.invoice_photos" width="150px" class="p-4" :src="props.devices.invoice_photos" alt="Invoice photos">
+                  <p v-else class="p-4">No invoice photo available</p>
+                </p>
               </div>
             </div>
         </div>
