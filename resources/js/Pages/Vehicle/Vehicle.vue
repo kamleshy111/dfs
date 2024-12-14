@@ -40,7 +40,7 @@ const columns = [
             <div class="icon-all-dflex">
               <a href="/vehicle-type/${data.id}/view" class="btn btn-light action-btn"><i class="bi bi-eye-fill"></i> </a>
               <a class="btn btn-warning text-white action-btn" href="vehicle-type/${data.id}/edit" ><i class="bi bi-pencil-fill"></i> </a>
-               <a class="btn btn-dark text-white action-btn" href="vehicle-type/${data.id}/photos" ><i class="bi bi-cloud-upload"></i></a>
+               <a class="btn btn-light action-btn" href="vehicle-type/${data.id}/photos" ><i class="bi bi-cloud-upload"></i></a>
               <button class="btn-danger  action-btn delete-btn" data-id="${data.id}"><i class="bi bi-trash-fill"></i></button>
               </div>
             `;

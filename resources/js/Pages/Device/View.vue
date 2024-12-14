@@ -35,7 +35,7 @@ const goBack = () => {
               </div>
               <div class="col-md-4">
                 <p  class="mt-2"><strong>Invoice Photos:</strong></p>
-                  <img v-if="props.devices.invoice_photos" width="150px" class="p-4" :src="props.devices.invoice_photos" alt="Invoice photos">
+                  <img v-if="props.devices.invoice_photos" width="150px" class="p-1 invoice-image" :src="props.devices.invoice_photos" alt="Invoice photos">
                   <p v-else class="p-4">No invoice photo available</p>
            
               </div>
