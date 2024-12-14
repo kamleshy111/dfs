@@ -81,7 +81,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::group(['prefix' => 'devices'], function () {
         Route::get('/', [DeviceController::class, 'index'])->name('devices');
         Route::get('/create', [DeviceController::class, 'create'])->name('devices.create');
-        Route::post('/upload-device', [DeviceController::class, 'uploadDevice'])->name('devices.upload-device');
+        
+        Route::post('/upload-excel', [DeviceController::class, 'importDevice'])->name('devices.upload-excel');
+        Route::post('/import-chunk', [DeviceController::class, 'importChunk'])->name('devices.importChunk');
+
         Route::post('/store',[DeviceController::class, 'store'])->name('devices.store');
         Route::get('/{id}/view', [DeviceController::class, 'view'])->name('devices.view');
         Route::get('/{id}/edit', [DeviceController::class, 'edit'])->name('devices.edit');
