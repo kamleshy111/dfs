@@ -57,14 +57,27 @@ const columns = [
         <div class="d-flex justify-content-between align-items-center">
           <h4><i class="bi bi-truck-front-fill mr-2"></i>All Devices</h4>
           <div class="text-end">
-            <a class="mr-2">
-              <button
-                class="btn btn-primary btn-custom"
-                @click="showPopup = true"
-              >
-                <i class="bi bi-cloud-upload mr-2"></i>Add New devices file
-              </button>
-            </a>
+            <div class="mr-2">
+                            
+                <form @submit.prevent="uploadExcel" enctype="multipart/form-data" class="btn btn-primary btn-custom">
+                    <input type="file" accept=".xlsx, .xls" class="file-upload-input" id="file-upload"
+                        @change="onFileChange" />
+                    <label for="file-upload" class="file-upload-button">
+                      <i class="bi bi-cloud-upload mr-2"></i>
+                    </label>
+                    <button  type="submit" :disabled="!file || isImporting">Add New devices Upload & Inport</button>
+                </form>
+                <div class="file-p mt-2">File Upload .xlsx, .xls <a href="/sample.xlsx" download>Downlod Sample</a></div>
+                <div v-if="totalChunks" class="count-design">
+                    <div v-if="isImporting">
+                        <div class="loader"></div>
+                    </div>
+                    <p v-if="totalChunks">Importing data... {{ currentChunk * 10 }}/{{ totalChunks * 10 }}
+                    </p>
+                    <p v-if="failed_count">Failed count: {{ failed_count }}</p>
+                    <p v-if="success_count">Success count: {{ success_count }}</p>
+                </div>
+            </div>
             <a class="mr-2" :href="route('devices.create')">
               <button class="btn btn-primary btn-custom">
                 <i class="bi bi-plus-circle-fill mr-2"></i>Add New Device
@@ -96,231 +109,160 @@ const columns = [
           </div>
 
       </div>
-      <!-- Popup -->
-      <div v-if="showPopup" class="popup-overlay">
-        <div class="popup">
-          <header class="popup-header">
-            <h2>Upload</h2>
-            <button @click="closePopup" class="close-btn">✖</button>
-          </header>
-          <p class="popup-description">A single file does not exceed 2MB</p>
-
-          <!-- Buttons -->
-          <div class="popup-actions">
-            <input type="file" @change="selectFile" class="file-input" />
-          </div>
-
-          <!-- File list -->
-          <table class="file-table">
-            <thead>
-              <tr>
-                <th>File Name</th>
-                <th>File Size</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-if="file">
-                <td>{{ file.name }}</td>
-                <td>{{ (file.size / 1024).toFixed(2) }} KB</td>
-                <td>{{ uploadStatus }}</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <!-- Footer -->
-          <footer class="popup-footer">
-            <button @click="uploadFile" class="upload-btn">Start Upload</button>
-            <button @click="closePopup" class="cancel-btn">Cancel</button>
-          </footer>
-        </div>
-      </div>
     </div>
   </AuthenticatedLayout>
 </template>
 
 <script>
 export default {
-  data() {
-    return {
-      showPopup: false,
-      file: null,
-      uploadStatus: "Pending",
-    };
-  },
-  props: {
-    user: Object,
-  },
-  mounted() {
-    this.setupDeleteButton();
-  },
-  methods: {
-    setupDeleteButton() {
-      const self = this;
-      $(document).on('click', '.delete-btn', (event) => {
-        const deviceId = $(event.target).closest('button').data('id');
-        self.deleteDevice(deviceId);
-      });
+    data() {
+        return {
+            file: null,
+            isImporting: false,
+            totalChunks: 0,
+            currentChunk: 0,
+            failed_count: 0,
+            success_count: 0,
+        };
     },
+    mounted() {
+      this.setupDeleteButton();
+    },
+    methods: {
+        setupDeleteButton() {
+          const self = this;
+          $(document).on('click', '.delete-btn', (event) => {
+            const deviceId = $(event.target).closest('button').data('id');
+            self.deleteDevice(deviceId);
+          });
+        },
+        deleteDevice(deviceId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'Do you want to delete this device?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Send Axios request if confirmed
+                    axios
+                        .delete(`/devices/destroy/${deviceId}`)
+                        .then(response => {
+                            Swal.fire(
+                                'Deleted!',
+                                'Your device has been deleted.',
+                                'success'
+                            );
 
-    deleteDevice(deviceId) {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: 'Do you want to delete this device?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Send Axios request if confirmed
-                axios
-                    .delete(`/devices/destroy/${deviceId}`)
-                    .then(response => {
-                        Swal.fire(
-                            'Deleted!',
-                            'Your device has been deleted.',
-                            'success'
-                        );
+                            const index = this.devices.findIndex(device => device.id === deviceId);
+                            if (index !== -1) {
+                              this.devices.splice(index, 1);
+                            }
+                            // Optional: Update the UI or refresh data
+                            console.log(response.data);
+                        })
+                        .catch(error => {
+                            Swal.fire(
+                                'Error!',
+                                'Failed to delete the device. Please try again.',
+                                'error'
+                            );
+                            location.reload();
+                            console.error(error);
+                        });
+                } else {
+                    console.log('device canceled the delete action.');
+                }
+            });
+        },
+        onFileChange(event) {
+            this.file = event.target.files[0];
+        },
+        async uploadExcel() {
+            let app = this;
+            this.failed_count = 0;
+            this.success_count = 0;
 
-                        const index = this.devices.findIndex(device => device.id === deviceId);
-                        if (index !== -1) {
-                           this.devices.splice(index, 1);
-                         }
-                        // Optional: Update the UI or refresh data
-                        console.log(response.data);
-                    })
-                    .catch(error => {
-                        Swal.fire(
-                            'Error!',
-                            'Failed to delete the device. Please try again.',
-                            'error'
-                        );
-                        location.reload();
-                        console.error(error);
-                    });
-            } else {
-                console.log('device canceled the delete action.');
+            if (!this.file) {
+                this.message = "Please select a file.";
+                this.success = false;
+                return;
             }
-        });
-    },
 
-    closePopup() {
-      this.showPopup = false;
-      this.file = null;
-      this.uploadStatus = "Pending";
-    },
-    downloadTemplate() {
-      // Replace with your template file's URL
-      window.open("/devices", "_blank");
-    },
-    selectFile(event) {
-      this.file = event.target.files[0];
-      this.uploadStatus = "Ready to upload";
-    },
-    uploadFile() {
-      if (!this.file) {
-        alert("Please select a file first.");
-        return;
-      }
+            const formData = new FormData();
+            formData.append("file", this.file);
 
-      const formData = new FormData();
-      formData.append("file", this.file);
+            try {
+                await axios.post('/devices/upload-excel', formData).then(function (response) {
+                    console.log(response.data.totalChunks);
+                    app.totalChunks = response.data.totalChunks;
+                    app.currentChunk = 0;
+                    app.isImporting = true;
 
-      // Perform the file upload using Axios
-      axios
-        .post("devices/upload-device", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        })
-        .then((response) => {
-          this.uploadStatus = "Uploaded successfully";
-          console.log("Upload Response:", response.data);
-        })
-        .catch((error) => {
-          this.uploadStatus = "Upload failed";
-          console.error("Upload Error:", error);
-        });
+                    // Step 2: Start importing data in chunks
+                    app.importChunks();
+                }).catch(
+                    error => console.log(error)
+                )
+            } catch (error) {
+                this.message = "Failed to upload file.";
+                this.success = false;
+            }
+        },
+        async importChunks() {
+            let app = this;
+            while (this.currentChunk < this.totalChunks) {
+                try {
+                    const formData = new FormData();
+                    formData.append("file", this.file);
+                    formData.append("chunkIndex", this.currentChunk);
+
+                    await axios.post('/devices/import-chunk', formData).then(function (response) {
+                        app.failed_count += response.data.failed_count;
+                        app.success_count += response.data.success_count;
+                    });
+
+                    this.currentChunk++;
+                } catch (error) {
+                    console.error('Error importing chunk:', error);
+                    break;
+                }
+            }
+
+            this.isImporting = false;
+            alert('Import completed!');
+            // location.href = location.href;
+        }
     },
-  },
 };
 </script>
 
 <style>
-.popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.6); /* Dark overlay */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
+.file-upload-container {
+    position: relative;
+    display: flex;
+    align-items: center;
 }
 
-.popup {
-  background-color: #fff;
-  border-radius: 10px;
-  width: 450px;
-  max-width: 90%;
-  padding: 30px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
+.file-upload-input {
+    display: none;
 }
 
-.popup-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  border-bottom: 2px solid #f0f0f0;
-  padding-bottom: 10px;
-}
-
-.popup-header h2 {
-  font-size: 20px;
-  margin: 0;
-  color: #333;
-}
-
-.close-btn {
-  background-color: transparent;
-  border: none;
-  font-size: 1.6em;
-  cursor: pointer;
-  color: #333;
-  padding: 0;
-  line-height: 1;
-}
-
-.popup-description {
-  font-size: 1em;
-  color: #777;
-  margin: 20px 0;
-}
-
-.popup-actions {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.download-btn, .upload-btn, .cancel-btn {
-    background-color: var(--light-color);
-    color: white;
+.file-upload-button {
+    background-color: transparent;
+    margin: 0 10px 0 0;
     border: none;
-    padding: 6px 20px;
-    border-radius: 5px;
     cursor: pointer;
-    font-size: 15px;
-    transition: background-color 0.3s;
+    display: inline-flex;
+    font-size: 12px;
+    align-items: center;
+}
+.count-design {
+    width: 220px;
+    background: #fff;
 }
 .upload-btn{
       border: 1px solid var(--light-color) !important;
@@ -399,30 +341,35 @@ export default {
   .popup {
     width: 95%;
     padding: 20px;
-  }
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    margin-top: 10px;
+    border-radius: 5px;
+}
 
-  .popup-header h2 {
-    font-size: 1.4em;
-  }
+.file-upload-button svg {
+    fill: #b70900;
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+}
+.loader {
+    border: 8px solid #c2c2c2;
+    border-top: 8px solid #b70900;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1.5s linear infinite;
+    margin-bottom: 10px;
+}
 
-  .popup-description {
-    font-size: 0.9em;
-  }
+}
 
-  .download-btn,
-  .upload-btn,
-  .cancel-btn {
-    padding: 10px 18px;
-    font-size: 0.9em;
-  }
-
-  .file-input {
-    font-size: 0.9em;
-  }
-
-  .file-table th,
-  .file-table td {
-    padding: 8px;
-  }
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 </style>

@@ -14,8 +14,9 @@ use App\Http\Controllers\Admin\PaymentsController;
 use App\Http\Controllers\Admin\ReviewRatingController;
 use App\Http\Controllers\Admin\VehicleTypeController;
 use App\Http\Controllers\Admin\BillingController;
-use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\User\BillingController as UserBillingController;
+use App\Http\Controllers\NotificationController;
 
 
 // Route::get('/', function () {
@@ -30,6 +31,12 @@ use App\Http\Controllers\User\BillingController as UserBillingController;
 Route::get('/', function () {
     return Inertia::render('Auth/Login');
 });
+
+Route::get('/pusher', function () {
+    return view('push');
+});
+
+Route::view('pusher1','pusher');
 
 // Route::get('/dashboard', function () {
 //     return Inertia::render('Dashboard');
@@ -81,7 +88,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::group(['prefix' => 'devices'], function () {
         Route::get('/', [DeviceController::class, 'index'])->name('devices');
         Route::get('/create', [DeviceController::class, 'create'])->name('devices.create');
-        Route::post('/upload-device', [DeviceController::class, 'uploadDevice'])->name('devices.upload-device');
+        
+        Route::post('/upload-excel', [DeviceController::class, 'importDevice'])->name('devices.upload-excel');
+        Route::post('/import-chunk', [DeviceController::class, 'importChunk'])->name('devices.importChunk');
+
         Route::post('/store',[DeviceController::class, 'store'])->name('devices.store');
         Route::get('/{id}/view', [DeviceController::class, 'view'])->name('devices.view');
         Route::get('/{id}/edit', [DeviceController::class, 'edit'])->name('devices.edit');
@@ -103,6 +113,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/{id}/edit',[VehicleTypeController::class, 'edit'])->name('vehicle-type.edit');
         Route::post('/update/{id}', [VehicleTypeController::class, 'update'])->name('vehicle-type.update');
         Route::delete('/destroy/{id}', [VehicleTypeController::class, 'destroy'])->name('vehicle-type.destroy');
+    });
+
+    Route::group(['prefix' => 'report'], function () {
+        Route::get('/', [ReportController::class, 'index'])->name('report');
     });
 
     //Billing Route
@@ -136,6 +150,9 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::group(['prefix' => 'monitor'], function () {
         Route::get('/{device_id}', [MonitorController::class, 'index'])->name('monitor');
     });
+
+    # Notification
+    Route::get('/notification/{vehicleId?}',[NotificationController::class, 'notification'])->name('notification');
 
 });
 

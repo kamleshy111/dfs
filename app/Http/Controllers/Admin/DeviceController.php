@@ -47,11 +47,105 @@ class DeviceController extends Controller
     }
 
 
-    public function uploadDevice(Request $request){
+    public function importDevice(Request $request) {
+        $file = $request->file('file');
 
+        // Parse the Excel file
+        $data = Excel::toArray([], $file)[0];
 
-        if ($request->file('file')) {
-            Excel::import(new DevicesImport, $request->file('file'));
+        // removing headings
+        array_shift($data);
+
+        $chunks = array_chunk($data, 10); // Divide data into chunks of 100
+
+        return response()->json([
+            'success' => true,
+            'totalChunks' => count($chunks),
+        ]);
+
+        return response()->json([
+            'message' => 'device Import',
+            'totalChunks' => count($chunks),
+        ]);
+    }
+
+    public function importChunk(Request $request) {
+
+        $file = $request->file('file');
+        $data = Excel::toArray([], $file)[0];
+        array_shift($data);
+        $chunks = array_chunk($data, 10);
+
+        $chunkIndex = $request->input('chunkIndex');
+
+        $errors = [];
+        if (isset($chunks[$chunkIndex])) {
+            $success_count = 0;
+            $failed_count = 0;
+            foreach ($chunks[$chunkIndex] as $row) {
+                $thisData = [
+                    "device_id" => (($row[0]) ? $row[0] : ''), //0 => "Device Id"
+                    "order_id" => (($row[1]) ? $row[1] : ''), //1 => "Order Id"
+                    "company_name" => (($row[2]) ? $row[2] : ''), //2 => "Company Name"
+                    "date_time" => (($row[3]) ? $row[3] : ''), //3 => "data"
+                    "invoicePhotos" => (($row[4]) ? $row[4] : ''), //4 => "Invoice Photos"
+                ];
+
+                $created_bool = $this->create_device($thisData, null);
+
+                if( $created_bool ) {
+                    $success_count++;
+                    $errors[] = ["success" => 1];
+                } else {
+                    $failed_count++;
+                    $errors[] = ["success" => 0, "msg" => "Unable to import data."];
+                }
+            }
+
+            return response()->json([
+                'message' => 'Successfully imported!',
+                'failed_count' => $failed_count,
+                'success_count' => $success_count
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Unable to import the Devices!',
+            'failed_count' => count($chunks[$chunkIndex]),
+            'success_count' => 0
+        ]);
+    }
+
+    private function create_device($thisData, $request = null ) {
+
+            $date_string = $thisData["date_time"];
+            $date_string = preg_replace('/\s\([^)]+\)$/', '', $date_string);
+            $formatted_date = Carbon::parse($date_string)->format('Y-m-d H:i:s');
+
+            
+            $device = new Device;
+            $device->device_id = $thisData["device_id"] ?? '';
+            $device->order_id = $thisData["order_id"] ?? '';
+            $device->company_name = $thisData["company_name"] ?? '';
+            $device->date_time = $formatted_date ?? '';
+            
+            if (!empty($thisData["invoicePhotos"])) {
+
+                $imageContent = @file_get_contents($thisData["invoicePhotos"]);
+              
+                $extension = pathinfo(parse_url($thisData["invoicePhotos"], PHP_URL_PATH), PATHINFO_EXTENSION);
+                $filename = 'InvoicePhotos/' . uniqid() . '.' . $extension;
+                Storage::disk('public')->put($filename, $imageContent);
+                $storedImageUrl = Storage::url($filename);
+                $device->invoice_photos = $storedImageUrl;
+            }
+
+            $device->save();
+  
+        if ($device) {
+            return response()->json(['message' => 'Device added successfully!']);
+        } else {
+            return response()->json(['message' => 'An error occurred while adding the device.']);
         }
     }
 

@@ -65,3 +65,76 @@ const columns = [
     </div>
   </AuthenticatedLayout>
 </template>
+
+<!-- <script>
+import toastr from "toastr";
+import "toastr/build/toastr.min.css";
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import Pusher from "pusher-js";
+
+export default {
+  name: "Notification",
+  mounted() {
+    Pusher.logToConsole = true;
+
+    // Initialize Pusher
+    const pusher = new Pusher("ba58f8359f6318f23ee1", {
+      cluster: "ap2",
+    });
+
+    // Subscribe to the channel
+    const channel = pusher.subscribe("notification");
+
+    // Bind to the event
+    channel.bind("test.notification", (data) => {
+      console.log("Received data:", data); // Debugging line
+
+      // Display Toastr notification with icons and inline content
+      if (data.vehicleId && data.title) {
+        toastr.info(
+          `<div class="notification-content">
+            <i class="fas fa-user"></i> <span>   ${data.vehicleId}</span>
+            <i class="fas fa-user"></i> <span>   ${data.title}</span>
+            <i class="fas fa-book" style="margin-left: 20px;"></i> <span>${data.body}</span>
+          </div>`,
+          "New Post Notification",
+          {
+            closeButton: true,
+            progressBar: true,
+            timeOut: 0, // Set timeOut to 0 to make it persist until closed
+            extendedTimeOut: 0, // Ensure the notification stays open
+            positionClass: "toast-top-right",
+            enableHtml: true,
+          }
+        );
+      } else {
+        console.error("Invalid data received:", data);
+      }
+    });
+
+    // Debugging line
+    pusher.connection.bind("connected", function () {
+      console.log("Pusher connected");
+    });
+  },
+};
+</script>
+
+<style scoped>
+/* Custom style for Toastr notifications */
+.toast-info .toast-message {
+  display: flex;
+  align-items: center;
+}
+
+.toast-info .toast-message i {
+  margin-right: 10px;
+}
+
+.toast-info .toast-message .notification-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+</style> -->
+

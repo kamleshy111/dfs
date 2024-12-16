@@ -80,6 +80,16 @@ $(document).ready(function() {
                 <i class="bi bi-credit-card-fill mr-3"></i>Billing
               </NavLink>
             </li>
+
+            <li class="nav-item">
+              <NavLink
+                :href="route('report')"
+                :active="route().current('report')"
+                class="nav-link"
+              >
+                <i class="bi bi-credit-card-fill mr-3"></i>Report
+              </NavLink>
+            </li>
             <!-- <li class="nav-item"><a class="nav-link" href="#"><i
                                     class="bi bi-credit-card-fill mr-3"></i>Payments</a>
                         </li>
