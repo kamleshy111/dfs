@@ -11,7 +11,7 @@ body {
 }
 
 :root {
-    --light-color: #2239c3cc;
+    --light-color: #2196f3;
 }
 
 body {
@@ -63,8 +63,99 @@ body {
 .nav .nav-link {
     color: #000000e3;
     font-size: 15px;
-    padding: 0.5rem !important;
+    padding: 13px 0 !important;
 }
+.nav .nav-link:hover {
+    color: #000;
+}
+.nav .nav-link:focus {
+    outline: none !important;
+    border: 0 !important;
+}
+
+.animate-bell {
+    -webkit-animation: ring 4s 0.7s ease-in-out infinite;
+    -webkit-transform-origin: 50% 4px;
+    -moz-animation: ring 4s 0.7s ease-in-out infinite;
+    -moz-transform-origin: 50% 4px;
+    animation: ring 4s 0.7s ease-in-out infinite;
+    transform-origin: 50% 4px;
+  }
+  @keyframes ring {
+    0% {
+      transform: rotate(0);
+    }
+    1% {
+      transform: rotate(30deg);
+    }
+    3% {
+      transform: rotate(-28deg);
+    }
+    5% {
+      transform: rotate(34deg);
+    }
+    7% {
+      transform: rotate(-32deg);
+    }
+    9% {
+      transform: rotate(30deg);
+    }
+    11% {
+      transform: rotate(-28deg);
+    }
+    13% {
+      transform: rotate(26deg);
+    }
+    15% {
+      transform: rotate(-24deg);
+    }
+    17% {
+      transform: rotate(22deg);
+    }
+    19% {
+      transform: rotate(-20deg);
+    }
+    21% {
+      transform: rotate(18deg);
+    }
+    23% {
+      transform: rotate(-16deg);
+    }
+    25% {
+      transform: rotate(14deg);
+    }
+    27% {
+      transform: rotate(-12deg);
+    }
+    29% {
+      transform: rotate(10deg);
+    }
+    31% {
+      transform: rotate(-8deg);
+    }
+    33% {
+      transform: rotate(6deg);
+    }
+    35% {
+      transform: rotate(-4deg);
+    }
+    37% {
+      transform: rotate(2deg);
+    }
+    39% {
+      transform: rotate(-1deg);
+    }
+    41% {
+      transform: rotate(1deg);
+    }
+    43% {
+      transform: rotate(0);
+    }
+    100% {
+      transform: rotate(0);
+    }
+  }
+  
 
 .form-control::placeholder {
     color: #000000de;
@@ -74,6 +165,7 @@ body {
     border-radius: 5px;
     color: #000000de;
 }
+
 
 .upload-box {
     background-color: #f8f9fa;
@@ -107,7 +199,7 @@ body {
     align-items: center;
 }
 
-.icon-profile .bi {
+.icon-profile-bell {
     border: 1px solid #6b7280;
     padding: 0px 10px;
     border-radius: 4px;
@@ -115,16 +207,64 @@ body {
     height: 40px;
     display: flex;
     justify-content: center;
+    position: relative;
     align-items: center;
+}
+.notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: var(--light-color);
+    color: white;
+    font-size: 10px;
+    width: 16px;
+    height: 15px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+.icon-profile .bi i{
     font-size: 15px;
 }
+.dropdown-header-noti {
+    padding: 0 0 10px 20px;
+    color: #3d3d3d;
+    border-bottom: 1px solid #929292;
+    margin-bottom: 10px;
+    font-weight: 600;
+    font-size: 18px;
+}
+.icon-circle {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: #f1f1f1;
+    color: #007bff;
+    font-size: 1.2rem;
+}
+.status-text {
+    font-weight: bold;
+}
+.muted-text {
+    color: #aaa;
+}
 
+
+.dropdown-header-noti {
+    margin: 10px 0;
+}
 header h2 {
     font-size: 24px;
 }
 
 .upload-box .bi {
-    color: #2239c3cc;
+    color: var(--light-color);
     font-size: 40px;
 }
 
@@ -165,8 +305,23 @@ form {
 .btn-custom {
     background: var(--light-color);
     border-color: var(--light-color);
+    color: #fff;
     font-size: 13px;
-    opacity: 0.8;
+}
+.btn-custom:hover {
+    background: transparent;
+    color: var(--light-color) ;
+    border-color: var(--light-color);
+}
+.action-btn:hover {
+    background: #4c5fcd45 !important;
+    color: #000000bf !important;
+}
+.action-btn:hover i{
+    color: #000000bf !important;
+}
+.action-btn{
+    transition: 0.3s;
 }
 
 .table tr td {
@@ -245,7 +400,7 @@ a.page-link {
     background: var(--light-color);
     color: #fff;
     padding: 8px 14px;
-    border-radius: 8px;
+    border-radius: 4px;
     margin: 0;
 }
 
@@ -470,17 +625,33 @@ a.page-link {
 .new-tg-1 strong {
     font-size: 14px;
 }
-
-li.nav-item {
-    margin-bottom: 10px;
-}
-
-.nav-link.active {
-    background: var(--light-color);
-    color: #fff;
+.nav .nav-link{
+    border: 0 !important;
     width: 100%;
-    border: 0;
-    border-radius: 6px;
+}
+.nav-item {
+    margin: 1px 0;
+}
+.siderbar .nav-item a, .siderbar .nav-item button {
+    position: relative;
+    transition: all .4s ease-in-out;
+}
+.siderbar .nav-item a::before, .siderbar .nav-item button::before {
+    border-radius: 0;
+    bottom: 0;
+    content: "";
+    height: 100%;
+    left: -16px;
+    position: absolute;
+    top: 0;
+    transition: all .4s ease-in-out;
+    width: 0;
+    z-index: 1;
+    background-color: #2196f34f;
+    border-radius: 0 25px 25px 0;
+}
+.sidebar .nav-item a:hover::before , .siderbar .nav-item button:hover::before{
+    width: 100%;
 }
 
 button#dropdownMenuButton {
@@ -499,10 +670,19 @@ ul#forms-nav {
 
 .text-muted {
     color: #6c757d !important;
-    font-size: 10px;
-    font-weight: 400;
+    font-size: 12px;
+    font-weight: 500;
 }
-
+.icon-box-profile {
+    border-bottom: 1px solid #9d9d9d;
+    padding-bottom: 15px;
+    padding-top: 15px;
+}
+.icon-box-profile span.time {
+    color: #393939;
+    font-size: 13px;
+    font-weight: 600;
+}
 p.text-muted.expiry {
     font-weight: 500;
     margin: 0;
@@ -739,7 +919,7 @@ p.active-device {
     border-radius: unset !important;
     border: unset !important;
     background: unset !important;
-    font-size: unset !important;
+    font-size: 12px !important;
 }
 
 .multiselect__placeholder {
@@ -770,14 +950,21 @@ p.active-device {
 }
 
 .save-btn-custom {
-    padding: 16px 15px !important;
+    padding: 12px 12px !important;
     height: unset !important;
-    font-size: 14px !important;
+    font-size: 13px !important;
     background-color: var(--light-color);
+    border: 1px solid var(--light-color) !important;
     transition: 0.3s;
+    border-radius: 4px;
+    text-transform: math-auto;
+    position: relative;
+    overflow: hidden;
 }
+
 .save-btn-custom:hover{
-    background-color: var(--light-color) !important;
+    background-color: transparent !important;
+    color: var(--light-color) !important;
 }
 .back-section {
     margin-bottom: 30px;
@@ -785,10 +972,16 @@ p.active-device {
 
 .back-btn-custom {
     background: var(--light-color);
-    padding: 10px;
+    padding: 8px;
     border-radius: 4px;
     color: #fff;
-    font-size: 14px;
+    font-size: 13px;
+    transition: 0.3s;
+    border: 1px solid var(--light-color);
+}
+.back-btn-custom:hover {
+    background: transparent;
+    color: var(--light-color);
 }
 
 .footer-map .nav-link.active {
@@ -856,7 +1049,7 @@ p.active-device {
 }
 
 .action-btn i {
-    font-size: 14px;
+    font-size: 12px;
 }
 
 .table-bordered {
@@ -950,19 +1143,39 @@ p.active-device {
     transition: all 0.3s ease;
     width: 80%;
 }
-  .client-info-card:hover {
-    transform: scale(1.03);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  }
 
   /* Section Title */
   .section-title {
-    font-size: 1.8rem;
+    font-size: 25px;
     color: var(--light-color);
     text-align: center;
     font-weight: bold;
-    margin-bottom: 30px;
-  }
+    margin-bottom: 50px;
+    position: relative;
+    text-transform: uppercase;
+}
+.section-title::before {
+    width: 28px;
+    height: 5px;
+    display: block;
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    margin-left: -14px;
+    background-color: var(--light-color);
+}
+.section-title::after {
+    width: 100px;
+    height: 1px;
+    display: block;
+    content: "";
+    position: relative;
+    margin-top: 15px;
+    left: 50%;
+    margin-left: -50px;
+    background-color: var(--light-color);
+}
 
   /* Client Info Section */
   .client-info-section {
@@ -1027,7 +1240,84 @@ div.dt-container select.dt-input {
     display: flex;
     align-items: center;
 }
-
+.card-gallery-box.box-shadow {
+    border: 1px solid #4e61cf;
+}
+.user-select-icon-box {
+    padding: 15px 20px;
+    height: 34px;
+}
+.image-zoom-effect img:hover {
+    transform: scale(1.1);
+    border-radius: 5px;
+}
+.image-zoom-effect img {
+    transition: 0.3s;
+    border-radius: 5px;
+}
+.image-zoom-effect {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 5px;
+}
+.nav .nav-link.active::before {
+    border-radius: 0;
+    bottom: 0;
+    content: "";
+    height: 100%;
+    left: -16px;
+    position: absolute;
+    top: 0;
+    transition: all .4s ease-in-out;
+    width: 100%;
+    z-index: 1;
+    background-color: #4c5fcd45;
+    border-radius: 0 25px 25px 0;
+}
+.nav .nav-link.active{
+    position: relative;
+}
+.dropdown-menu.notification-dropdown.show {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border: 0;
+    width: 340px;
+}
+.dropdown-menu.mt-2.p-2.show {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border: 0;
+}
+.invoice-image {
+    border-radius: 10px;
+}
+.card-summary .selected_class .bi {
+    background: transparent;
+    color: var(--light-color);
+    border: 1px solid var(--light-color);
+}
+.icon-profile button {
+    border: 0 !important;
+}
+.icon-profile .dropdown .nav-link i {
+    width: unset !important;
+    height: unset !important;
+    font-size: 16px;
+}
+button.dt-paging-button {
+    padding: 5px 12px !important;
+    font-size: 12px;
+}
+div.dt-container .dt-paging .dt-paging-button.current {
+    background: var(--light-color) !important;
+    color: #fff !important;
+    border: 1px solid var(--light-color) !important;
+}
+div.dt-container .dt-paging .dt-paging-button.current:hover {
+    background: transparent !important;
+    color: var(--light-color) !important;
+}
+.dt-length {
+    margin-left: 5px;
+}
 
 @media screen and (min-width: 768px) and (max-width: 991px) {
 
@@ -1056,6 +1346,12 @@ div.dt-container select.dt-input {
 
 
 @media (max-width: 767px) {
+    .client-info-card {
+        width: 100%;
+    }
+    .client-info-card .profile-details.d-flex {
+        display: block !important;
+    }
     .btn-custom {
         margin-top: 5px;
     }

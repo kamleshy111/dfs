@@ -263,6 +263,83 @@ export default {
 .count-design {
     width: 220px;
     background: #fff;
+}
+.upload-btn{
+      border: 1px solid var(--light-color) !important;
+}
+.upload-btn:hover{
+  color: var(--light-color);
+}
+
+.download-btn:hover, .upload-btn:hover, .cancel-btn:hover {
+    background-color: transparent;
+}
+
+.file-input {
+  padding: 10px;
+  font-size: 1em;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.file-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  font-size: 0.9em;
+}
+
+.file-table th,
+.file-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.file-table th {
+  background-color: #f4f4f4;
+  font-weight: normal;
+}
+
+.file-table tr:hover {
+  background-color: #f9f9f9;
+}
+
+.popup-footer {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.cancel-btn {
+  background-color: #e0e0e0;
+  color: #333;
+  padding: 12px 20px;
+  border-radius: 5px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.cancel-btn:hover {
+  background-color: #ccc;
+}
+.popup .close-btn {
+  background: #fff;
+  padding: 8px;
+  font-size: 16px;
+  position: absolute;
+  right: -10px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  top: -18px;
+  border-radius: 18%;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .popup {
+    width: 95%;
     padding: 20px;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
     margin-top: 10px;
@@ -285,6 +362,7 @@ export default {
     margin-bottom: 10px;
 }
 
+}
 
 @keyframes spin {
     0% {

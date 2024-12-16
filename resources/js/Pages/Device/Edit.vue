@@ -170,7 +170,7 @@ const submitForm = async () => {
                   </div>
                   <span style="font-size: 18px" class="mt-2"
                     >Click to Select Invoice
-                    <span style="color: #2239c3cc">Image</span></span
+                    <span style="color: var(--light-color)">Image</span></span
                   >
 
                   <!-- Hidden file input -->
