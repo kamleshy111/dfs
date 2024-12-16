@@ -234,7 +234,7 @@ const submitForm = async () => {
           <i class="bi bi-cloud-arrow-up-fill"></i>
           <span>
             Drop Your File Here, or
-            <label for="file-upload" style="color: #2239c3cc; cursor: pointer">
+            <label for="file-upload" style="color: var(--light-color); cursor: pointer">
               Browse
             </label>
           </span>

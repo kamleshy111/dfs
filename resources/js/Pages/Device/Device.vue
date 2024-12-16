@@ -322,11 +322,15 @@ export default {
     font-size: 15px;
     transition: background-color 0.3s;
 }
+.upload-btn{
+      border: 1px solid var(--light-color) !important;
+}
+.upload-btn:hover{
+  color: var(--light-color);
+}
 
-.download-btn:hover,
-.upload-btn:hover,
-.cancel-btn:hover {
-  background-color: #2239c3ab;
+.download-btn:hover, .upload-btn:hover, .cancel-btn:hover {
+    background-color: transparent;
 }
 
 .file-input {

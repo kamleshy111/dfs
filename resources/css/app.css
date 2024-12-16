@@ -11,7 +11,7 @@ body {
 }
 
 :root {
-    --light-color: #2239c3cc;
+    --light-color: #2196f3;
 }
 
 body {
@@ -264,7 +264,7 @@ header h2 {
 }
 
 .upload-box .bi {
-    color: #2239c3cc;
+    color: var(--light-color);
     font-size: 40px;
 }
 
@@ -305,16 +305,20 @@ form {
 .btn-custom {
     background: var(--light-color);
     border-color: var(--light-color);
+    color: #fff;
     font-size: 13px;
-    opacity: 0.8;
 }
 .btn-custom:hover {
-    background: #000000bf;
-    color: #fff;
-    border-color: #000000bf;
+    background: transparent;
+    color: var(--light-color) ;
+    border-color: var(--light-color);
 }
 .action-btn:hover {
-    background: #000000bf !important;
+    background: #4c5fcd45 !important;
+    color: #000000bf !important;
+}
+.action-btn:hover i{
+    color: #000000bf !important;
 }
 .action-btn{
     transition: 0.3s;
@@ -396,7 +400,7 @@ a.page-link {
     background: var(--light-color);
     color: #fff;
     padding: 8px 14px;
-    border-radius: 8px;
+    border-radius: 4px;
     margin: 0;
 }
 
@@ -632,7 +636,7 @@ a.page-link {
     position: relative;
     transition: all .4s ease-in-out;
 }
-.siderbar .nav-item a::before , .siderbar .nav-item button::before {
+.siderbar .nav-item a::before, .siderbar .nav-item button::before {
     border-radius: 0;
     bottom: 0;
     content: "";
@@ -643,7 +647,7 @@ a.page-link {
     transition: all .4s ease-in-out;
     width: 0;
     z-index: 1;
-    background-color: #4c5fcd45;
+    background-color: #2196f34f;
     border-radius: 0 25px 25px 0;
 }
 .sidebar .nav-item a:hover::before , .siderbar .nav-item button:hover::before{
@@ -949,7 +953,8 @@ p.active-device {
     padding: 12px 12px !important;
     height: unset !important;
     font-size: 13px !important;
-    background-color: #2239c391;
+    background-color: var(--light-color);
+    border: 1px solid var(--light-color) !important;
     transition: 0.3s;
     border-radius: 4px;
     text-transform: math-auto;
@@ -958,25 +963,25 @@ p.active-device {
 }
 
 .save-btn-custom:hover{
-    background-color: #4c5fcd45 !important;
-    color: #000000bf !important;
+    background-color: transparent !important;
+    color: var(--light-color) !important;
 }
 .back-section {
     margin-bottom: 30px;
 }
 
 .back-btn-custom {
-    background: #2239c391;
+    background: var(--light-color);
     padding: 8px;
-    border-radius: 0;
+    border-radius: 4px;
     color: #fff;
     font-size: 13px;
     transition: 0.3s;
-    border-radius: 4px;
+    border: 1px solid var(--light-color);
 }
 .back-btn-custom:hover {
-    background: #4c5fcd45;
-    color: #000000bf;
+    background: transparent;
+    color: var(--light-color);
 }
 
 .footer-map .nav-link.active {
@@ -1044,7 +1049,7 @@ p.active-device {
 }
 
 .action-btn i {
-    font-size: 14px;
+    font-size: 12px;
 }
 
 .table-bordered {
@@ -1283,6 +1288,35 @@ div.dt-container select.dt-input {
 }
 .invoice-image {
     border-radius: 10px;
+}
+.card-summary .selected_class .bi {
+    background: transparent;
+    color: var(--light-color);
+    border: 1px solid var(--light-color);
+}
+.icon-profile button {
+    border: 0 !important;
+}
+.icon-profile .dropdown .nav-link i {
+    width: unset !important;
+    height: unset !important;
+    font-size: 16px;
+}
+button.dt-paging-button {
+    padding: 5px 12px !important;
+    font-size: 12px;
+}
+div.dt-container .dt-paging .dt-paging-button.current {
+    background: var(--light-color) !important;
+    color: #fff !important;
+    border: 1px solid var(--light-color) !important;
+}
+div.dt-container .dt-paging .dt-paging-button.current:hover {
+    background: transparent !important;
+    color: var(--light-color) !important;
+}
+.dt-length {
+    margin-left: 5px;
 }
 
 @media screen and (min-width: 768px) and (max-width: 991px) {
