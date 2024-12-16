@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Device;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\DB;
+use App\Models\Notification;
 
 class AdminDashboardController extends Controller
 {
@@ -30,6 +31,25 @@ class AdminDashboardController extends Controller
             'inactive_device_count' => $inactive_device_count,
             'customer_amounts'      => formatAmount($customers_amount),
             'device_sold_by_month'  => $device_sold_by_month
+        ]);
+    }
+    public function getNotification(){
+       
+    
+       $data = Notification::where('status', 0)->get();
+
+        $notifications = $data->map(function($item) {
+            return [
+                'id' => $item->id ?? 0,
+                'vehicleId' => $item->vehicle_id ?? 0,
+                'title' => $item->title ?? '',
+                'body' => $item->body ?? '---',
+                'date' => \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') ?? '',
+            ];
+        });
+
+       return response()->json([
+            'notifications' => $notifications,
         ]);
     }
 }

@@ -14,8 +14,9 @@ use App\Http\Controllers\Admin\PaymentsController;
 use App\Http\Controllers\Admin\ReviewRatingController;
 use App\Http\Controllers\Admin\VehicleTypeController;
 use App\Http\Controllers\Admin\BillingController;
-use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\User\BillingController as UserBillingController;
+use App\Http\Controllers\NotificationController;
 
 
 // Route::get('/', function () {
@@ -30,6 +31,12 @@ use App\Http\Controllers\User\BillingController as UserBillingController;
 Route::get('/', function () {
     return Inertia::render('Auth/Login');
 });
+
+Route::get('/pusher', function () {
+    return view('push');
+});
+
+Route::view('pusher1','pusher');
 
 // Route::get('/dashboard', function () {
 //     return Inertia::render('Dashboard');
@@ -108,6 +115,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::delete('/destroy/{id}', [VehicleTypeController::class, 'destroy'])->name('vehicle-type.destroy');
     });
 
+    Route::group(['prefix' => 'report'], function () {
+        Route::get('/', [ReportController::class, 'index'])->name('report');
+    });
+
     //Billing Route
     Route::group(['prefix' => 'all-billing'], function () {
         Route::get('/', [BillingController::class, 'index'])->name('all-billing');
@@ -139,6 +150,9 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::group(['prefix' => 'monitor'], function () {
         Route::get('/{device_id}', [MonitorController::class, 'index'])->name('monitor');
     });
+
+    # Notification
+    Route::get('/notification/{vehicleId?}',[NotificationController::class, 'notification'])->name('notification');
 
 });
 
