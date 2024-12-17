@@ -38,7 +38,10 @@ class AdminDashboardController extends Controller
 
     public function getNotification(){
        
-       $data = Notification::where('status', 0)->get();
+    //    $data = Notification::where('status', 0)->get();
+    $data = Notification::where('status', 0)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
 
         $notifications = $data->map(function($item) {
   

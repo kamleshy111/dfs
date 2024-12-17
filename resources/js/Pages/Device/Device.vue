@@ -19,6 +19,18 @@ defineProps({
   },
 });
 
+
+const showPopup = ref(false);
+
+const uploadStatus = ref("Pending");
+
+const closePopup = () => {
+  showPopup.value = false;
+  file.value = null;
+  uploadStatus.value = "Pending";
+
+};
+
 // Column definitions for DataTable
 const columns = [
 //   { data: 'id', title: 'S No' },
@@ -58,26 +70,45 @@ const columns = [
           <h4><i class="bi bi-truck-front-fill mr-2"></i>All Devices</h4>
           <div class="text-end">
             <div class="mr-2">
-                            
-                <form @submit.prevent="uploadExcel" enctype="multipart/form-data" class="btn btn-primary btn-custom">
-                    <input type="file" accept=".xlsx, .xls" class="file-upload-input" id="file-upload"
-                        @change="onFileChange" />
-                    <label for="file-upload" class="file-upload-button">
-                      <i class="bi bi-cloud-upload mr-2"></i>
-                    </label>
-                    <button  type="submit" :disabled="!file || isImporting">Add New devices Upload & Inport</button>
-                </form>
-                <div class="file-p mt-2">File Upload .xlsx, .xls <a href="/sample.xlsx" download>Downlod Sample</a></div>
-                <div v-if="totalChunks" class="count-design">
-                    <div v-if="isImporting">
-                        <div class="loader"></div>
-                    </div>
-                    <p v-if="totalChunks">Importing data... {{ currentChunk * 10 }}/{{ totalChunks * 10 }}
-                    </p>
-                    <p v-if="failed_count">Failed count: {{ failed_count }}</p>
-                    <p v-if="success_count">Success count: {{ success_count }}</p>
+                   
+              <div v-if="showPopup" class="popup-overlay">
+                <div class="popup">
+                    <header class="popup-header">
+                      <h2>Upload</h2>
+                      <button @click="closePopup" class="close-btn">*</button>
+                    </header>
+                    <p class="popup-description">A Single file does not exceed 2Mb</p>
+                    
+                    <form @submit.prevent="uploadExcel" enctype="multipart/form-data">
+                      <input type="file" accept=".xlsx, .xls" class="file-upload-input" id="file-upload"
+                            @change="onFileChange" />
+                      <div class="popup-actions">
+                      
+                          <button type="submit" class="btn btn-success">Start Upload</button>
+                          <button @click="closePopup" class="cancel-btn">Cancle</button>
+                          
+                 
+                        </div>
+                        <div class="file-p mt-2">File Upload .xlsx, .xls <a href="/sample.xlsx" download>Downlod Sample</a></div>
+                          <div v-if="totalChunks" class="count-design">
+                              <div v-if="isImporting">
+                                  <div class="loader"></div>
+                              </div>
+                              <p v-if="totalChunks">Importing data... {{ currentChunk * 10 }}/{{ totalChunks * 10 }}
+                              </p>
+                              <p v-if="failed_count">Failed count: {{ failed_count }}</p>
+                              <p v-if="success_count">Success count: {{ success_count }}</p>
+                          </div>
+                    </form>
+                  </div>
                 </div>
+ 
             </div>
+            <a class="mr-2">
+              <button class="btn btn-primary btn-custom" @click="showPopup = true">
+              <i class="bi bi-cloud-upload mr-2"></i>Add New devices file
+                </button>
+            </a>
             <a class="mr-2" :href="route('devices.create')">
               <button class="btn btn-primary btn-custom">
                 <i class="bi bi-plus-circle-fill mr-2"></i>Add New Device
@@ -93,21 +124,21 @@ const columns = [
         </div>
 
         <div class="table-responsive">
-            <!-- DataTable Component -->
-            <DataTable :data="devices" :columns="columns" id="devices">
-              <thead class="thead-light">
-                <tr>
-                  <th scope="col">S No</th>
-                  <th scope="col">Device ID</th>
-                  <th scope="col">Order ID</th>
-                  <th scope="col">Customer Name</th>
-                  <th scope="col">Start Data</th>
-                  <th scope="col">Action</th>
-                </tr>
-              </thead>
-            </DataTable>
-          </div>
-
+          <!-- DataTable Component -->
+          <DataTable :data="devices" :columns="columns" id="devices">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">S No</th>
+                <th scope="col">Device ID</th>
+                <th scope="col">Order ID</th>
+                <th scope="col">Customer Name</th>
+                <th scope="col">Start Data</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+          </DataTable>
+        </div>
+          
       </div>
     </div>
   </AuthenticatedLayout>
@@ -123,10 +154,14 @@ export default {
             currentChunk: 0,
             failed_count: 0,
             success_count: 0,
+            showPopup: false,
         };
     },
     mounted() {
       this.setupDeleteButton();
+    },
+    props: {
+      user: Object,
     },
     methods: {
         setupDeleteButton() {
@@ -179,16 +214,23 @@ export default {
             });
         },
         onFileChange(event) {
-            this.file = event.target.files[0];
+          this.file = event.target.files[0];       
         },
         async uploadExcel() {
             let app = this;
             this.failed_count = 0;
             this.success_count = 0;
+          
+            if (!this.file || this.file.length === 0) {
+                toast.error("Please select a file.", { autoClose: 3000 });
+                return;
+            }
 
-            if (!this.file) {
-                this.message = "Please select a file.";
-                this.success = false;
+            if (this.file.type !== "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
+               
+              
+              toast.error("Invalid file type. Only .xlsx files are allowed.", { autoClose: 3000 });
+                this.file = null;
                 return;
             }
 
@@ -208,8 +250,8 @@ export default {
                     error => console.log(error)
                 )
             } catch (error) {
-                this.message = "Failed to upload file.";
-                this.success = false;
+              toast.error("Failed to upload file.", { autoClose: 3000 });
+                return;
             }
         },
         async importChunks() {
@@ -233,22 +275,63 @@ export default {
             }
 
             this.isImporting = false;
-            alert('Import completed!');
-            // location.href = location.href;
+            toast.success('Import completed!');
+            setTimeout(() => {
+              window.location.reload();
+            }, 3000); // Reloads page after 3 seconds
+                  
         }
+    },
+    closePopup() {
+      this.showPopup = false;
+      this.file = null;
+      this.uploadStatus = "Pending";
+    },
+    downloadTemplate() {
+      // Replace with your template file's URL
+      window.open("/devices", "_blank");
     },
 };
 </script>
 
 <style>
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* Dark overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+.popup {
+  background-color: #fff;
+  border-radius: 10px;
+  width: 450px;
+  max-width: 90%;
+  padding: 30px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 10px;
+}
 .file-upload-container {
     position: relative;
     display: flex;
     align-items: center;
-}
-
-.file-upload-input {
-    display: none;
 }
 
 .file-upload-button {

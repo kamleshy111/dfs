@@ -5,6 +5,19 @@ import { Inertia } from "@inertiajs/inertia";
 import { ref } from "vue";
 const loadingButtons = ref({});
 
+
+// Define props
+defineProps({
+  notifications: {
+    type: Array, // Corrected type: Array for table data
+    required: true,
+  },
+  notificationCount: {
+    type: Number,
+    required: true,
+  }
+});
+
 $(document).ready(function() {
     $('.notification-item').on('click', function() {
         var details = $(this).next('.notification-details'); // Get the corresponding .notification-details
@@ -15,11 +28,9 @@ $(document).ready(function() {
         // Toggle the clicked notification's details
         details.toggleClass('open');
     });
-});
 
-$(document).ready(function() {
-    // Check if the mobile menu was open before
-    if (localStorage.getItem('mobileMenuVisible') === 'true') {
+     // Check if the mobile menu was open before
+     if (localStorage.getItem('mobileMenuVisible') === 'true') {
         $('#mobileMenu').show();
     }
 
@@ -87,53 +98,38 @@ $(document).ready(function() {
     <div class="notification-card">
         <!-- Header -->
         <div class="notification-header">
-            <h5>Notifications <span class="badge bg-primary">3</span></h5>
+            <h5>Notifications <span class="badge bg-primary">{{ notificationCount }}</span></h5>
             <span class="mark-all">Mark all as read</span>
         </div>
 
         <!-- Notification List -->
-        <div class="notifications-list">
+        <div class="notifications-list" v-for="notification in notifications" :key="notification.id">
             <!-- Notification Item 1 -->
-            <div class="notification-main">
+            <div class="notification-main" v-if="notification.status === 0">
                 <div class="notification-item">
                    <div class="icon-circle mr-3" data-v-2245cac1=""><i class="fas fa-sync-alt" data-v-2245cac1=""></i></div>
                     <div class="notification-content">
-                        <p><strong>Mark Webber</strong> reacted to your recent post <span class="highlight">My first tournament today!</span></p>
-                        <small>1m ago</small>
+                        <p><span class="highlight">{{ notification.title }}</span></p>
+                        <small>{{ notification.date }}</small>
                     </div>
                     <div class="unread-dot"></div>
                 </div>
                 <div class="notification-details">
-                    <p>This is the detailed view of the notification. Here you can add more information.</p>
-                </div>
-            </div>
-
-            <!-- Notification Item 2 -->
-            <div class="notification-main">
-                <div class="notification-item">
-                    <div class="icon-circle mr-3" data-v-2245cac1=""><i class="fas fa-sync-alt" data-v-2245cac1=""></i></div>
-                    <div class="notification-content">
-                        <p><strong>Mark Webber</strong> reacted to your recent post <span class="highlight">My first tournament today!</span></p>
-                        <small>1m ago</small>
-                    </div>
-                    <div class="unread-dot"></div>
-                </div>
-                <div class="notification-details">
-                    <p>This is the detailed view of the notification. Here you can add more information.</p>
+                    <p>{{ notification.body }}.</p>
                 </div>
             </div>
 
             <!-- Notification Item 3 -->
-            <div class="notification-main">
+            <div class="notification-main" v-if="notification.status === 1">
                 <div class="notification-item">
                     <div class="icon-circle mr-3" data-v-2245cac1=""><i class="fas fa-sync-alt" data-v-2245cac1=""></i></div>
                     <div class="notification-content">
-                        <p><strong>Mark Webber</strong> reacted to your recent post <span class="highlight">My first tournament today!</span></p>
-                        <small>1m ago</small>
+                        <p><span class="highlight">{{ notification.title }}</span></p>
+                        <small>{{ notification.date }}</small>
                     </div>
                 </div>
                 <div class="notification-details">
-                    <p>This is the detailed view of the notification. Here you can add more information.</p>
+                    <p>{{ notification.body }}.</p>
                 </div>
             </div>
         </div>
