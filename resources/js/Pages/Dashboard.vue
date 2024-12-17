@@ -92,6 +92,9 @@ var selected_filter = ref('all');
 onMounted(() => {
     loadMapData();
     getAdminStats();
+    window.onload = () => {
+        reloadMarkers('all')
+    };
 });
 
 const reloadMarkers = (selected) => {
