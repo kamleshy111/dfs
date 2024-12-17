@@ -93,7 +93,10 @@ onMounted(() => {
     loadMapData();
     getAdminStats();
     window.onload = () => {
-        reloadMarkers('all')
+        setTimeout(() => {
+            console.log("Function executed after delay.");
+            reloadMarkers('all');
+        }, 2000);
     };
 });
 
