@@ -89,7 +89,7 @@ const columns = [
             <tr>
               <th scope="col">S No</th>
               <th scope="col">Customers Name</th>
-              <th scope="col">Vehicle Register Number </th>
+              <th scope="col">Vehicle Register Number</th>
               <th scope="col">Vehicle Type</th>
               <th scope="col">Installation Date</th>
               <th scope="col">Action</th>
