@@ -9,6 +9,7 @@ use App\Models\Device;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\DB;
 use App\Models\Notification;
+use Carbon\Carbon;
 
 class AdminDashboardController extends Controller
 {
@@ -33,23 +34,42 @@ class AdminDashboardController extends Controller
             'device_sold_by_month'  => $device_sold_by_month
         ]);
     }
+
+
     public function getNotification(){
        
-    
        $data = Notification::where('status', 0)->get();
 
         $notifications = $data->map(function($item) {
+  
+            $assignedDate = Carbon::create($item->created_at);
+            $currentDate = Carbon::now();
+    
+            $minutesDifference = $assignedDate->diffInMinutes($currentDate);
+            if($minutesDifference < 1440 && $minutesDifference >= 60) {
+                $comment_date = round($minutesDifference/60) . ' hours ago';
+            } elseif ($minutesDifference < 60) {
+                $comment_date = round($minutesDifference) . ' minutes ago';
+            } else {
+                $comment_date = $item->created_at->format('j F, Y');
+            }
             return [
                 'id' => $item->id ?? 0,
                 'vehicleId' => $item->vehicle_id ?? 0,
                 'title' => $item->title ?? '',
                 'body' => $item->body ?? '---',
-                'date' => \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') ?? '',
+                'date' => $comment_date,
             ];
         });
 
        return response()->json([
             'notifications' => $notifications,
         ]);
+    }
+
+    public function adminUnreadNotifications() {
+
+        $adminUnreadCount = Notification::where('status', 0)->count();
+        return response()->json(['adminUnreadCount' => $adminUnreadCount]);
     }
 }
