@@ -93,10 +93,11 @@ onMounted(() => {
     loadMapData();
     getAdminStats();
     window.onload = () => {
-        setTimeout(() => {
-            console.log("Function executed after delay.");
-            reloadMarkers('all');
-        }, 2000);
+        const dashboardLink = document.querySelector(".sidebar li a");
+        if (dashboardLink) {
+            console.log("DDDd");
+            dashboardLink.click();
+        }
     };
 });
 
