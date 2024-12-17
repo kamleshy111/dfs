@@ -29,8 +29,8 @@ const columns = [
     render: (data, type, row, meta) => meta.row + 1,
     },
     { data: 'customerName' },
-    { data: 'vehicleType'},
     { data: 'vehicleRegisterNumber'},
+    { data: 'vehicleType'},
     { data: 'installationDate' },
     {
         title: 'Actions',
