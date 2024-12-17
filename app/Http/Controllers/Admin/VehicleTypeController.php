@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Device;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -33,7 +34,7 @@ class VehicleTypeController extends Controller
                 'vehicleType' => $item->vehicle_type ?? '',
                 'vehicleRegisterNumber' => $item->vehicle_register_number ?? '',
                 'installationDate' => \Carbon\Carbon::parse($item->installation_date)->format('d-m-Y') ?? '',
-    
+
             ];
         });
 
@@ -63,7 +64,7 @@ class VehicleTypeController extends Controller
             'imeiNumber' => 'required',
             'duration' => 'required_with:durationUnit',
             'durationUnit' => 'required_with:duration',
-           
+
         ], [
             'customerId.required' => 'Customer Name is required.',
             'vehicleRegisterNumber' => 'Vehicle Register Number id required',
@@ -93,6 +94,15 @@ class VehicleTypeController extends Controller
             'sim_operator' => $request->input('simOperator') ?? '',
         ]);
 
+
+        //update device status base on id
+        if (!empty($request->input('deviceId'))) {
+            Device::where('id', $request->input('deviceId'))->update([
+                'status' => 1,
+            ]);
+        }
+
+
         if($vehicle) {
             return response()->json(["message" => 'Vehicle added successfully.']);
         } else {
@@ -118,9 +128,9 @@ class VehicleTypeController extends Controller
                     if($data->duration_unit == 'days'){
                        $startDate =  Carbon::parse($data->start_date);
                        $duration = (int) $data->duration;
-                       $expirationDate = $startDate->addDays($duration); 
+                       $expirationDate = $startDate->addDays($duration);
 
-                       $formattedExpirationDate = $expirationDate->format('d-m-Y'); 
+                       $formattedExpirationDate = $expirationDate->format('d-m-Y');
                     }
 
                     if($data->duration_unit == 'months'){
@@ -128,7 +138,7 @@ class VehicleTypeController extends Controller
                         $duration = (int) $data->duration;
                         $expirationDate = $startDate->addMonths($duration);
 
-                        $formattedExpirationDate = $expirationDate->format('d-m-Y'); 
+                        $formattedExpirationDate = $expirationDate->format('d-m-Y');
                     }
 
                     if($data->duration_unit == 'years'){
@@ -136,14 +146,14 @@ class VehicleTypeController extends Controller
                         $duration = (int) $data->duration;
                         $expirationDate = $startDate->addYears($duration);
 
-                        $formattedExpirationDate = $expirationDate->format('d-m-Y'); 
+                        $formattedExpirationDate = $expirationDate->format('d-m-Y');
                     }
-                   
+
 
              $startDate =     Carbon::parse($data->start_date)->format('d-m-Y');
 
                $installationDate =     Carbon::parse($data->installation_date)->format('d-m-Y');
-     
+
 
         $vehicleDetails = [
             'id' => $data->id ?? 0,
@@ -154,12 +164,12 @@ class VehicleTypeController extends Controller
             'installation_date' => $installationDate ?? '',
             'start_date' => $startDate ?? '--',
             'duration' => ($data->duration ?? '') . ' ' . ($data->duration_unit ?? ''),
-            'expirationDate' => $formattedExpirationDate ?? '--', 
+            'expirationDate' => $formattedExpirationDate ?? '--',
             'sim_operator' => $data->sim_operator ?? '--',
             'first_name' => $data->first_name,
             'last_name' => $data->last_name,
             'deviceName' => $data->deviceName ?? '--',
-   
+
         ];
 
         return Inertia::render('Vehicle/View',[
@@ -209,7 +219,7 @@ class VehicleTypeController extends Controller
 
         $customers = Customer::all();
         $data = Vehicle::find($id);
-   
+
         if (!$data) {
             return response()->json(["message" => 'Vehicle not found.']);
         }
@@ -256,7 +266,7 @@ class VehicleTypeController extends Controller
         ]);
 
         if (!$validated) {
-        
+
             return response()->json(["message" => $validated]);
         }
 

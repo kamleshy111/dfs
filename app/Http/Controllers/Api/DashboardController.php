@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Device;
 use App\Models\Customer;
+use App\Services\AlertService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -43,22 +44,45 @@ class DashboardController extends Controller
         $locations = [];
         foreach ($devices as $index => $device) {
             if( $status == 'all' || $status == $device->status ) {
+                $courseSyncService = app(AlertService::class);
+                $deviceCurrentStatus = $courseSyncService->getDeviceAlert($device->device_id);
+                $message = '';
+                $messageType = 'inactive';
+                $deviceAlert = [];
+                if ((!empty($deviceCurrentStatus) && $deviceCurrentStatus['result'] != 0) || (isset($device['status']) && $device['status'] == 2)) {
+                    $message = $deviceCurrentStatus['message'];
+                    $messageType = "danger";
+                } else if (isset($device['status']) && $device['status'] == 1){
+                    $deviceAlert = $deviceCurrentStatus['status'] ?? [];
+                    $messageType = "normal";
+                } else {
+                    $deviceAlert = $deviceCurrentStatus['status'] ?? [];
+                }
+
+                $lat_lng = [];
+                if (!empty($deviceAlert) && !empty($deviceAlert[0])) {
+                    $lat_lng = collect($deviceAlert)->map(function ($item){
+                        return [
+                            'lat' => floatval($item['mlat'] ?? 0),
+                            'lng' => floatval($item['mlng'] ?? 0)
+                        ];
+                    });
+
+                    $deviceAlert = collect($deviceAlert)->first();
+                }
+
                 $locations[] = [
-                    "position" => $this->getRandomCoordinatesInIndia(),
-                    "title" => 'LADY LIBERTY',
+                    "position" => $this->getCoordinates($deviceAlert),
+                    "title" => $device->device_id,
                     "content" => [
-                        "device_id" => mt_rand(1000000, 9999999),
-                        'device_name' => 'Device Name' . $index,
-                        'message' => 'This is test device' . $index,
+                        "device_id" => $device->device_id,
+                        'device_name' => 'Device Name' . $device->device_id,
+                        'message' => $message,
                         'url' => '',
-                        'message_type' => 'normal',
-                        'last_active' => date("Y-m-d h:i:s a", time()),
+                        'message_type' => $messageType,
+                        'last_active' => $deviceAlert['gt'] ?? "",
                         'photo' => 'https://img.freepik.com/free-vector/truck_53876-34798.jpg',
-                        'lat_lng' => [
-                            ["lat" => 40.62201182900588, "lng" =>  -74.19500694401374],
-                            ["lat" => 40.62201182900588, "lng" =>  -74.19500694401374],
-                            ["lat" => 40.62201182900588, "lng" =>  -74.19500694401374]
-                        ]
+                        'lat_lng' => $lat_lng,
                     ]
                 ];
             }
@@ -70,21 +94,12 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function getRandomCoordinatesInIndia()
+    public function getCoordinates($deviceAlert)
     {
-        // Define India's approximate latitude and longitude bounds
-        $minLat = 20.0;  // Approximate southern bound of central India
-        $maxLat = 25.0;  // Approximate northern bound of central India
-        $minLng = 75.0;  // Approximate western bound of central India
-        $maxLng = 85.0;  // Approximate eastern bound of central India
-
-        // Generate random latitude and longitude within the bounds
-        $latitude = $minLat + mt_rand() / mt_getrandmax() * ($maxLat - $minLat);
-        $longitude = $minLng + mt_rand() / mt_getrandmax() * ($maxLng - $minLng);
 
         return [
-            'lat' => $latitude,
-            'lng' => $longitude
+            'lat' => floatval($deviceAlert['mlat'] ?? 0),
+            'lng' => floatval($deviceAlert['mlng'] ?? 0)
         ];
     }
 }

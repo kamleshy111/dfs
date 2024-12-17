@@ -75,11 +75,20 @@
     iconElement.style.height = "20px";
     iconElement.style.color = "#FFF";
 
+    let iconType = '';
+    if (location && location.content && location.content.message_type == 'danger') {
+        iconType = 'c32222';
+    } else if (location && location.content && location.content.message_type == 'inactive') {
+        iconType = 'ff8300';
+    } else {
+        iconType = '385be8';
+    }
+
     const pin = new google.maps.marker.PinElement({
       glyph: iconElement,
       glyphColor: "#ff8300",
-      background: "#2239c3cc",
-      borderColor: "#2239c3cc",
+      background: "#" + iconType,
+      borderColor: "#" + iconType
     });
 
     return pin;
