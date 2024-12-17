@@ -57,14 +57,33 @@ const columns = [
     <div class="mt-5">
       <div class="table-container">
         <div class="d-flex justify-content-between align-items-center">
-          <h4><i class="bi bi-truck-front-fill mr-2"></i>All vehicles</h4>
+            <h4 class="responsive-btn">
+             <i class="bi bi-people-fill mr-2"></i>All Clients
+            </h4>
 
-            
-            <a :href="route('vehicle-type.create')">
-              <button class="btn btn-primary btn-custom"><i class="bi bi-plus-circle-fill mr-2"></i>Add New
-                vehicle</button>
-            </a>
+           <div class="text-end mobile-btn-responsive">
+              <!-- Mobile menu button -->
+              <button class="btn btn-primary btn-custom d-block d-md-none" id="mobilebtn">
+                  <i class="bi bi-three-dots-vertical"></i>
+              </button>
+              <div class="d-none d-md-flex" id="desktopButtons">
+                <a :href="route('vehicle-type.create')">
+                    <button class="btn btn-primary btn-custom"><i class="bi bi-plus-circle-fill mr-2"></i>Add New
+                      vehicle</button>
+                  </a>
+              </div>
+
+              <!-- Popup mobile menu -->
+              <div id="mobileMenu" class="mobile-menu" style="display: none;">
+                <a :href="route('vehicle-type.create')">
+                    <button class="btn btn-primary btn-custom"><i class="bi bi-plus-circle-fill mr-2"></i>Add New
+                      vehicle</button>
+                  </a>
+              </div>
+           </div>
         </div>
+
+        <div class="table-responsive">
           <DataTable :data="vehicles" :columns="columns" id="vehicles">
           <thead class="thead-light">
             <tr>
@@ -77,6 +96,7 @@ const columns = [
             </tr>
           </thead>
         </DataTable>
+        </div>
 
 
  
@@ -146,4 +166,32 @@ export default {
     },
   },
 };
+
+$(document).ready(function() {
+    // Check if the mobile menu was open before
+    if (localStorage.getItem('mobileMenuVisible') === 'true') {
+        $('#mobileMenu').show();
+    }
+
+    // Toggle mobile menu visibility and update localStorage
+    $('#mobilebtn').click(function(e) {
+        e.stopPropagation();
+        const isVisible = $('#mobileMenu').is(':visible');
+        $('#mobileMenu').toggle();
+        localStorage.setItem('mobileMenuVisible', !isVisible);
+    });
+
+    // Close the mobile menu if clicking outside
+    $(document).click(function(e) {
+        if (!$(e.target).closest('#mobilebtn, #mobileMenu').length) {
+            $('#mobileMenu').hide();
+            localStorage.setItem('mobileMenuVisible', 'false');
+        }
+    });
+
+    // Prevent closing menu if clicking inside the menu
+    $('#mobileMenu').click(function(e) {
+        e.stopPropagation();
+    });
+});
 </script>
