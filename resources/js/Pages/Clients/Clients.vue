@@ -55,44 +55,74 @@ const columns = [
     <Head title="Clients" />
 
     <AuthenticatedLayout>
-        <div class="my-3">
-            <div class="form-container shadow">
-                <div class="table-container">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h4 class="responsive-btn"><i class="bi bi-people-fill mr-2"></i>All Clients</h4>
-                        <div class="text-end">
-                            <a class="mr-2" :href="route('clients.create')">
-                                <button class="btn btn-primary btn-custom responsive-btn">
-                                    <i class="bi bi-plus-circle-fill mr-2 "></i>Add New Client
-                                </button>
-                            </a>
-                            <a :href="route('clients.map')">
-                                <button class="btn btn-primary btn-custom">
-                                    <i class="bi bi-geo-alt-fill mr-2"></i>View on Map
-                                </button>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="table-responsive">
-                        <!-- DataTable Component -->
-                        <DataTable :data="customers" :columns="columns" id="customers">
+    <div class="my-3">
+        <div class="form-container shadow">
+            <div class="table-container">
+             <div class="d-flex justify-content-between align-items-center">
+    <h4 class="responsive-btn">
+        <i class="bi bi-people-fill mr-2"></i>All Clients
+    </h4>
+
+    <div class="text-end mobile-btn-responsive">
+        <!-- Mobile menu button -->
+        <button class="btn btn-primary btn-custom d-block d-md-none" id="mobilebtn">
+            <i class="bi bi-three-dots-vertical"></i>
+        </button>
+
+        <!-- Buttons on larger screens (desktop view) -->
+        <div class="d-none d-md-flex" id="desktopButtons">
+            <a class="mr-2" href="route('clients.create')">
+                <button class="btn btn-primary btn-custom">
+                    <i class="bi bi-plus-circle-fill mr-2"></i>Add New Client
+                </button>
+            </a>
+            <a href="route('clients.map')">
+                <button class="btn btn-primary btn-custom">
+                    <i class="bi bi-geo-alt-fill mr-2"></i>View on Map
+                </button>
+            </a>
+        </div>
+
+        <!-- Popup mobile menu -->
+        <div id="mobileMenu" class="mobile-menu" style="display: none;">
+            <a class="mr-2" href="route('clients.create')">
+                <button class="btn btn-primary btn-custom">
+                    <i class="bi bi-plus-circle-fill mr-2"></i>Add New Client
+                </button>
+            </a>
+            <a href="route('clients.map')">
+                <button class="btn btn-primary btn-custom">
+                    <i class="bi bi-geo-alt-fill mr-2"></i>View on Map
+                </button>
+            </a>
+        </div>
+    </div>
+</div>
+
+
+
+
+                <div class="table-responsive">
+                    <!-- DataTable Component -->
+                    <DataTable :data="customers" :columns="columns" id="customers">
                         <thead class="thead-light">
                             <tr>
-                            <th scope="col">S No</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Mobile Number</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">Date & Time</th>
-                            <th scope="col">Action</th>
+                                <th scope="col">S No</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Mobile Number</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Date & Time</th>
+                                <th scope="col">Action</th>
                             </tr>
                         </thead>
-                        </DataTable>
-                    </div>
-
+                        <!-- The table rows would be dynamically inserted here -->
+                    </DataTable>
                 </div>
             </div>
         </div>
-    </AuthenticatedLayout>
+    </div>
+</AuthenticatedLayout>
+
 </template>
 
 <script>
@@ -156,4 +186,32 @@ export default {
     },
   },
 };
+
+$(document).ready(function() {
+    // Check if the mobile menu was open before
+    if (localStorage.getItem('mobileMenuVisible') === 'true') {
+        $('#mobileMenu').show();
+    }
+
+    // Toggle mobile menu visibility and update localStorage
+    $('#mobilebtn').click(function(e) {
+        e.stopPropagation();
+        const isVisible = $('#mobileMenu').is(':visible');
+        $('#mobileMenu').toggle();
+        localStorage.setItem('mobileMenuVisible', !isVisible);
+    });
+
+    // Close the mobile menu if clicking outside
+    $(document).click(function(e) {
+        if (!$(e.target).closest('#mobilebtn, #mobileMenu').length) {
+            $('#mobileMenu').hide();
+            localStorage.setItem('mobileMenuVisible', 'false');
+        }
+    });
+
+    // Prevent closing menu if clicking inside the menu
+    $('#mobileMenu').click(function(e) {
+        e.stopPropagation();
+    });
+});
 </script>

@@ -92,6 +92,13 @@ var selected_filter = ref('all');
 onMounted(() => {
     loadMapData();
     getAdminStats();
+    window.onload = () => {
+        const dashboardLink = document.querySelector(".sidebar li a");
+        if (dashboardLink) {
+            console.log("DDDd");
+            dashboardLink.click();
+        }
+    };
 });
 
 const reloadMarkers = (selected) => {

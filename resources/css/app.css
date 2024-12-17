@@ -23,7 +23,7 @@ body {
 }
 
 .header {
-    width: 82%;
+    width: 83%;
     margin: 0 0 0 auto;
     padding-right: 30px;
 }
@@ -45,6 +45,7 @@ body {
     position: fixed;
     left: 0;
     top: 0;
+    z-index: 9999;
 }
 
 .logo {
@@ -772,11 +773,11 @@ p.text-muted.expiry {
 }
 
 .toggle-btn {
-    background-color: #4d60ce;
+    background-color: var(--light-color);
     color: white;
     border: none;
-    padding: 5px 20px;
-    font-size: 24px;
+    padding: 5px 15px;
+    font-size: 20px;
     cursor: pointer;
     margin-left: 15px;
     border-radius: 5px;
@@ -1271,7 +1272,7 @@ div.dt-container select.dt-input {
     transition: all .4s ease-in-out;
     width: 100%;
     z-index: 1;
-    background-color: #4c5fcd45;
+    background-color: #2196f34f;
     border-radius: 0 25px 25px 0;
 }
 .nav .nav-link.active{
@@ -1321,12 +1322,40 @@ div.dt-container .dt-paging .dt-paging-button.current:hover {
 .toast-info {
     background-color: #2196f3;
 }
+#mobileMenu {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: 10px;
+    width: 200px;
+    display: none;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}   
+.mobile-btn-responsive {
+    position: relative;
+}
+#mobileMenu {
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+#mobileMenu .btn {
+    width: 100%;
+    margin-bottom: 10px;
+}
+.mobile-sidebar .sidebar {
+    display: block;
+}
 
 @media screen and (min-width: 768px) and (max-width: 991px) {
 
     .header {
         width: 100%;
-        margin: 0 15px;
+        margin: 0 0;
+        padding-right: 0;
     }
     .sidebar{
         display: none;
@@ -1335,23 +1364,36 @@ div.dt-container .dt-paging .dt-paging-button.current:hover {
         display: block;
     }
     .right-box {
+        margin: 0 0 50px 0;
         width: 100%;
-        margin-left: 18px;
-        padding-right: 8px;
+        padding: 0;
     }
     .action-btn{
         margin-bottom: 10px !important;
     }
-    
+    .min-h-screen {
+        margin: 0 10px;
+    }
+    .client-info-card{
+        width: 100%;
+    }
     
     
 }
 
 
 @media (max-width: 767px) {
+    #mobileMenu {
+        display: none;
+    }
+    .table-container .dt-layout-cell {
+        text-align: start !important;
+        margin-bottom: 15px;
+    }
     .client-info-card {
         width: 100%;
     }
+    
     .client-info-card .profile-details.d-flex {
         display: block !important;
     }
@@ -1362,8 +1404,8 @@ div.dt-container .dt-paging .dt-paging-button.current:hover {
         width: 60%;
         font-size: 16px;
     }
-    .right-box{
-        margin: 0;
+    .right-box {
+        margin: 0 0 50px 0;
         width: 100%;
         padding: 0;
     }
@@ -1441,7 +1483,8 @@ div.dt-container .dt-paging .dt-paging-button.current:hover {
 
     .header {
         width: 100%;
-        margin: 0 15px;
+        margin: 0 0px;
+        padding-right: 0;
     }
 
     .search-desktop {

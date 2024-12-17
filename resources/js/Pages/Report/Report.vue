@@ -28,6 +28,32 @@ $(document).ready(function() {
         // Toggle the clicked notification's details
         details.toggleClass('open');
     });
+
+     // Check if the mobile menu was open before
+     if (localStorage.getItem('mobileMenuVisible') === 'true') {
+        $('#mobileMenu').show();
+    }
+
+    // Toggle mobile menu visibility and update localStorage
+    $('#mobilebtn').click(function(e) {
+        e.stopPropagation();
+        const isVisible = $('#mobileMenu').is(':visible');
+        $('#mobileMenu').toggle();
+        localStorage.setItem('mobileMenuVisible', !isVisible);
+    });
+
+    // Close the mobile menu if clicking outside
+    $(document).click(function(e) {
+        if (!$(e.target).closest('#mobilebtn, #mobileMenu').length) {
+            $('#mobileMenu').hide();
+            localStorage.setItem('mobileMenuVisible', 'false');
+        }
+    });
+
+    // Prevent closing menu if clicking inside the menu
+    $('#mobileMenu').click(function(e) {
+        e.stopPropagation();
+    });
 });
 
 </script>
@@ -38,18 +64,32 @@ $(document).ready(function() {
   <AuthenticatedLayout>
     <div class="mt-5">
       <div class="table-container">
+
         <div class="d-flex justify-content-between align-items-center">
-          <h4><i class="bi bi-truck-front-fill mr-2"></i>All Report</h4>
-          <div class="text-end">
-            <div class="mr-2">
-            </div>
-            <a :href="route('devices.map')">
+            <h4><i class="bi bi-truck-front-fill mr-2"></i>All Report</h4>
+
+           <div class="text-end mobile-btn-responsive">
+              <!-- Mobile menu button -->
+              <button class="btn btn-primary btn-custom d-block d-md-none" id="mobilebtn">
+                  <i class="bi bi-three-dots-vertical"></i>
+              </button>
+              <div class="d-none d-md-flex" id="desktopButtons">
+                <a :href="route('devices.map')">
               <button class="btn btn-primary btn-custom">
                 <i class="bi bi-geo-alt-fill mr-2"></i>View on Map
               </button>
             </a>
+              </div>
 
-          </div>
+              <!-- Popup mobile menu -->
+              <div id="mobileMenu" class="mobile-menu" style="display: none;">
+                <a :href="route('devices.map')">
+              <button class="btn btn-primary btn-custom">
+                <i class="bi bi-geo-alt-fill mr-2"></i>View on Map
+              </button>
+            </a>
+              </div>
+           </div>
         </div>
 
       </div>
@@ -197,8 +237,25 @@ $(document).ready(function() {
 }
 
 .notification-details.open {
-    max-height: 200px; /* You can adjust this value depending on the content */
+    max-height: 200px;
     padding: 10px;
+}
+
+@media (max-width: 767px){
+    .notification-content p {
+    margin: 0;
+    font-size: 12px;
+}
+.notification-item {
+    padding: 12px 10px;
+}
+.icon-circle {
+    width: 50px;
+    font-size: 20px;
+}
+.unread-dot {
+    width: 10px;
+}
 }
 
 
