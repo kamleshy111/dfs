@@ -71,12 +71,12 @@ const columns = [
 
         <!-- Buttons on larger screens (desktop view) -->
         <div class="d-none d-md-flex" id="desktopButtons">
-            <a class="mr-2" href="route('clients.create')">
+            <a class="mr-2" :href="route('clients.create')">
                 <button class="btn btn-primary btn-custom">
                     <i class="bi bi-plus-circle-fill mr-2"></i>Add New Client
                 </button>
             </a>
-            <a href="route('clients.map')">
+            <a :href="route('clients.map')">
                 <button class="btn btn-primary btn-custom">
                     <i class="bi bi-geo-alt-fill mr-2"></i>View on Map
                 </button>
@@ -85,12 +85,12 @@ const columns = [
 
         <!-- Popup mobile menu -->
         <div id="mobileMenu" class="mobile-menu" style="display: none;">
-            <a class="mr-2" href="route('clients.create')">
+            <a class="mr-2" :href="route('clients.create')">
                 <button class="btn btn-primary btn-custom">
                     <i class="bi bi-plus-circle-fill mr-2"></i>Add New Client
                 </button>
             </a>
-            <a href="route('clients.map')">
+            <a :href="route('clients.map')">
                 <button class="btn btn-primary btn-custom">
                     <i class="bi bi-geo-alt-fill mr-2"></i>View on Map
                 </button>
