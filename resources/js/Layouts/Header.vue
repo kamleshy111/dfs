@@ -78,16 +78,14 @@ onMounted(() => {
         </div> -->
         <div class="icon-profile">
           <div class="dropdown">
-            <button
-              class="dropdown-toggle"
-              type="button"
-              id="notificationDropdown"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <i class="bi bi-bell"></i>
+            <button class="dropdown-toggle show" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="true">
+              <div class="icon-profile-bell">
+                <i class="bi bi-bell animate-bell"></i>
+                <!-- Notification badge for unread notifications -->
+                <span class="notification-badge">{{ adminUnreadCount }}</span>
+              </div>
             </button>
-            <ul
+            <!-- <ul
               class="dropdown-menu notification-dropdown"
               aria-labelledby="notificationDropdown"
             >
@@ -99,6 +97,30 @@ onMounted(() => {
                   {{ notification.title }} {{ notification.date }}
                 </a>
               </li>
+            </ul> -->
+            <ul
+              class="dropdown-menu notification-dropdown"
+              aria-labelledby="notificationDropdown"
+              data-popper-placement="bottom-end"
+            >
+              <h5 class="dropdown-header-noti">
+                <span class="notification-title">Notifications</span>
+              </h5>
+              <div class="d-flex align-items-center icon-box-profile"  v-for="notification in notifications" :key="notification.id">
+                <div class="icon-circle mr-3">
+                  <i class="fas fa-sync-alt"></i>
+                </div>
+                <div>
+                  <div style="line-height: 20px">
+                    <span class="status-text">{{ notification.title }}</span>
+                  </div>
+                  <div class="d-flex align-items-center muted-text mt-1">
+                    <span class="time"
+                      ><i class="bi bi-clock mr-1"></i> {{ notification.date }}</span
+                    >
+                  </div>
+                </div>
+              </div>
             </ul>
           </div>
           <div class="dropdown img-header">
@@ -308,6 +330,7 @@ export default {
   data() {
     return {
       notifications: [],
+      adminUnreadCount: 0,
     };
   },
   components: {
@@ -315,6 +338,7 @@ export default {
   },
   mounted() {
     this.getNotification();
+    this.getAdminUnreadNotifications();
     Pusher.logToConsole = true;
 
     // Initialize Pusher
@@ -362,6 +386,14 @@ export default {
         this.notifications = response.data.notifications || [];
       } catch (error) {
         console.error("Error fetching notifications:", error);
+      }
+    },
+    async getAdminUnreadNotifications () {
+      try {
+        const response = await axios.get("/api/admin-unread-notification");
+        this.adminUnreadCount = response.data.adminUnreadCount;
+      } catch (error) {
+        console.error("Error fetching unread admin unread count:", error);
       }
     },
   },
