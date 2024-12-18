@@ -12,9 +12,17 @@ use Carbon\Carbon;
 
 class ReportController extends Controller
 {
-    public function index(){
+    public function index($notificationsId = 0){ 
 
-        // $data = Notification::all();
+        $notification = Notification::find($notificationsId);
+
+        if ($notification) {
+            $notification->status = 1;
+            $notification->save(); 
+
+            $notificationsId = $notification->id;
+        }
+
         $data = Notification::orderBy('created_at', 'desc')->get();
 
 
@@ -44,6 +52,7 @@ class ReportController extends Controller
 
         return Inertia::render('Report/Report',[
             'user' => Auth::user(),
+            'notificationsId' => $notificationsId,
             'notifications' => $notifications,
             'notificationCount' => $notificationCount,
         ]);

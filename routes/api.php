@@ -48,4 +48,7 @@ Route::middleware('auth:sanctum', 'role:admin')->group(function(){
 #admin unread notifications adminUnreadNotifications
     Route::get('/admin-unread-notification', [AdminDashboardController::class, 'adminUnreadNotifications']); 
 
+#read notification    
+    Route::post('/notifications/{id?}/mark-as-read', [AdminDashboardController::class, 'markAsRead']);
+
 });

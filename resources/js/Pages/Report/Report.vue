@@ -1,63 +1,47 @@
 <script setup>
+import { ref, onMounted } from 'vue';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
-import { Inertia } from "@inertiajs/inertia";
-import { ref } from "vue";
-const loadingButtons = ref({});
-
 
 // Define props
-defineProps({
+const props = defineProps({
   notifications: {
-    type: Array, // Corrected type: Array for table data
+    type: Array,
     required: true,
   },
   notificationCount: {
     type: Number,
     required: true,
+  },
+  notificationsId: {
+    type: Number,
+    required: false,
   }
 });
 
-$(document).ready(function() {
-    $('.notification-item').on('click', function() {
-        var details = $(this).next('.notification-details'); // Get the corresponding .notification-details
+const openNotificationId = ref(null);
 
-        // Collapse all other open details
-        $('.notification-details.open').not(details).removeClass('open');
-
-        // Toggle the clicked notification's details
-        details.toggleClass('open');
-    });
-
-     // Check if the mobile menu was open before
-     if (localStorage.getItem('mobileMenuVisible') === 'true') {
-        $('#mobileMenu').show();
+onMounted(() => {
+    if (props.notificationsId) {
+      openNotificationId.value = props.notificationsId;
     }
-
-    // Toggle mobile menu visibility and update localStorage
-    $('#mobilebtn').click(function(e) {
-        e.stopPropagation();
-        const isVisible = $('#mobileMenu').is(':visible');
-        $('#mobileMenu').toggle();
-        localStorage.setItem('mobileMenuVisible', !isVisible);
-    });
-
-    // Close the mobile menu if clicking outside
-    $(document).click(function(e) {
-        if (!$(e.target).closest('#mobilebtn, #mobileMenu').length) {
-            $('#mobileMenu').hide();
-            localStorage.setItem('mobileMenuVisible', 'false');
-        }
-    });
-
-    // Prevent closing menu if clicking inside the menu
-    $('#mobileMenu').click(function(e) {
-        e.stopPropagation();
-    });
 });
 
-</script>
+const toggleNotification = async (id) => {
 
+  if (id) {
+    try {
+      const response = await axios.post(`/api/notifications/${id}/mark-as-read`);
+      console.log("Notification marked as read:", response.data);
+    } catch (error) {
+      console.error("Error marking notification as read:", error);
+    }
+  }
+
+  openNotificationId.value = openNotificationId.value === id ? null : id;
+
+};
+</script>
 <template>
   <Head title="device" />
 
@@ -75,73 +59,73 @@ $(document).ready(function() {
               </button>
               <div class="d-none d-md-flex" id="desktopButtons">
                 <a :href="route('devices.map')">
-              <button class="btn btn-primary btn-custom">
-                <i class="bi bi-geo-alt-fill mr-2"></i>View on Map
-              </button>
-            </a>
+                  <button class="btn btn-primary btn-custom">
+                    <i class="bi bi-geo-alt-fill mr-2"></i>View on Map
+                  </button>
+                </a>
               </div>
 
               <!-- Popup mobile menu -->
               <div id="mobileMenu" class="mobile-menu" style="display: none;">
                 <a :href="route('devices.map')">
-              <button class="btn btn-primary btn-custom">
-                <i class="bi bi-geo-alt-fill mr-2"></i>View on Map
-              </button>
-            </a>
+                  <button class="btn btn-primary btn-custom">
+                    <i class="bi bi-geo-alt-fill mr-2"></i>View on Map
+                  </button>
+                </a>
               </div>
            </div>
         </div>
 
       </div>
 
-     <section class="notifications">
-    <div class="notification-card">
-        <!-- Header -->
-        <div class="notification-header">
+      <section class="notifications">
+        <div class="notification-card">
+          <!-- Header -->
+          <div class="notification-header">
             <h5>Notifications <span class="badge bg-primary">{{ notificationCount }}</span></h5>
             <span class="mark-all">Mark all as read</span>
-        </div>
+          </div>
 
-        <!-- Notification List -->
-        <div class="notifications-list" v-for="notification in notifications" :key="notification.id">
-            <!-- Notification Item 1 -->
+          <!-- Notification List -->
+          <div class="notifications-list" v-for="notification in notifications" :key="notification.id">
             <div class="notification-main" v-if="notification.status === 0">
-                <div class="notification-item">
-                   <div class="icon-circle mr-3" data-v-2245cac1=""><i class="fas fa-sync-alt" data-v-2245cac1=""></i></div>
-                    <div class="notification-content">
-                        <p><span class="highlight">{{ notification.title }}</span></p>
-                        <small>{{ notification.date }}</small>
-                    </div>
-                    <div class="unread-dot"></div>
+              <div class="notification-item" @click="toggleNotification(notification.id)">
+                <div class="icon-circle mr-3">
+                  <i class="fas fa-sync-alt"></i>
                 </div>
-                <div class="notification-details">
-                    <p>{{ notification.body }}.</p>
+               
+                <div class="notification-content">
+                  <p><span class="highlight">{{ notification.title }}</span></p>
+                  <small>{{ notification.date }}</small>
                 </div>
+                <i class="unread-dot"></i>
+              </div>
+              <div v-show="openNotificationId == notification.id" class="notification-details">
+                <p>{{ notification.body }}.</p>
+              </div>
             </div>
 
             <!-- Notification Item 3 -->
             <div class="notification-main" v-if="notification.status === 1">
-                <div class="notification-item">
-                    <div class="icon-circle mr-3" data-v-2245cac1=""><i class="fas fa-sync-alt" data-v-2245cac1=""></i></div>
-                    <div class="notification-content">
-                        <p><span class="highlight">{{ notification.title }}</span></p>
-                        <small>{{ notification.date }}</small>
-                    </div>
+              <div class="notification-item" @click="toggleNotification(notification.id)">
+                <div class="icon-circle mr-3">
+                  <i class="fas fa-sync-alt"></i>
                 </div>
-                <div class="notification-details">
-                    <p>{{ notification.body }}.</p>
+                <div class="notification-content">
+                  <p><span class="highlight">{{ notification.title }}</span></p>
+                  <small>{{ notification.date }}</small>
                 </div>
+              </div>
+              <div v-show="openNotificationId === notification.id" class="notification-details">
+                <p>{{ notification.body }}.</p>
+              </div>
             </div>
+          </div>
         </div>
-    </div>
-</section>
-
-
-
+      </section>
     </div>
   </AuthenticatedLayout>
 </template>
-
 <style scoped>
 .notification-card {
     margin: 50px auto;
@@ -227,18 +211,11 @@ $(document).ready(function() {
 }
 
 .notification-details {
-    max-height: 0;
-    overflow: hidden;
-    padding: 0 10px;
+    padding: 10px 10px;
     background-color: #f1f1f1;
     margin-top: -5px;
     border-radius: 5px;
     transition: max-height 0.3s ease-out, padding 0.3s ease-out;
-}
-
-.notification-details.open {
-    max-height: 200px;
-    padding: 10px;
 }
 
 @media (max-width: 767px){
