@@ -75,4 +75,12 @@ class AdminDashboardController extends Controller
         $adminUnreadCount = Notification::where('status', 0)->count();
         return response()->json(['adminUnreadCount' => $adminUnreadCount]);
     }
+
+    public function markAsRead($id) {
+
+        $notification = Notification::findOrFail($id);
+        $notification->update(['status' => 1]); // Assuming 'status' is used to track read/unread
+        return response()->json(['message' => 'Notification marked as read.']);
+    }
+
 }

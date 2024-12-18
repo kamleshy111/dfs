@@ -116,7 +116,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     });
 
     Route::group(['prefix' => 'report'], function () {
-        Route::get('/', [ReportController::class, 'index'])->name('report');
+        Route::get('/{notificationsId?}', [ReportController::class, 'index'])->name('report');
     });
 
     //Billing Route
