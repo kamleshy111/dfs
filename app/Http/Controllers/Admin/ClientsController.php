@@ -285,9 +285,9 @@ class ClientsController extends Controller
                 }
             }
 
-            if ($request->file('file')) {
-                Excel::import(new CustomerDeviceImport($customerId), $request->file('file'));
-            }
+            // if ($request->file('file')) {
+            //     Excel::import(new CustomerDeviceImport($customerId), $request->file('file'));
+            // }
 
             DB::commit();
 
