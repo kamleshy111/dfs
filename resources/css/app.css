@@ -968,7 +968,7 @@ p.active-device {
     color: var(--light-color) !important;
 }
 .back-section {
-    margin-bottom: 30px;
+    margin-bottom: 0;
 }
 
 .back-btn-custom {
@@ -1320,7 +1320,7 @@ div.dt-container .dt-paging .dt-paging-button.current:hover {
     margin-left: 5px;
 }
 .toast-info {
-    background-color: #2196f3;
+    background-color: #2196f3 !important;
 }
 #mobileMenu {
     position: absolute;
