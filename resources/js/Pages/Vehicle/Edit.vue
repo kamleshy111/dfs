@@ -124,10 +124,8 @@ const submitForm = async () => {
                         <div class="form-group col-md-6">
                             <select class="form-control" v-model="form.vehicle_type">
                                 <option value="" disabled>Select Vehicle type</option>
-                                <option value="car">Car</option>
-                                <option value="truck">Truck</option>
-                                <option value="motorcycle">Motorcycle</option>
-                                <option value="bus">Bus</option>
+                                <option value="Commercial">Commercial</option>
+                                <option value="Non-Commercial">Non-Commercial</option>
                                 <option value="other">Other</option>
                             </select>
                             <label for="vehicle_type" class="form-label">Select Vehicle type</label>

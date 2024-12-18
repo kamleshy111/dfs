@@ -29,6 +29,8 @@ const form = ref({
 const file = ref(null);
 const fileName = ref("");
 
+const selectedSource = ref(""); // Manage the selected source
+
 const handleFileUpload = (event) => {
   const uploadedFile = event.target.files[0];
   if (uploadedFile) {
@@ -199,17 +201,22 @@ const submitForm = async () => {
       </div>
       <div class="form-row">
         <div class="form-group col-md-6">
-          <multiselect
-            v-model="form.device_id"
-            :options="devices"
-            :multiple="true"
-            :searchable="true"
-            track-by="id"
-            label="device_id"
-            placeholder="Select devices"
-            class="form-control"
-             @update:model-value="watchDeviceSelection"
-          ></multiselect>
+          <select class="form-control">
+                <option value="">Select Vehicle type</option>
+                <option value="Commercial">Commercial</option>
+                <option value="Non-Commercial">Non-Commercial</option>
+                <option value="other">Other</option>
+              </select>
+              <label for="vehicleType" class="form-label">Select Vehicle Type</label>
+        </div>
+      
+        <div class="form-group col-md-6">
+          <select class="form-control" id="deviceSource"  v-model="selectedSource" >
+                <option value="">Select Devices Sources</option>
+                <option value="Get-Sheet">Get-Sheet</option>
+                <option value="Get-Dropdown">Get-Dropdown</option>
+              </select>
+              <label for="deviceSource" class="form-label">Select Devices Sources</label>
         </div>
       </div>
       <div class="form-group relative">
@@ -224,7 +231,22 @@ const submitForm = async () => {
         />
          <label for="address" class="form-label">Address</label>
       </div>
-      <div class="form-group">
+      <div class="form-row" v-if="selectedSource === 'Get-Dropdown'">
+        <div class="form-group col-md-6">
+          <multiselect
+            v-model="form.device_id"
+            :options="devices"
+            :multiple="true"
+            :searchable="true"
+            track-by="id"
+            label="device_id"
+            placeholder="Select devices"
+            class="form-control"
+             @update:model-value="watchDeviceSelection"
+          ></multiselect>
+        </div>
+      </div>
+      <div class="form-group"  v-if="selectedSource === 'Get-Sheet'">
         <div
           class="upload-box text-center"
           @drop="handleDrop"
