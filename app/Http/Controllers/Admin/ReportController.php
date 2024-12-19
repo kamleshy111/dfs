@@ -12,8 +12,9 @@ use Carbon\Carbon;
 
 class ReportController extends Controller
 {
-    public function index($notificationsId = 0){ 
+    public function index(Request $request){ 
 
+        $notificationsId = $request->query('id');
         $notification = Notification::find($notificationsId);
 
         if ($notification) {
@@ -23,37 +24,37 @@ class ReportController extends Controller
             $notificationsId = $notification->id;
         }
 
-        $data = Notification::orderBy('created_at', 'desc')->get();
+        // $data = Notification::orderBy('created_at', 'desc')->get();
 
 
-        $notifications = $data->map(function($item){
-                            $assignedDate = Carbon::create($item->created_at);
-                            $currentDate = Carbon::now();
+        // $notifications = $data->map(function($item){
+        //                     $assignedDate = Carbon::create($item->created_at);
+        //                     $currentDate = Carbon::now();
                     
-                            $minutesDifference = $assignedDate->diffInMinutes($currentDate);
-                            if($minutesDifference < 1440 && $minutesDifference >= 60) {
-                                $comment_date = round($minutesDifference/60) . ' hours ago';
-                            } elseif ($minutesDifference < 60) {
-                                $comment_date = round($minutesDifference) . ' minutes ago';
-                            } else {
-                                $comment_date = $item->created_at->format('j F, Y');
-                            }
-                            return [
-                                'id' => $item->id ?? 0,
-                                'vehicleId' => $item->vehicle_id ?? 0,
-                                'title' => $item->title ?? '',
-                                'body' => $item->body ?? '---',
-                                'status' => $item->status ?? '',
-                                'date' => $comment_date,
-                            ];
-                        });
+        //                     $minutesDifference = $assignedDate->diffInMinutes($currentDate);
+        //                     if($minutesDifference < 1440 && $minutesDifference >= 60) {
+        //                         $comment_date = round($minutesDifference/60) . ' hours ago';
+        //                     } elseif ($minutesDifference < 60) {
+        //                         $comment_date = round($minutesDifference) . ' minutes ago';
+        //                     } else {
+        //                         $comment_date = $item->created_at->format('j F, Y');
+        //                     }
+        //                     return [
+        //                         'id' => $item->id ?? 0,
+        //                         'vehicleId' => $item->vehicle_id ?? 0,
+        //                         'title' => $item->title ?? '',
+        //                         'body' => $item->body ?? '---',
+        //                         'status' => $item->status ?? '',
+        //                         'date' => $comment_date,
+        //                     ];
+        //                 });
 
         $notificationCount = Notification::count();
 
         return Inertia::render('Report/Report',[
             'user' => Auth::user(),
             'notificationsId' => $notificationsId,
-            'notifications' => $notifications,
+            // 'notifications' => $notifications,
             'notificationCount' => $notificationCount,
         ]);
     }

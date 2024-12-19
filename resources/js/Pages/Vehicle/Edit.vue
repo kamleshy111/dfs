@@ -117,7 +117,7 @@ const submitForm = async () => {
                                 <option v-for="device in devices" v-bind:value="device.id">{{ device.device_id }}
                                 </option>
                             </select>
-                            <label for="device_id" class="form-label">Devices Name</label>
+                            <label for="device_id" class="form-label">Devices Id</label>
                         </div>
                     </div>
                     <div class="form-row">

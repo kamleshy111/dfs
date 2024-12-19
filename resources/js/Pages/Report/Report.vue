@@ -2,13 +2,13 @@
 import { ref, onMounted } from 'vue';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
+import Datepicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
+import { Bootstrap5Pagination } from 'laravel-vue-pagination';
+import axios from "axios";
 
 // Define props
 const props = defineProps({
-  notifications: {
-    type: Array,
-    required: true,
-  },
   notificationCount: {
     type: Number,
     required: true,
@@ -21,14 +21,39 @@ const props = defineProps({
 
 const openNotificationId = ref(null);
 
+const notifications = ref([]);
+const searchQuery = ref("");
+const customerName = ref("");
+const deviceId = ref("");
+const date = ref(null);
+
+
+const getData = async(page = 1) =>{
+  try {
+
+    const res = await axios.get(`api/allNotifications`, {
+      params: {
+        page,
+        search: searchQuery.value,
+        customerSearch : customerName.value,
+        start_date: date.value,
+        device_id: deviceId.value,
+      },
+    });
+    notifications.value = res.data;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};
+
 onMounted(() => {
     if (props.notificationsId) {
       openNotificationId.value = props.notificationsId;
-    }
+    };
+    getData();
 });
 
 const toggleNotification = async (id) => {
-
   if (id) {
     try {
       const response = await axios.post(`/api/notifications/${id}/mark-as-read`);
@@ -74,6 +99,31 @@ const toggleNotification = async (id) => {
                 </a>
               </div>
            </div>
+
+        </div>
+        <div class="d-flex justify-content-between align-items-center mt-2">
+
+
+
+            <div class="form-group col-md-3">
+              <input v-model="customerName" type="text" class="form-control" placeholder="" @input="getData" />
+              <label for="customerName" class="form-label">Customer Name</label>
+            </div> 
+
+            <div class="form-group col-md-3">
+              <input v-model="deviceId" type="text" class="form-control" placeholder="" @input="getData" />
+              <label for="deviceId" class="form-label">Device Id</label>
+            </div>
+
+            <div class="form-group col-md-3">
+              <input v-model="searchQuery" type="text" class="form-control" placeholder="" @input="getData" />
+              <label for="searchQuery" class="form-label">Search title and body</label>
+            </div>
+
+            <div class="form-group col-md-3">
+              <input type="date" v-model="date" @input="getData" class="form-control" />
+              <label for="date" class="form-label">Date</label>
+            </div>
         </div>
 
       </div>
@@ -87,7 +137,7 @@ const toggleNotification = async (id) => {
           </div>
 
           <!-- Notification List -->
-          <div class="notifications-list" v-for="notification in notifications" :key="notification.id">
+          <div class="notifications-list" v-for="notification in notifications.data" :key="notification.id">
             <div class="notification-main" v-if="notification.status === 0">
               <div class="notification-item" @click="toggleNotification(notification.id)">
                 <div class="icon-circle mr-3">
@@ -100,7 +150,7 @@ const toggleNotification = async (id) => {
                 </div>
                 <i class="unread-dot"></i>
               </div>
-              <div v-show="openNotificationId == notification.id" class="notification-details">
+              <div v-show="openNotificationId === notification.id" class="notification-details">
                 <p>{{ notification.body }}.</p>
               </div>
             </div>
@@ -121,12 +171,22 @@ const toggleNotification = async (id) => {
               </div>
             </div>
           </div>
+          <Bootstrap5Pagination 
+                :data="notifications" 
+                @pagination-change-page="getData"
+            />
         </div>
       </section>
     </div>
   </AuthenticatedLayout>
 </template>
+<style>
+.notification-card .pagination {
+    justify-content: center;
+    margin: 10px 0;
+}</style>
 <style scoped>
+
 .notification-card {
     margin: 50px auto;
     background-color: white;
