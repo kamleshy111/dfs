@@ -199,26 +199,6 @@ const submitForm = async () => {
           <label for="secondary_phone" class="form-label">Secondary Mobile Number</label>
         </div>
       </div>
-      <div class="form-row">
-        <div class="form-group col-md-6">
-          <select class="form-control">
-                <option value="">Select Vehicle type</option>
-                <option value="Commercial">Commercial</option>
-                <option value="Non-Commercial">Non-Commercial</option>
-                <option value="other">Other</option>
-              </select>
-              <label for="vehicleType" class="form-label">Select Vehicle Type</label>
-        </div>
-      
-        <div class="form-group col-md-6">
-          <select class="form-control" id="deviceSource"  v-model="selectedSource" >
-                <option value="">Select Devices Sources</option>
-                <option value="Get-Sheet">Get-Sheet</option>
-                <option value="Get-Dropdown">Get-Dropdown</option>
-              </select>
-              <label for="deviceSource" class="form-label">Select Devices Sources</label>
-        </div>
-      </div>
       <div class="form-group relative">
         <TextInput
           id="address"
@@ -231,6 +211,18 @@ const submitForm = async () => {
         />
          <label for="address" class="form-label">Address</label>
       </div>
+      <div class="form-row">
+       
+      
+        <div class="form-group col-md-6">
+          <select class="form-control" id="deviceSource"  v-model="selectedSource" >
+                <option value="">Select Devices Sources</option>
+                <option value="Get-Sheet">Get-Sheet</option>
+                <option value="Get-Dropdown">Get-Dropdown</option>
+              </select>
+              <label for="deviceSource" class="form-label">Select Devices Sources</label>
+        </div>
+      </div>
       <div class="form-row" v-if="selectedSource === 'Get-Dropdown'">
         <div class="form-group col-md-6">
           <multiselect
@@ -241,7 +233,6 @@ const submitForm = async () => {
             track-by="id"
             label="device_id"
             placeholder="Select devices"
-            class="form-control"
              @update:model-value="watchDeviceSelection"
           ></multiselect>
         </div>
