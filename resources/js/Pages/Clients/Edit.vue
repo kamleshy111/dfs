@@ -190,21 +190,6 @@ const submitForm = async () => {
           <label for="secondary_phone" class="form-label">Secondary Mobile Number</label>
         </div>
       </div>
-      <div class="form-row">
-        <div class="form-group col-md-6">
-          <Multiselect
-              v-model="form.device_id"
-              :options="devices"
-              :multiple="true"
-              track-by="id"
-              label="device_id"
-              placeholder="Select devices"
-              class="form-control"
-              @update:model-value="watchDeviceSelection"
-          />
-        </div>
-      </div>
-
       <div class="form-group relative">
         <TextInput
           id="address"
@@ -215,6 +200,19 @@ const submitForm = async () => {
           autocomplete="address"
         />
         <label for="address" class="form-label">Address</label>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <Multiselect
+              v-model="form.device_id"
+              :options="devices"
+              :multiple="true"
+              track-by="id"
+              label="device_id"
+              placeholder="Select devices"
+              @update:model-value="watchDeviceSelection"
+          />
+        </div>
       </div>
 
       <!-- <div class="form-group">
