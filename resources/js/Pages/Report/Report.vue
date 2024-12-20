@@ -84,17 +84,20 @@ onMounted(() => {
 });
 
 const toggleNotification = async (id) => {
-  if (id) {
-    try {
-      const response = await axios.post(`/api/notifications/${id}/mark-as-read`);
-      console.log("Notification marked as read:", response.data);
-    } catch (error) {
-      console.error("Error marking notification as read:", error);
+  const notification = notifications.value.data.find((n) => n.id === id);
+  if (notification) {
+   
+    if (notification.status === 0) {
+      try {
+        // Update notification status 
+        await axios.post(`/api/notifications/${id}/mark-as-read`);
+        notification.status = 1;
+      } catch (error) {
+        console.error("Error marking notification as read:", error);
+      }
     }
+    openNotificationId.value = openNotificationId.value === id ? null : id;
   }
-
-  openNotificationId.value = openNotificationId.value === id ? null : id;
-
 };
 </script>
 <template>
