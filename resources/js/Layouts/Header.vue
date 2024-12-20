@@ -1,23 +1,51 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
+import toastr from "toastr";
+import "toastr/build/toastr.min.css";
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import Pusher from "pusher-js";
+import Echo from 'laravel-echo';
+import axios from 'axios';
 
-const showingNavigationDropdown = ref(false);
-
-// Props
+const notifications = ref([]);
+const adminUnreadCount = ref(0);
+const role = ref('admin');
 const props = defineProps({
-  role: {
-    type: String,
-    required: true,
-  },
-  heading: {
-    type: String,
-    default: "Dashboard", // Default value if no heading is provided
-  },
+    role: {
+        type: String,
+        required: true,
+    },
+    heading: {
+        type: String,
+        default: "Dashboard", // Default value if no heading is provided
+    },
 });
 
-// Reactive variable for the current date
 const currentDate = ref("");
+
+const getNotification = async () => {
+    try {
+        const response = await axios.get('/api/get-notification');
+        notifications.value = response.data.notifications || [];
+        adminUnreadCount.value = response.data.adminUnreadCount || 0;
+    } catch (error) {
+        console.error('Error fetching notifications:', error);
+    }
+};
+
+const echo = window.Echo;
+
+const pusherNotification = () => {
+   /* window.Echo.connector.pusher.connection.bind('connected', () => {
+        console.log('Laravel Echo successfully connected to Pusher');
+    });*/
+    window.Echo.channel('notification')
+        .listen('.test.notification', (data) => {
+            console.log('Received data:', data);
+
+        });
+};
 
 onMounted(() => {
   const today = new Date();
@@ -52,6 +80,9 @@ onMounted(() => {
   const year = today.getFullYear();
 
   currentDate.value = `${day}, ${date} ${month} ${year}`;
+
+    getNotification();
+    pusherNotification();
 });
 </script>
 <template>
@@ -61,43 +92,17 @@ onMounted(() => {
       class="d-flex justify-content-between align-items-center py-3 mb-4 border-bottom"
     >
       <div class="w-50">
-        <!-- <h2 class="d-flex align-items-center">
-                    {{ heading }}<img src="/storage/heand.png" class="ml-2" />
-                </h2>-->
         <p class="header-date">Today is {{ currentDate }}</p>
       </div>
       <div class="d-flex align-items-center w-50 justify-content-end">
-        <!-- <div class="position-relative mr-4 search-desktop">
-          <input
-            type="text"
-            class="form-control mr-3 search-header"
-            placeholder="Search here..."
-            style="max-width: 300px"
-          />
-          <span class="search-icon-header"><i class="bi bi-search"></i></span>
-        </div> -->
         <div class="icon-profile">
           <div class="dropdown">
             <button class="dropdown-toggle show" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="true">
               <div class="icon-profile-bell">
                 <i class="bi bi-bell animate-bell"></i>
-                <!-- Notification badge for unread notifications -->
                 <span class="notification-badge">{{ adminUnreadCount }}</span>
               </div>
             </button>
-            <!-- <ul
-              class="dropdown-menu notification-dropdown"
-              aria-labelledby="notificationDropdown"
-            >
-              <li v-if="notifications.length === 0">
-                <a class="dropdown-item" href="#">No new notifications</a>
-              </li>
-              <li v-for="notification in notifications" :key="notification.id">
-                <a class="dropdown-item" :href="notification.link">
-                  {{ notification.title }} {{ notification.date }}
-                </a>
-              </li>
-            </ul> -->
             <ul
               class="dropdown-menu notification-dropdown"
               aria-labelledby="notificationDropdown"
@@ -125,8 +130,7 @@ onMounted(() => {
                 </a>
               </div>
               <div class="text-center mt-2">
-                <!-- <a :href="`/report/${notification.id}`"> -->
-                <a :href="`/report`" class="status-text">view more</a> 
+                <a :href="`/report`" class="status-text">view more</a>
               </div>
             </ul>
           </div>
@@ -183,18 +187,9 @@ onMounted(() => {
         <p class="header-date">Today is {{ currentDate }}</p>
       </div>
       <div class="d-flex align-items-center w-50 justify-content-end">
-        <!-- <div class="position-relative mr-4 search-desktop">
-          <input
-            type="text"
-            class="form-control mr-3 search-header"
-            placeholder="Search here..."
-            style="max-width: 300px"
-          />
-          <span class="search-icon-header"><i class="bi bi-search"></i></span>
-        </div> -->
         <div class="icon-profile">
           <div class="dropdown">
-            <button class="dropdown-toggle show" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="true">
+            <button class="dropdown-toggle show" type="button" data-bs-toggle="dropdown" aria-expanded="true">
               <div class="icon-profile-bell">
                 <i class="bi bi-bell animate-bell"></i>
                 <!-- Notification badge for unread notifications -->
@@ -225,7 +220,6 @@ onMounted(() => {
                   </div>
                 </div>
               </div>
-
               <div class="d-flex align-items-center icon-box-profile">
                 <div class="icon-circle mr-3">
                   <i class="fas fa-sync-alt"></i>
@@ -242,7 +236,6 @@ onMounted(() => {
                   </div>
                 </div>
               </div>
-
               <div class="d-flex align-items-center icon-box-profile">
                 <div class="icon-circle mr-3">
                   <i class="fas fa-sync-alt"></i>
@@ -324,81 +317,6 @@ onMounted(() => {
     </div>
   </header>
 </template>
-
-<script>
-import { Link as InertiaLink } from "@inertiajs/vue3";
-import toastr from "toastr";
-import "toastr/build/toastr.min.css";
-import "@fortawesome/fontawesome-free/css/all.min.css";
-import Pusher from "pusher-js";
-
-export default {
-  name: "Notification",
-  data() {
-    return {
-      notifications: [],
-      adminUnreadCount: 0,
-    };
-  },
-  components: {
-    InertiaLink,
-  },
-  mounted() {
-    this.getNotification();
-    Pusher.logToConsole = true;
-
-    // Initialize Pusher
-    const pusher = new Pusher("ba58f8359f6318f23ee1", {
-      cluster: "ap2",
-    });
-
-    // Subscribe to the channel
-    const channel = pusher.subscribe("notification");
-
-    // Bind to the event
-    channel.bind("test.notification", (data) => {
-      console.log("Received data:", data); // Debugging line
-
-      // Display Toastr notification with icons and inline content
-      if (data && this.role === "admin") {
-        toastr.info(
-          `<div class="notification-content">
-            <i class="fas fa-user"></i> <span>   ${data.vehicleId}</span>
-            <i class="fas fa-user"></i> <span>   ${data.title}</span>
-            <i class="fas fa-book" style="margin-left: 20px;"></i> <span>${data.body}</span>
-          </div>`,
-          "New Post Notification",
-          {
-            closeButton: true,
-            progressBar: true,
-            timeOut: 0, // Set timeOut to 0 to make it persist until closed
-            extendedTimeOut: 0, // Ensure the notification stays open
-            positionClass: "toast-top-right",
-            enableHtml: true,
-          }
-        );
-      } else {
-        console.error("Invalid data received:", data);
-      }
-    });
-    pusher.connection.bind("connected", function () {
-      console.log("Pusher connected");
-    });
-  },
-  methods: {
-    async getNotification() {
-      try {
-        const response = await axios.get("/api/get-notification");
-        this.notifications = response.data.notifications || [];
-        this.adminUnreadCount = response.data.adminUnreadCount || 0;
-      } catch (error) {
-        console.error("Error fetching notifications:", error);
-      }
-    },
-  },
-};
-</script>
-
 <style scoped>
 /* Custom style for Toastr notifications */
 .toast-info .toast-message {
