@@ -114,18 +114,18 @@ const submitForm = async () => {
             <div class="form-group col-md-6">
               <div v-if="devices.length">
                 <select class="form-control" v-model="form.deviceId">
-                  <option value="" disabled>Select Device</option>
+                  <option value="" disabled>Select Device ID</option>
                   <option v-for="device in devices" :key="device.id" :value="device.id">
                     {{ device.device_id }}
                   </option>
                 </select>
-                <label for="deviceId" class="form-label">Device Name</label>
+                <label for="deviceId" class="form-label">Device ID</label>
               </div>
               <div v-else-if="form.customerId">
                   <select class="form-control">
-                  <option value="" disabled>Select Device</option>
+                  <option value="" disabled>Select Device ID</option>
                 </select>
-                <label for="deviceId" class="form-label">Device Name</label>
+                <label for="deviceId" class="form-label">Device ID</label>
               </div>
             </div>
           </div>
@@ -133,10 +133,16 @@ const submitForm = async () => {
             <div class="form-group col-md-6">
               <select class="form-control" v-model="form.vehicleType">
                 <option value="" disabled>Select Vehicle type</option>
-                <option value="car">Car</option>
-                <option value="truck">Truck</option>
-                <option value="motorcycle">Motorcycle</option>
-                <option value="bus">Bus</option>
+                <option value="Dangerous Goods Transporter">Dangerous Goods Transporter</option>
+                <option value="Ordinary Passenger Transport Vehicle">Non-Ordinary Passenger Transport Vehicle</option>
+                <option value="Rural Passenger Transport Vehicle">Rural Passenger Transport Vehicle</option>
+                <option value="Taxi">Taxi</option>
+                <option value="Freight Vehicle">Freight Vehicle</option>
+                <option value="Waste Truck">Waste Truck</option>
+                <option value="Sanitation Vehicle">Sanitation Vehicle</option>
+                <option value="Concrete Vehicle">Concrete Vehicle</option>
+                <option value="Excavator">Excavator</option>
+                <option value="Engineering Vehicle">Engineering Vehicle</option>
                 <option value="other">Other</option>
               </select>
               <label for="vehicleType" class="form-label">Select Vehicle type</label>

@@ -117,17 +117,23 @@ const submitForm = async () => {
                                 <option v-for="device in devices" v-bind:value="device.id">{{ device.device_id }}
                                 </option>
                             </select>
-                            <label for="device_id" class="form-label">Devices Name</label>
+                            <label for="device_id" class="form-label">Devices Id</label>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <select class="form-control" v-model="form.vehicle_type">
                                 <option value="" disabled>Select Vehicle type</option>
-                                <option value="car">Car</option>
-                                <option value="truck">Truck</option>
-                                <option value="motorcycle">Motorcycle</option>
-                                <option value="bus">Bus</option>
+                                <option value="Dangerous Goods Transporter">Dangerous Goods Transporter</option>
+                                <option value="Ordinary Passenger Transport Vehicle">Non-Ordinary Passenger Transport Vehicle</option>
+                                <option value="Rural Passenger Transport Vehicle">Rural Passenger Transport Vehicle</option>
+                                <option value="Taxi">Taxi</option>
+                                <option value="Freight Vehicle">Freight Vehicle</option>
+                                <option value="Waste Truck">Waste Truck</option>
+                                <option value="Sanitation Vehicle">Sanitation Vehicle</option>
+                                <option value="Concrete Vehicle">Concrete Vehicle</option>
+                                <option value="Excavator">Excavator</option>
+                                <option value="Engineering Vehicle">Engineering Vehicle</option>
                                 <option value="other">Other</option>
                             </select>
                             <label for="vehicle_type" class="form-label">Select Vehicle type</label>

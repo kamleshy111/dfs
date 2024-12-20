@@ -28,8 +28,6 @@ class DashboardController extends Controller
             $status = 'all';
         }
 
-        $devices = [];
-
         if( ! empty( $request->device_id ) ) {
             $devices = Device::where('id', $request->device_id)->get();
         } else {
@@ -42,33 +40,43 @@ class DashboardController extends Controller
         }
 
         $locations = [];
+        $deviceIds = $devices->pluck('device_id')->implode(',');
+        $courseSyncService = app(AlertService::class);
+        $deviceCurrentStatus = $courseSyncService->getDeviceAlert($deviceIds);
+
+        $deviceAlertResult = collect([]);
+        if (isset($deviceCurrentStatus['result']) && $deviceCurrentStatus['result'] === 0) {
+            $deviceAlertResult = collect($deviceCurrentStatus['status']);
+        }
+
         foreach ($devices as $index => $device) {
             if( $status == 'all' || $status == $device->status ) {
-                $courseSyncService = app(AlertService::class);
-                $deviceCurrentStatus = $courseSyncService->getDeviceAlert($device->device_id);
                 $message = '';
-                $messageType = 'inactive';
+                $messageType = 'alert';
                 $deviceAlert = [];
-                if ((!empty($deviceCurrentStatus) && $deviceCurrentStatus['result'] != 0) || (isset($device['status']) && $device['status'] == 2)) {
-                    $message = $deviceCurrentStatus['message'];
+                $device_id = $device->device_id;
+
+                $deviceAlertItem = $deviceAlertResult->first(function ($item) use ($device_id) {
+                    return $item['id'] === $device_id;
+                });
+
+                if (empty($deviceAlertItem) || (isset($device['status']) && $device['status'] == 2)) {
+                    $message = $deviceAlertItem['message']?? "Device not found";
                     $messageType = "danger";
-                } else if (isset($device['status']) && $device['status'] == 1){
-                    $deviceAlert = $deviceCurrentStatus['status'] ?? [];
+                } else if (isset($device['status']) && $device['status'] == 1 && $deviceAlertItem['ol'] == 1){
+                    $deviceAlert = $deviceAlertItem;
                     $messageType = "normal";
-                } else {
-                    $deviceAlert = $deviceCurrentStatus['status'] ?? [];
+                } else if (isset($device['status']) && $device['status'] == 1 && $deviceAlertItem['ol'] == 0){
+                    $deviceAlert = $deviceAlertItem;
+                    $messageType = "inactive";
                 }
 
                 $lat_lng = [];
-                if (!empty($deviceAlert) && !empty($deviceAlert[0])) {
-                    $lat_lng = collect($deviceAlert)->map(function ($item){
-                        return [
-                            'lat' => floatval($item['mlat'] ?? 0),
-                            'lng' => floatval($item['mlng'] ?? 0)
-                        ];
-                    });
-
-                    $deviceAlert = collect($deviceAlert)->first();
+                if (!empty($deviceAlert)) {
+                    $lat_lng = [
+                        'lat' => floatval($deviceAlert['mlat'] ?? 0),
+                        'lng' => floatval($deviceAlert['mlng'] ?? 0)
+                    ];
                 }
 
                 $locations[] = [

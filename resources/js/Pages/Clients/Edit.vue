@@ -22,42 +22,42 @@ const form = ref({
   secondary_phone: customerDetail.secondary_phone || "",
   address: customerDetail.address || "",
   device_id: customerDetail.device_id || [],
-  file: null,
+  // file: null,
 });
 
-const file = ref(null);
-const fileName = ref("");
+// const file = ref(null);
+// const fileName = ref("");
 
-//File Upload Handlers
-const handleFileUpload = (event) => {
-  const uploadedFile = event.target.files[0];
-  if (uploadedFile) {
-    file.value = uploadedFile;
-    form.value.file = uploadedFile;
-    fileName.value = uploadedFile.name;
-  }
-};
+// //File Upload Handlers
+// const handleFileUpload = (event) => {
+//   const uploadedFile = event.target.files[0];
+//   if (uploadedFile) {
+//     file.value = uploadedFile;
+//     form.value.file = uploadedFile;
+//     fileName.value = uploadedFile.name;
+//   }
+// };
 
-// Drag-and-Drop Handlers
-const handleDrop = (event) => {
-  event.preventDefault();
-  const droppedFile = event.dataTransfer.files[0];
-  if (droppedFile) {
-    file.value = droppedFile;
-    form.file = droppedFile;
-    fileName.value = droppedFile.name;
-  }
-};
+// // Drag-and-Drop Handlers
+// const handleDrop = (event) => {
+//   event.preventDefault();
+//   const droppedFile = event.dataTransfer.files[0];
+//   if (droppedFile) {
+//     file.value = droppedFile;
+//     form.file = droppedFile;
+//     fileName.value = droppedFile.name;
+//   }
+// };
 
-const handleDragOver = (event) => {
-  event.preventDefault();
-};
+// const handleDragOver = (event) => {
+//   event.preventDefault();
+// };
 
-const clearFile = () => {
-  file.value = null;
-  form.file = null;
-  fileName.value = "";
-};
+// const clearFile = () => {
+//   file.value = null;
+//   form.file = null;
+//   fileName.value = "";
+// };
 
 // Go Back Function
 const goBack = () => {
@@ -81,9 +81,9 @@ const submitForm = async () => {
       formData.append('device_id[]', deviceId.id);
     });
 
-    if (form.value.file) {
-      formData.append("file", form.value.file);
-    }
+    // if (form.value.file) {
+    //   formData.append("file", form.value.file);
+    // }
 
     // Send the update request
     const customerId = customerDetail.id || "";
@@ -190,21 +190,6 @@ const submitForm = async () => {
           <label for="secondary_phone" class="form-label">Secondary Mobile Number</label>
         </div>
       </div>
-      <div class="form-row">
-        <div class="form-group col-md-6">
-          <Multiselect
-              v-model="form.device_id"
-              :options="devices"
-              :multiple="true"
-              track-by="id"
-              label="device_id"
-              placeholder="Select devices"
-              class="form-control"
-              @update:model-value="watchDeviceSelection"
-          />
-        </div>
-      </div>
-
       <div class="form-group relative">
         <TextInput
           id="address"
@@ -216,8 +201,21 @@ const submitForm = async () => {
         />
         <label for="address" class="form-label">Address</label>
       </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <Multiselect
+              v-model="form.device_id"
+              :options="devices"
+              :multiple="true"
+              track-by="id"
+              label="device_id"
+              placeholder="Select devices"
+              @update:model-value="watchDeviceSelection"
+          />
+        </div>
+      </div>
 
-      <div class="form-group">
+      <!-- <div class="form-group">
         <div
           class="upload-box text-center"
           @drop="handleDrop"
@@ -245,7 +243,7 @@ const submitForm = async () => {
             </button>
           </p>
         </div>
-      </div>
+      </div> -->
 
       <PrimaryButton class="btn save-btn-custom"> Update Customer</PrimaryButton>
     </form>
@@ -255,7 +253,7 @@ const submitForm = async () => {
 <style>
 @import "vue-multiselect/dist/vue-multiselect.min.css";
 </style>
-<style scoped>
+<!-- <style scoped>
 
 .upload-box {
   border: 2px dashed #ccc;
@@ -272,4 +270,4 @@ const submitForm = async () => {
 .upload-box.drag-over {
   background-color: #e9e9e9;
 }
-</style>
+</style> -->

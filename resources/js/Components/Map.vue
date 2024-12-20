@@ -79,7 +79,7 @@
     if (location && location.content && location.content.message_type == 'danger') {
         iconType = 'c32222';
     } else if (location && location.content && location.content.message_type == 'inactive') {
-        iconType = 'ff8300';
+        iconType = 'a1a19f';
     } else {
         iconType = '385be8';
     }
