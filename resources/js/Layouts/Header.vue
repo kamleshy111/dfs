@@ -345,7 +345,6 @@ export default {
   },
   mounted() {
     this.getNotification();
-    this.getAdminUnreadNotifications();
     Pusher.logToConsole = true;
 
     // Initialize Pusher
@@ -391,16 +390,9 @@ export default {
       try {
         const response = await axios.get("/api/get-notification");
         this.notifications = response.data.notifications || [];
+        this.adminUnreadCount = response.data.adminUnreadCount || 0;
       } catch (error) {
         console.error("Error fetching notifications:", error);
-      }
-    },
-    async getAdminUnreadNotifications () {
-      try {
-        const response = await axios.get("/api/admin-unread-notification");
-        this.adminUnreadCount = response.data.adminUnreadCount;
-      } catch (error) {
-        console.error("Error fetching unread admin unread count:", error);
       }
     },
   },
