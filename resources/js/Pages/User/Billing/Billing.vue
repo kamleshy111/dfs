@@ -18,7 +18,7 @@ const columns = [
     title: 'S No',
     render: (data, type, row, meta) => meta.row + 1,
     },
-    { data: 'customerName' },
+    { data: 'vehicleNumber' },
     { data: 'deviceName' },
     { data: 'startData'},
     { data: 'duration'},
@@ -62,7 +62,7 @@ const columns = [
               <thead class="thead-light">
                 <tr>
                   <th scope="col">S No</th>
-                  <th scope="col">customer Name</th>
+                  <th scope="col">Vehicle Register Number</th>
                   <th scope="col">Device ID</th>
                   <th scope="col">Start Date</th>
                   <th scope="col">Duration</th>

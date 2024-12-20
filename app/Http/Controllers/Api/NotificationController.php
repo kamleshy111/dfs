@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Events\NotificationRead;
 use Illuminate\Http\Request;
 use App\Models\Notification;
 use Carbon\Carbon;
@@ -133,6 +134,11 @@ class NotificationController extends Controller
 
         $notification = Notification::findOrFail($id);
         $notification->update(['status' => 1]);
+
+        event(new NotificationRead([
+           'title' =>  'Notification read',
+          ]));
+
         return response()->json(['message' => 'Notification marked as read.']);
     }
     

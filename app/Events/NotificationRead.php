@@ -11,31 +11,28 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-
-class NotificationCreate implements ShouldBroadcastNow
+class NotificationRead implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $data;
+    public $title;
 
     /**
      * Create a new event instance.
-     *
-     * @param array $data
      */
-    public function __construct($data)
+    public function __construct($title)
     {
-        $this->data = $data;
+        $this->title = $title;
     }
 
     /**
-     * The channel the event should broadcast on.
+     * Get the channels the event should broadcast on.
      *
-     * @return Channel
+     * @return array<int, \Illuminate\Broadcasting\Channel>
      */
     public function broadcastOn()
     {
-        return new Channel('notification');
+        return new Channel('read-title');
     }
 
     /**
@@ -45,7 +42,7 @@ class NotificationCreate implements ShouldBroadcastNow
      */
     public function broadcastAs()
     {
-        return 'received.notification';
+        return 'read.notification';
     }
 
     /**
@@ -55,8 +52,6 @@ class NotificationCreate implements ShouldBroadcastNow
      */
     public function broadcastWith(): array
     {
-        return $this->data;
+        return $this->title;
     }
 }
-
-

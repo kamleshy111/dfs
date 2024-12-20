@@ -14,10 +14,14 @@ class BillingController extends Controller
 {
     public function index(){
 
+        $userId = Auth::user()->id;
+
+        $customerId = Customer::where('user_id', $userId)->value('id');
+  
         $data = Vehicle::select('vehicles.*', 'customers.first_name', 'customers.last_name', 'devices.device_id as deviceName')
             ->join('customers', 'vehicles.customer_id', '=', 'customers.id')
             ->join('devices', 'vehicles.device_id', '=', 'devices.id')
-            // ->where('customer_id', $customerId) // Assuming vehicles table has 'user_id' column
+            ->where('customer_id', $customerId)
             ->get();
 
         $devices = $data->map(function($item) {
@@ -49,7 +53,7 @@ class BillingController extends Controller
         $startDate =     Carbon::parse($item->start_date)->format('d-m-Y');
         return [
             'id' => $item->id ?? 0,
-            'customerName' => ($item->first_name ?? '') . ' ' . ($item->last_name ?? ''),
+            'vehicleNumber' => ($item->vehicle_register_number ?? ''),
             'deviceName' => $item->deviceName ?? '',
             'startData' => $startDate ?? '',
             'duration' => ($item->duration ?? '') . ' ' . ($item->duration_unit ?? ''),
