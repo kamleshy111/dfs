@@ -592,8 +592,8 @@ a.page-link {
 
 .badge {
     font-size: 0.85rem;
-    padding: 0.4em 0.7em;
-    border-radius: 12px;
+    padding: 5px;
+    border-radius: 50px;
 }
 
 .badge.bg-success {
@@ -1351,6 +1351,30 @@ div.dt-container .dt-paging .dt-paging-button.current:hover {
 .mobile-sidebar .sidebar {
     display: block;
 }
+.notifications-searchbar .form-group small.text-danger {
+    position: absolute;
+    background: #fff;
+    box-shadow: 0 9px 16px rgba(0, 0, 0, 0.1);
+    padding: 6px;
+    font-size: 12px;
+    border-radius: 5px;
+}
+
+.notifications-searchbar .search-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-46%);
+    background-color: #2196f3;
+    padding: 5px;
+    color: #fff;
+    pointer-events: none;
+    padding: 17px 15px;
+    border-radius: 0 4px 4px 0px;
+}
+  
+  
+
 
 @media screen and (min-width: 768px) and (max-width: 991px) {
 
@@ -1385,6 +1409,10 @@ div.dt-container .dt-paging .dt-paging-button.current:hover {
 
 
 @media (max-width: 767px) {
+    .notifications-searchbar .form-group.m-0.col-md-6 {
+        padding: 0;
+        margin-bottom: 15px !important;
+    }
     #mobileMenu {
         display: none;
     }

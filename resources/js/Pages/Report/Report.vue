@@ -36,8 +36,8 @@ const validateDates = () => {
     const start = new Date(startDate.value);
     const end = new Date(endDate.value);
     if (start > end) {
-      validationErrors.value.startDate = "Start Date must be before or the same as End Date.";
-      validationErrors.value.endDate = "End Date must be after or the same as Start Date.";
+      validationErrors.value.startDate = "Start Date must be less than or equal to End Date.";
+      validationErrors.value.endDate = "End Date must be greater than or equal to  Start Date.";
       return false;
     }
   }
@@ -105,7 +105,7 @@ const toggleNotification = async (id) => {
       <div class="table-container">
 
         <div class="d-flex justify-content-between align-items-center">
-            <h4><i class="bi bi-truck-front-fill mr-2"></i>All Report</h4>
+            <h4><i class="fa fa-filter mr-2"></i>Filters Notifications </h4>
 
            <div class="text-end mobile-btn-responsive">
               <!-- Mobile menu button -->
@@ -131,31 +131,32 @@ const toggleNotification = async (id) => {
            </div>
 
         </div>
-        <div class="d-flex justify-content-between align-items-center mt-2">
-
-            <div class="form-group col-md-3">
-              <input v-model="customerName" type="text" class="form-control" placeholder="" @input="getData" />
+        <div class="row align-items-center mt-4 notifications-searchbar ">
+            <div class="form-group col-md-4">
+              <input v-model="customerName" type="text" class="form-control pe-5" placeholder="" @input="getData" />
               <label for="customerName" class="form-label">Customer Name</label>
-            </div> 
+            </div>
 
-            <div class="form-group col-md-3">
+
+            <div class="form-group col-md-4">
               <input v-model="deviceId" type="text" class="form-control" placeholder="" @input="getData" />
               <label for="deviceId" class="form-label">Device Id</label>
             </div>
 
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-4">
               <input v-model="vehicleRegister" type="text" class="form-control" placeholder="" @input="getData" />
               <label for="vehicleRegister" class="form-label">Vehicle Register Number</label>
             </div>
-
-            <div class="form-group col-md-3">
-              <div class="form-group col-md-6">
+        </div>
+        <div class="row align-items-center mt-3 notifications-searchbar-border">
+          <div class="form-group row align-items-center col-md-8 mx-auto">
+              <div class="form-group m-0 col-md-6">
                 <input type="date" v-model="startDate" @input="getData" class="form-control" />
                 <label for="startDate" class="form-label">Start Date</label>
                 <small v-if="validationErrors.startDate" class="text-danger">{{ validationErrors.startDate }}</small>
 
               </div>
-              <div class="form-group col-md-6">
+              <div class="form-group m-0 col-md-6 boder-class">
                 <input type="date" v-model="endDate" @input="getData" class="form-control" />
                 <label for="endDate" class="form-label">End Date</label>
                 <small v-if="validationErrors.endDate" class="text-danger">{{ validationErrors.endDate }}</small>
@@ -224,7 +225,21 @@ const toggleNotification = async (id) => {
   }
 </style>
 <style scoped>
-
+.notifications-searchbar-border .boder-class .form-control[data-v-9e7b69c8] {
+    border-right: 1px solid rgb(209 213 219) !important;
+    border-left: 0;
+    border-radius: 0 4px 4px 0;
+}
+.notifications-searchbar .form-label {
+    left: 20px;
+}
+.notifications-searchbar-border .form-group.m-0.col-md-6 {
+    padding: 0;
+}
+.notifications-searchbar-border .form-control[data-v-9e7b69c8] {
+    border-right: 0;
+    border-radius: 4px 0 0px 4px;
+}
   .notification-card {
       margin: 50px auto;
       background-color: white;
@@ -331,6 +346,25 @@ const toggleNotification = async (id) => {
   .unread-dot {
       width: 10px;
   }
+  .notifications-searchbar-border .boder-class .form-control {
+    border-right:  1px solid rgb(209 213 219) !important;
+    border-left:  1px solid rgb(209 213 219) !important;
+    border-radius: 4px !important;
+    margin-bottom: 20px;
+}
+
+.notifications-searchbar-border .form-group.m-0.col-md-6 {
+    padding: 0 !important;
+    margin-bottom: 10px  !important;
+    margin-top: 10px  !important;
+}
+.notifications-searchbar-border .form-control {
+    border-right: 1px solid rgb(209 213 219) !important;
+    border-radius: 4px !important;
+}
+.notifications-searchbar-border {
+    margin-top: 0 !important;
+}
   }
 
 
