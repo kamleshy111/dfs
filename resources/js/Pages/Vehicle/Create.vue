@@ -114,18 +114,18 @@ const submitForm = async () => {
             <div class="form-group col-md-6">
               <div v-if="devices.length">
                 <select class="form-control" v-model="form.deviceId">
-                  <option value="" disabled>Select Device</option>
+                  <option value="" disabled>Select Device ID</option>
                   <option v-for="device in devices" :key="device.id" :value="device.id">
                     {{ device.device_id }}
                   </option>
                 </select>
-                <label for="deviceId" class="form-label">Device Name</label>
+                <label for="deviceId" class="form-label">Device ID</label>
               </div>
               <div v-else-if="form.customerId">
                   <select class="form-control">
-                  <option value="" disabled>Select Device</option>
+                  <option value="" disabled>Select Device ID</option>
                 </select>
-                <label for="deviceId" class="form-label">Device Name</label>
+                <label for="deviceId" class="form-label">Device ID</label>
               </div>
             </div>
           </div>

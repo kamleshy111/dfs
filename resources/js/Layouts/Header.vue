@@ -107,7 +107,8 @@ onMounted(() => {
                 <span class="notification-title">Notifications</span>
               </h5>
               <div class="d-flex align-items-center icon-box-profile" v-for="notification in notifications" :key="notification.id">
-                <a :href="`/report/${notification.id}`">
+                  <a :href="`/report?id=${notification.id}`">
+
                   <div class="icon-circle mr-3">
                     <i class="fas fa-sync-alt"></i>
                   </div>
@@ -122,6 +123,10 @@ onMounted(() => {
                     </div>
                   </div>
                 </a>
+              </div>
+              <div class="text-center mt-2">
+                <!-- <a :href="`/report/${notification.id}`"> -->
+                <a :href="`/report`" class="status-text">view more</a> 
               </div>
             </ul>
           </div>
@@ -340,7 +345,6 @@ export default {
   },
   mounted() {
     this.getNotification();
-    this.getAdminUnreadNotifications();
     Pusher.logToConsole = true;
 
     // Initialize Pusher
@@ -386,16 +390,9 @@ export default {
       try {
         const response = await axios.get("/api/get-notification");
         this.notifications = response.data.notifications || [];
+        this.adminUnreadCount = response.data.adminUnreadCount || 0;
       } catch (error) {
         console.error("Error fetching notifications:", error);
-      }
-    },
-    async getAdminUnreadNotifications () {
-      try {
-        const response = await axios.get("/api/admin-unread-notification");
-        this.adminUnreadCount = response.data.adminUnreadCount;
-      } catch (error) {
-        console.error("Error fetching unread admin unread count:", error);
       }
     },
   },

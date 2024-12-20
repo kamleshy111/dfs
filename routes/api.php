@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\BillingController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\AdminDashboardController;
 use App\Http\Controllers\Api\CustomerDeviceController;
+use App\Http\Controllers\Api\NotificationController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -42,13 +43,13 @@ Route::middleware('auth:sanctum')->group(function(){
 
 Route::middleware('auth:sanctum', 'role:admin')->group(function(){
     
-# admin notification show  
-    Route::get('/get-notification', [AdminDashboardController::class, 'getNotification']); 
-
-#admin unread notifications adminUnreadNotifications
-    Route::get('/admin-unread-notification', [AdminDashboardController::class, 'adminUnreadNotifications']); 
+# admin notification show header 
+    Route::get('/get-notification', [NotificationController::class, 'getNotification']); 
 
 #read notification    
-    Route::post('/notifications/{id?}/mark-as-read', [AdminDashboardController::class, 'markAsRead']);
+    Route::post('/notifications/{id?}/mark-as-read', [NotificationController::class, 'markAsRead']);
+
+#all notification 
+    Route::get('allNotifications', [NotificationController::class, 'index'])->name('allNotification'); 
 
 });

@@ -1,18 +1,14 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
+import Datepicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
+import { Bootstrap5Pagination } from 'laravel-vue-pagination';
+import axios from "axios";
 
 // Define props
 const props = defineProps({
-  notifications: {
-    type: Array,
-    required: true,
-  },
-  notificationCount: {
-    type: Number,
-    required: true,
-  },
   notificationsId: {
     type: Number,
     required: false,
@@ -21,14 +17,73 @@ const props = defineProps({
 
 const openNotificationId = ref(null);
 
+const notifications = ref([]);
+const totalCount = ref("");
+const vehicleRegister = ref("");
+const customerName = ref("");
+const deviceId = ref("");
+const startDate = ref(null);
+const endDate = ref(null);
+
+const validationErrors = ref({ startDate: "", endDate: "" });
+
+// Validate the date range
+const validateDates = () => {
+  validationErrors.value.startDate = "";
+  validationErrors.value.endDate = "";
+
+  if (startDate.value && endDate.value) {
+    const start = new Date(startDate.value);
+    const end = new Date(endDate.value);
+    if (start > end) {
+      validationErrors.value.startDate = "Start Date must be before or the same as End Date.";
+      validationErrors.value.endDate = "End Date must be after or the same as Start Date.";
+      return false;
+    }
+  }
+  return true;
+};
+
+const getData = async(page = 1) =>{
+
+  if (!validateDates()) {
+    return;
+  }
+  try {
+
+    const res = await axios.get(`api/allNotifications`, {
+      params: {
+        page,
+        vehicleRegisterSearch: vehicleRegister.value,
+        customerSearch : customerName.value,
+        device_id: deviceId.value,
+        startDate: startDate.value,
+        endDate: endDate.value,
+        
+      },
+    });
+    
+    notifications.value = res.data.notifications;
+    totalCount.value = res.data.totalCount;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};
+
+// Watchers for date validation
+watch([startDate, endDate], () => {
+  validateDates();
+  getData();
+});
+
 onMounted(() => {
     if (props.notificationsId) {
       openNotificationId.value = props.notificationsId;
-    }
+    };
+    getData();
 });
 
 const toggleNotification = async (id) => {
-
   if (id) {
     try {
       const response = await axios.post(`/api/notifications/${id}/mark-as-read`);
@@ -74,6 +129,38 @@ const toggleNotification = async (id) => {
                 </a>
               </div>
            </div>
+
+        </div>
+        <div class="d-flex justify-content-between align-items-center mt-2">
+
+            <div class="form-group col-md-3">
+              <input v-model="customerName" type="text" class="form-control" placeholder="" @input="getData" />
+              <label for="customerName" class="form-label">Customer Name</label>
+            </div> 
+
+            <div class="form-group col-md-3">
+              <input v-model="deviceId" type="text" class="form-control" placeholder="" @input="getData" />
+              <label for="deviceId" class="form-label">Device Id</label>
+            </div>
+
+            <div class="form-group col-md-3">
+              <input v-model="vehicleRegister" type="text" class="form-control" placeholder="" @input="getData" />
+              <label for="vehicleRegister" class="form-label">Vehicle Register Number</label>
+            </div>
+
+            <div class="form-group col-md-3">
+              <div class="form-group col-md-6">
+                <input type="date" v-model="startDate" @input="getData" class="form-control" />
+                <label for="startDate" class="form-label">Start Date</label>
+                <small v-if="validationErrors.startDate" class="text-danger">{{ validationErrors.startDate }}</small>
+
+              </div>
+              <div class="form-group col-md-6">
+                <input type="date" v-model="endDate" @input="getData" class="form-control" />
+                <label for="endDate" class="form-label">End Date</label>
+                <small v-if="validationErrors.endDate" class="text-danger">{{ validationErrors.endDate }}</small>
+              </div>
+            </div>
         </div>
 
       </div>
@@ -82,12 +169,12 @@ const toggleNotification = async (id) => {
         <div class="notification-card">
           <!-- Header -->
           <div class="notification-header">
-            <h5>Notifications <span class="badge bg-primary">{{ notificationCount }}</span></h5>
+            <h5>Notifications <span class="badge bg-primary">{{ totalCount }}</span></h5>
             <span class="mark-all">Mark all as read</span>
           </div>
 
           <!-- Notification List -->
-          <div class="notifications-list" v-for="notification in notifications" :key="notification.id">
+          <div class="notifications-list" v-for="notification in notifications.data" :key="notification.id">
             <div class="notification-main" v-if="notification.status === 0">
               <div class="notification-item" @click="toggleNotification(notification.id)">
                 <div class="icon-circle mr-3">
@@ -100,7 +187,7 @@ const toggleNotification = async (id) => {
                 </div>
                 <i class="unread-dot"></i>
               </div>
-              <div v-show="openNotificationId == notification.id" class="notification-details">
+              <div v-show="openNotificationId === notification.id" class="notification-details">
                 <p>{{ notification.body }}.</p>
               </div>
             </div>
@@ -121,119 +208,130 @@ const toggleNotification = async (id) => {
               </div>
             </div>
           </div>
+          <Bootstrap5Pagination 
+                :data="notifications" 
+                @pagination-change-page="getData"
+            />
         </div>
       </section>
     </div>
   </AuthenticatedLayout>
 </template>
+<style>
+  .notification-card .pagination {
+      justify-content: center;
+      margin: 10px 0;
+  }
+</style>
 <style scoped>
-.notification-card {
-    margin: 50px auto;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-}
 
-.notification-header {
-    padding: 15px 20px;
-    border-bottom: 1px solid #f0f0f0;
-}
+  .notification-card {
+      margin: 50px auto;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+  }
 
-.notification-header h5 {
-    font-weight: bold;
-    display: inline-block;
-    margin: 0;
-}
-.notification-header .badge {
-    background: #2196f3 !important;
-}
+  .notification-header {
+      padding: 15px 20px;
+      border-bottom: 1px solid #f0f0f0;
+  }
 
-.notification-header .mark-all {
-    float: right;
-    font-size: 0.9rem;
-    color: #007bff;
-    cursor: pointer;
-}
+  .notification-header h5 {
+      font-weight: bold;
+      display: inline-block;
+      margin: 0;
+  }
+  .notification-header .badge {
+      background: #2196f3 !important;
+  }
 
-.notifications-list {
-    padding: 10px;
-}
+  .notification-header .mark-all {
+      float: right;
+      font-size: 0.9rem;
+      color: #007bff;
+      cursor: pointer;
+  }
 
-.notification-main[data-v-9e7b69c8] {
-    padding: 5px;
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-    border-radius: 10px;
-}
-.notification-item {
-    display: flex;
-    align-items: center;
-    padding: 12px 20px;
-    border-bottom: 2px solid #f0f0f0;
-    cursor: pointer;
-    position: relative;
-    background-color: #f9f9f9;
-}
+  .notifications-list {
+      padding: 10px;
+  }
 
-.notification-item:hover {
-    background-color: #f1f1f1ba;
-}
+  .notification-main[data-v-9e7b69c8] {
+      padding: 5px;
+      box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+      border-radius: 10px;
+  }
+  .notification-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      border-bottom: 2px solid #f0f0f0;
+      cursor: pointer;
+      position: relative;
+      background-color: #f9f9f9;
+  }
 
-.notification-item .icon-circle {
-    background-color: #2196f3;
-    color: #fff;
-}
-.notification-content {
-    flex-grow: 1;
-}
+  .notification-item:hover {
+      background-color: #f1f1f1ba;
+  }
 
-.notification-content p {
-    margin: 0;
-    font-size: 0.9rem;
-}
+  .notification-item .icon-circle {
+      background-color: #2196f3;
+      color: #fff;
+  }
+  .notification-content {
+      flex-grow: 1;
+  }
 
-.notification-content small {
-    color: gray;
-    font-size: 0.8rem;
-}
+  .notification-content p {
+      margin: 0;
+      font-size: 0.9rem;
+  }
 
-.notification-content .highlight {
-    color: #2196f3;
-    font-weight: bold;
-}
+  .notification-content small {
+      color: gray;
+      font-size: 0.8rem;
+  }
 
-.unread-dot {
-    height: 8px;
-    width: 8px;
-    background-color: red;
-    border-radius: 50%;
-    margin-left: 8px;
-}
+  .notification-content .highlight {
+      color: #2196f3;
+      font-weight: bold;
+  }
 
-.notification-details {
-    padding: 10px 10px;
-    background-color: #f1f1f1;
-    margin-top: -5px;
-    border-radius: 5px;
-    transition: max-height 0.3s ease-out, padding 0.3s ease-out;
-}
+  .unread-dot {
+      height: 8px;
+      width: 8px;
+      background-color: red;
+      border-radius: 50%;
+      margin-left: 8px;
+  }
 
-@media (max-width: 767px){
-    .notification-content p {
-    margin: 0;
-    font-size: 12px;
-}
-.notification-item {
-    padding: 12px 10px;
-}
-.icon-circle {
-    width: 50px;
-    font-size: 20px;
-}
-.unread-dot {
-    width: 10px;
-}
-}
+  .notification-details {
+      padding: 10px 10px;
+      background-color: #f1f1f1;
+      margin-top: -5px;
+      border-radius: 5px;
+      transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+  }
+
+  @media (max-width: 767px){
+      .notification-content p {
+      margin: 0;
+      font-size: 12px;
+  }
+  .notification-item {
+      padding: 12px 10px;
+  }
+  .icon-circle {
+      width: 50px;
+      font-size: 20px;
+  }
+  .unread-dot {
+      width: 10px;
+  }
+  }
 
 
 </style>
