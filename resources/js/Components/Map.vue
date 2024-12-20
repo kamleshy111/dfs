@@ -54,8 +54,10 @@
   </template>
 
   <script setup>
-  import { ref } from "vue";
+  import { ref, onMounted } from "vue";
   import { GoogleMap, AdvancedMarker } from "vue3-google-map";
+  import Pusher from "pusher-js";
+  import toastr from "toastr";
 
   const props = defineProps({
     mapId: { type: String, default: "4504f8b37365c3d0" },
@@ -93,6 +95,41 @@
 
     return pin;
   };
+
+  const pusherNotification = () => {
+      // Ensure Echo is already initialized
+      const echo = window.Echo;
+      echo.channel('notification') // Replace with the actual channel name
+          .listen('TestNotification', (data) => { // Replace with the actual event name
+              console.log('Received data:', data);
+
+              // Display Toastr notification with icons and inline content
+              if (data && role.value === 'admin') {
+                  toastr.info(
+                      `<div class="notification-content">
+          <i class="fas fa-user"></i> <span>${data.vehicleId}</span>
+          <i class="fas fa-user"></i> <span>${data.title}</span>
+          <i class="fas fa-book" style="margin-left: 20px;"></i> <span>${data.body}</span>
+        </div>`,
+                      'New Post Notification',
+                      {
+                          closeButton: true,
+                          progressBar: true,
+                          timeOut: 0, // Set timeOut to 0 to make it persist until closed
+                          extendedTimeOut: 0, // Ensure the notification stays open
+                          positionClass: 'toast-top-right',
+                          enableHtml: true,
+                      }
+                  );
+              } else {
+                  console.error('Invalid data received:', data);
+              }
+          });
+  };
+
+  onMounted(() => {
+
+  });
   </script>
 
   <style scoped>
