@@ -1,17 +1,16 @@
+import Echo from 'laravel-echo';
+import Pusher from 'pusher-js';
 
-    import Echo from 'laravel-echo';
-    import Pusher from 'pusher-js';
+// Set up Pusher globally
+window.Pusher = Pusher;
 
-    // Set up Pusher globally
-    window.Pusher = Pusher;
+// Initialize Echo
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: import.meta.env.VITE_PUSHER_APP_KEY, // Replace with your Pusher key
+    cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER, // Replace with your Pusher cluster
+    forceTLS: false,
+});
 
-    // Initialize Echo
-    window.Echo = new Echo({
-        broadcaster: 'pusher',
-        key: 'ba58f8359f6318f23ee1', // Replace with your Pusher key
-        cluster: 'ap2', // Replace with your Pusher cluster
-        forceTLS: false,
-    });
-
-    console.log('Echo initialized:', window.Echo); // Debugging
+console.log('Echo initialized:', window.Echo); // Debugging
 
