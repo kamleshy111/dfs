@@ -32,7 +32,8 @@ class NotificationController extends Controller
          'title' =>  $data->title,
          'body' => $data->body,
         ]));
-      
-        return redirect('/billing');
+    
+        
+            return response()->json(['message' => 'Vehicle Renewal Reminder']);
     }
 }

@@ -1,6 +1,9 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
+import { ref,onMounted } from "vue";
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 
 // Define props
 defineProps({
@@ -13,11 +16,11 @@ defineProps({
 // Column definitions for DataTable
 const columns = [
 //   { data: 'id', title: 'S No' },
-    { 
+  { 
     data: null,
     title: 'S No',
     render: (data, type, row, meta) => meta.row + 1,
-    },
+  },
     { data: 'vehicleNumber' },
     { data: 'deviceName' },
     { data: 'startData'},
@@ -27,14 +30,36 @@ const columns = [
         title: 'Actions',
         data: null,
         render: (data, type, row) => {
-            return `
+        return `
             <div class="icon-all-dflex">
-              <a href="/notification/${data.id}" class="btn btn-light action-btn"><i class="bi bi-bell"></i> </a>
+              <a href="javascript:void(0);" class="btn btn-light action-btn notify-btn" data-device="${data.id}">
+                <i class="bi bi-bell"></i>
+              </a>
               </div>
             `;
         }
     }
 ];
+
+onMounted(() => {
+  document.querySelectorAll(".notify-btn").forEach(button => {
+    button.addEventListener('click', () => {
+      const id = button.getAttribute('data-device');
+      RenewalDevices(id)
+    });
+  });
+});
+
+const RenewalDevices = async (id ) => {
+    try {
+        const response = await axios.get(`/notification/${id}`);
+        toast.success(response.data.message);
+        // devices.value = response.data.devices;
+    } catch (error) {
+        console.error("Error Vehicle Renewal Reminder:", error);
+        toast.error("Failed to message. Please try again.");
+    }
+};
 </script>
 
 <template>

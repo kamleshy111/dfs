@@ -33,7 +33,8 @@
               <th scope="col">Location</th>
               <th scope="col">Status</th>
               <th scope="col">Captures</th>
-              <th scope="col">Address</th>
+              <th scope="col">Message</th>
+              <th scope="col">Alert</th>
             </tr>
           </thead>
         </DataTable>
