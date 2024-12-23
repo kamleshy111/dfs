@@ -1,9 +1,11 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
+import { type } from "jquery";
 import { ref,onMounted } from "vue";
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
+import axios from 'axios'; 
 
 // Define props
 defineProps({
@@ -11,7 +13,29 @@ defineProps({
     type: Array, // Corrected type: Array for table data
     required: true,
   },
+  expirationVehicles: {
+    type: Array
+  }
 });
+
+
+
+const sendRenewalNotification = async () => {
+  try {
+    
+    const response = await axios.get(route('email.vehicle-renewal'));
+
+    console.log(response.data.message);
+    if (response.data.message) {
+      toast.success('Vehicle renewal notification sent successfully!');
+    } else {
+      toast.error('Failed to send vehicle renewal notification. Please try again.');
+    }
+  } catch (error) {
+    console.error("Error sending renewal notification:", error);
+    toast.error('An error occurred. Please try again.');
+  }
+};
 
 // Column definitions for DataTable
 const columns = [
@@ -73,6 +97,14 @@ const RenewalDevices = async (id ) => {
             <h4 class="responsive-btn">
               <i class="bi bi-people-fill mr-2"></i>All Billings
             </h4>
+            <div class="d-flex justify-content-end">
+            <div class="text-end mr-2">
+            <div  v-if="expirationVehicles.length > 0">
+              <button @click="sendRenewalNotification" class="btn btn-primary btn-custom">
+                <i class="bi bi-bell-fill mr-2"></i> Send Notification for Vehicle Renewal
+              </button>
+            </div>
+            </div>
             <div class="text-end">
               <a :href="route('clients.map')">
                 <button class="btn btn-primary btn-custom">
@@ -80,6 +112,7 @@ const RenewalDevices = async (id ) => {
                 </button>
               </a>
             </div>
+          </div>
           </div>
           <div class="table-responsive">
             <!-- DataTable Component -->

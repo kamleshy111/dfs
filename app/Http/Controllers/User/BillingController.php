@@ -61,8 +61,48 @@ class BillingController extends Controller
         ];
         });
 
+        $expirationData = Vehicle::select('vehicles.start_date','vehicles.duration','vehicles.duration_unit') 
+                        ->where('vehicles.customer_id', $customerId)
+                        ->get();
+
+        $expirationVehicles = $expirationData->map(function ($data) {
+            
+            $startDate = Carbon::parse($data->start_date);
+            $duration = (int) $data->duration;
+    
+            switch ($data->duration_unit) {
+                case 'days':
+                    $expiration = $startDate->addDays($duration);
+                    break;
+                case 'months':
+                    $expiration = $startDate->addMonths($duration);
+                    break;
+                case 'years':
+                    $expiration = $startDate->addYears($duration);
+                    break;
+                default:
+                    return null;
+            }
+    
+        
+            $currentDate = now()->addDay(5);
+     
+            if ($currentDate >= $expiration) {
+                return [
+                    'id' => $data->id,
+                    'startDate' => $startDate->format('d-m-Y'),
+                    'expirationDate' => $expiration->format('d-m-Y'),
+                ];
+            }
+    
+            return null;
+        })->filter();
+
+
+
         return Inertia::render('User/Billing/Billing',[
-            'devices' => $devices->toArray()
+            'devices' => $devices->toArray(),
+            'expirationVehicles' => $expirationVehicles->values()->toArray(),
         ]);
 
     }
