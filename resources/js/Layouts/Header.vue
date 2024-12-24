@@ -24,7 +24,7 @@ const props = defineProps({
 
 const currentDate = ref("");
 
-const getNotification = async () => {
+const getNotificationHeader = async () => {
     try {
         const response = await axios.get('/api/get-notification');
         notifications.value = response.data.notifications || [];
@@ -34,7 +34,18 @@ const getNotification = async () => {
     }
 };
 
-const echo = window.Echo;
+const getNotification = () => {
+  window.Echo.channel('notification')
+    .listen('.received.notification', async (data) => {
+        console.log('Received data:', data);
+        try {
+            const response = await axios.get('/api/get-notification');
+            notifications.value = response.data.notifications || [];
+        } catch (error) {
+            console.error('Error fetching notifications:', error);
+        }
+    });
+};
 
 const pushNotification = () => {
    /* window.Echo.connector.pusher.connection.bind('connected', () => {
@@ -92,6 +103,7 @@ onMounted(() => {
 
   currentDate.value = `${day}, ${date} ${month} ${year}`;
 
+    getNotificationHeader();
     getNotification();
     pushNotification();
     readNotification();

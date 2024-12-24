@@ -27,6 +27,29 @@ const endDate = ref(null);
 
 const validationErrors = ref({ startDate: "", endDate: "" });
 
+
+const NotificationCreateCount = () => {
+    window.Echo.channel('notification')
+        .listen('.received.notification', (data) => {
+            console.log('Total Count data:', data);
+            totalCount.value++;
+        });
+};
+
+const notificationGetAll = () => {
+  window.Echo.channel('notification')
+    .listen('.received.notification', async (data) => {
+        console.log('Received all message:', data);
+        try {
+            const response = await axios.get('/api/allNotifications');
+            notifications.value = response.data.notifications;
+        } catch (error) {
+            console.error('Error fetching notifications:', error);
+        }
+    });
+};
+
+
 // Validate the date range
 const validateDates = () => {
   validationErrors.value.startDate = "";
@@ -81,6 +104,8 @@ onMounted(() => {
       openNotificationId.value = props.notificationsId;
     };
     getData();
+    NotificationCreateCount();
+    notificationGetAll();
 });
 
 const toggleNotification = async (id) => {
