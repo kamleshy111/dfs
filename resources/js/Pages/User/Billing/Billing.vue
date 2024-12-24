@@ -18,11 +18,11 @@ defineProps({
   }
 });
 
-
+const loading = ref(false);
 
 const sendRenewalNotification = async () => {
   try {
-    
+    loading.value = true;
     const response = await axios.get(route('email.vehicle-renewal'));
 
     console.log(response.data.message);
@@ -34,6 +34,8 @@ const sendRenewalNotification = async () => {
   } catch (error) {
     console.error("Error sending renewal notification:", error);
     toast.error('An error occurred. Please try again.');
+  } finally {
+    loading.value = false;
   }
 };
 
@@ -99,8 +101,11 @@ const RenewalDevices = async (id ) => {
             </h4>
             <div class="d-flex justify-content-end">
             <div class="text-end mr-2">
-            <div  v-if="expirationVehicles.length > 0">
-              <button @click="sendRenewalNotification" class="btn btn-primary btn-custom">
+              <div v-if="loading" >
+                <div class="loader"></div>
+              </div>
+            <div  v-if="expirationVehicles.length > 0 && !loading">
+              <button id="myButton" @click="sendRenewalNotification" class="btn btn-primary btn-custom">
                 <i class="bi bi-bell-fill mr-2"></i> Send Notification for Vehicle Renewal
               </button>
             </div>
@@ -135,3 +140,25 @@ const RenewalDevices = async (id ) => {
     </div>
   </AuthenticatedLayout>
 </template>
+
+<style scoped>
+.loader {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    margin-right: 150px;
+    animation: spin 1s linear infinite;
+}
+
+.btn-custom {
+  padding: 10px 20px;
+  font-size: 16px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>
