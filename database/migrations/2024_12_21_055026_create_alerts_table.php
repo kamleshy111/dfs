@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('longitude');
             $table->text('location');
             $table->enum('status', ['active', 'inactive', 'expired'])->default('inactive');
+            $table->tinyInteger('read_unread_status')->default(0);
             $table->string('captures');
             $table->text('message');
             $table->string('alert_type');

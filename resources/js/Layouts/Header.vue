@@ -143,7 +143,7 @@ onMounted(() => {
                   </div>
                   <div>
                     <div style="line-height: 20px">
-                      <span class="status-text">{{ notification.title }}</span>
+                      <span class="status-text">{{ notification.message }}</span>
                     </div>
                     <div class="d-flex align-items-center muted-text mt-1">
                       <span class="time"

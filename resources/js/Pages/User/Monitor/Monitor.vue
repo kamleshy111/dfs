@@ -1,104 +1,94 @@
-<template>
-  <Head title="device" />
+<script setup>
 
-  <AuthenticatedLayout>
-    <div class="mt-5">
-      <div class="table-container">
-        <div class="d-flex justify-content-between align-items-center">
-          <h4><i class="bi bi-bell-fill mr-2"></i>Notifications</h4>
-          <div class="d-flex align-items-center my-2">
-            <label for="devices">Device: </label>
-            <select
-              name="devices"
-              id="devices"
-              class="user-select-icon-box ml-2"
-            >
-              <option
-                v-for="d in device_select"
-                :value="d.device_id"
-                :key="d.device_id"
-              >
-                {{ d.device_id }}
-              </option>
-            </select>
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import { Head } from "@inertiajs/vue3";
+import { Inertia } from '@inertiajs/inertia';
+import { useRouter } from 'vue-router';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
+import axios from 'axios';
+import { ref,onMounted  } from "vue";
+
+
+
+// Reactive reference for notifications
+const notifications = ref([]);
+
+// Define columns for the DataTable
+const columns = [
+  // { name: 'S No', field: 'index' },
+  { 
+    data: null,
+    title: 'S No',
+    render: (data, type, row, meta) => meta.row + 1,
+  },
+  { data: 'deviceId' },
+  {   
+    render: (data, type, row) => `${row.latitude}, ${row.longitude}`
+  },
+  {data: 'location' },
+  {data: 'status' },
+  { 
+    title: 'Captures', 
+    render: (data, type, row) => {
+      // Check if the captures field contains a valid image URL
+      return row.captures ? `<img src="${row.captures}" alt="Capture" style="width: 100px; height: auto;" />` : 'No Image';
+    }
+  },
+  {data: 'message' },
+  {data: 'alerts' },
+];
+
+const fetchNotifications = async () => {
+  try {
+    const response = await axios.get('/api/user-notifications'); 
+    console.log(response);
+    notifications.value = response.data.notifications;
+  } catch (error) {
+    console.error('Error fetching notifications:', error);
+    toast.error('Failed to load notifications');
+  }
+};
+
+
+onMounted(() => {
+  fetchNotifications();
+});
+</script>
+
+<template>
+
+    <Head title="Devices" />
+
+<AuthenticatedLayout>
+    <div class="my-3">
+      <div class="form-container shadow">
+        <div class="table-container">
+          <div class="d-flex justify-content-between align-items-center">
+            <h4 class="responsive-btn">
+              <i class="bi bi-people-fill mr-2"></i>All Clients
+            </h4>
+          </div>
+          <div class="table-responsive">
+            <!-- DataTable Component -->
+            <DataTable :data="notifications" :columns="columns" id="notifications">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col">S No</th>
+                  <th scope="col">Device ID</th>
+                  <th scope="col">Coordinates</th>
+                  <th scope="col">Location</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Captures</th>
+                  <th scope="col">Message</th>
+                  <th scope="col">Alert</th>
+                </tr>
+              </thead>
+            </DataTable>
           </div>
         </div>
-
-        <DataTable class="display" :data="devices">
-          <thead class="thead-light">
-            <tr>
-              <th scope="col">S No</th>
-              <th scope="col">Device ID</th>
-              <th scope="col">Coordinates</th>
-              <th scope="col">Location</th>
-              <th scope="col">Status</th>
-              <th scope="col">Captures</th>
-              <th scope="col">Message</th>
-              <th scope="col">Alert</th>
-            </tr>
-          </thead>
-        </DataTable>
       </div>
     </div>
-  </AuthenticatedLayout>
+</AuthenticatedLayout>
+
 </template>
-
-<script setup>
-import { ref, onMounted } from "vue";
-import { Head } from "@inertiajs/vue3";
-// import 'vue3-toastify/dist/index.css';
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-
-import DataTable from "datatables.net-vue3";
-import DataTablesCore from "datatables.net-dt";
-DataTable.use(DataTablesCore);
-
-var devices = ref("");
-var device_select = ref([]);
-onMounted(() => {
-  getDevices();
-
-  axios
-    .get(import.meta.env.VITE_AJAX_URL + "get-device-notifications")
-    .then((response) => {
-      if (response.status == 200) {
-        let data = [];
-        let index = 1;
-
-        for (let device of response.data.device_notifications) {
-          data.push([
-            index,
-            device.id,
-            device.coordinates,
-            device.location,
-            device.status,
-            `<img width="50px" height="50px" src="${device.capture}" onclick="window.open('${device.capture}', '_blank')" />`,
-            device.address,
-          ]);
-          index++;
-        }
-        devices.value = data;
-      }
-    })
-    .catch((error) => {
-      console.error("There was an error fetching the user devices:", error);
-    });
-});
-
-const getDevices = () => {
-  axios
-    .get(import.meta.env.VITE_AJAX_URL + "get-devices-1")
-    .then((response) => {
-      if (response.status == 200) {
-        console.log(response.data.devices);
-        device_select.value = response.data.devices;
-      }
-    })
-    .catch((error) => {
-      console.error("There was an error fetching the user devices:", error);
-    });
-};
-</script>
-<style>
-@import "datatables.net-dt";
-</style>

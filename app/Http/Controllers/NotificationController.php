@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\Notification;
 use App\Models\Vehicle;
 use App\Models\Customer;
+use App\Models\Alert;
 use App\Models\User;
 use Carbon\Carbon;
 
@@ -18,24 +19,30 @@ class NotificationController extends Controller
 {
     public function notification(Request $request,$vehicleId){
 
-        $vehicle = Vehicle::select('vehicles.id','vehicles.vehicle_register_number as vehicleRegisterNumber')
+      
+        $vehicle = Vehicle::select('vehicles.id', 'vehicles.device_id','vehicles.vehicle_register_number as vehicleRegisterNumber')
                     ->where('vehicles.id', '=', $vehicleId)
                     ->first();
 
-        $title = 'Vehicle Renewal Reminder';
-        $body = "My vehicle Register Number {$vehicle->vehicleRegisterNumber} is due for subscription renewal.";
+        $message = "My vehicle Register Number {$vehicle->vehicleRegisterNumber} is due for subscription renewal.";
 
 
-        $data = Notification::create([
-            'vehicle_id' => $vehicleId ,
-            'title' => $title,
-            'body' => $body
+        $data = Alert::create([
+            'device_id' => $vehicle->device_id,
+            'latitude' => '999.89',
+            'longitude' => '-68886.77',
+            'location' => 'jaipur',
+            'status' => 'inactive',
+            'read_unread_status' => '0',
+            'captures' => '/storage/InvoicePhotos/67616b5176aa0.jpg',
+            'alert_type' => 'emergency',
+            'message' => $message,
+
+            
         ]);
 
         event(new NotificationCreate([
           'vehicleId' => $data->vehicle_id,
-         'title' =>  $data->title,
-         'body' => $data->body,
         ]));
     
         

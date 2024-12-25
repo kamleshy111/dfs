@@ -112,11 +112,11 @@ const toggleNotification = async (id) => {
   const notification = notifications.value.data.find((n) => n.id === id);
   if (notification) {
    
-    if (notification.status === 0) {
+    if (notification.readUnreadStatus === 0) {
       try {
-        // Update notification status 
+        // Update notification read unread status 
         await axios.post(`/api/notifications/${id}/mark-as-read`);
-        notification.status = 1;
+        notification.readUnreadStatus = 1;
       } catch (error) {
         console.error("Error marking notification as read:", error);
       }
@@ -204,36 +204,62 @@ const toggleNotification = async (id) => {
 
           <!-- Notification List -->
           <div class="notifications-list" v-for="notification in notifications.data" :key="notification.id">
-            <div class="notification-main" v-if="notification.status === 0">
+            <div class="notification-main" v-if="notification.readUnreadStatus === 0">
               <div class="notification-item" @click="toggleNotification(notification.id)">
                 <div class="icon-circle mr-3">
                   <i class="fas fa-sync-alt"></i>
                 </div>
                
                 <div class="notification-content">
-                  <p><span class="highlight">{{ notification.title }}</span></p>
+                  <p><span class="highlight">{{ notification.message }}</span></p>
                   <small>{{ notification.date }}</small>
                 </div>
                 <i class="unread-dot"></i>
               </div>
               <div v-show="openNotificationId === notification.id" class="notification-details">
-                <p>{{ notification.body }}.</p>
+                <p>Message : {{ notification.message }}</p>
+                <p>Device Id : {{ notification.deviceId }}</p>
+                <p>Customer Name : {{ notification.customerName }}</p>
+                <p>Coordinates : {{ notification.coordinates }} </p>
+                <p>Location : {{ notification.location }}</p>
+                <p>Alert Type : {{ notification.alertType }}</p>
+                <p>Vehicle Register Number : {{ notification.vehicleRegisterNumber }}</p>
+                <p>Status : {{ notification.status }}</p>
+                <p  class="mt-2"><strong>Captures:</strong></p>
+                  <img v-if="notification.captures" width="150px" class="p-1 invoice-image" :src="notification.captures" alt="Invoice photos">
+                  <p v-else class="p-4">No Captures available</p>
+                
               </div>
             </div>
 
             <!-- Notification Item 3 -->
-            <div class="notification-main" v-if="notification.status === 1">
+            <div class="notification-main" v-if="notification.readUnreadStatus === 1">
               <div class="notification-item" @click="toggleNotification(notification.id)">
                 <div class="icon-circle mr-3">
                   <i class="fas fa-sync-alt"></i>
                 </div>
                 <div class="notification-content">
-                  <p><span class="highlight">{{ notification.title }}</span></p>
+                  <p><span class="highlight">{{ notification.message }}</span></p>
                   <small>{{ notification.date }}</small>
                 </div>
               </div>
-              <div v-show="openNotificationId === notification.id" class="notification-details">
-                <p>{{ notification.body }}.</p>
+              <div v-show="openNotificationId === notification.id" class="notification-details row">
+                <ul class="col-md-8 col-12 list-group-notification">
+                  <li><b>Customer Name:</b> {{ notification.customerName }}</li>
+                  <li><b>Device Id:</b> {{ notification.deviceId }}</li>
+                  <li><b>Alert Type:</b> {{ notification.alertType }}</li>
+                  <li><b>Coordinates:</b> {{ notification.coordinates }}</li>
+                  <li><b>Location:</b> {{ notification.location }}</li>
+                  <li><b>Vehicle Register Number:</b> {{ notification.vehicleRegisterNumber }}</li>
+                  <li><b>Status:</b> {{ notification.status }}</li>
+                </ul>
+                <div class="col-md-4 col-12">
+                <p class="mt-2"><strong>Captures:</strong></p>
+                <div class="capture-container">
+                  <img v-if="notification.captures"  class="p-1 invoice-image" :src="notification.captures" alt="Invoice photos">
+                  <p v-else class="p-4">No Captures available</p>
+                </div>
+              </div>
               </div>
             </div>
           </div>
@@ -253,6 +279,15 @@ const toggleNotification = async (id) => {
   }
 </style>
 <style scoped>
+.capture-container {
+    width: 85%;
+}
+.notification-details li {
+    padding-bottom: 10px;
+}
+.list-group-notification{
+  list-style-type: disc;
+}
 .notifications-searchbar-border .boder-class .form-control[data-v-9e7b69c8] {
     border-right: 1px solid rgb(209 213 219) !important;
     border-left: 0;
@@ -352,7 +387,7 @@ const toggleNotification = async (id) => {
   }
 
   .notification-details {
-      padding: 10px 10px;
+      padding: 20px 30px;
       background-color: #f1f1f1;
       margin-top: -5px;
       border-radius: 5px;

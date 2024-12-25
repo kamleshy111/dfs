@@ -36,6 +36,8 @@ Route::middleware('auth:sanctum')->group(function(){
 ## START: Admin Routes
     Route::get('/get-admin-stats', [AdminDashboardController::class, 'getAdminStats']);
 
+# user device notification get
+Route::get('/user-notifications', [NotificationController::class, 'userNotifications']); 
 
 ## END: Admin Routes
 });
