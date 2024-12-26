@@ -154,6 +154,9 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     # Notification
     Route::get('/notification/{vehicleId?}',[NotificationController::class, 'notification'])->name('notification');
 
+    # send email Vehicle Renewal
+    Route::get('/email/vehicle-renewal',[NotificationController::class, 'sendEmailVehicleRenewal'])->name('email.vehicle-renewal');
+
 });
 
 

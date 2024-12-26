@@ -24,7 +24,7 @@ const props = defineProps({
 
 const currentDate = ref("");
 
-const getNotification = async () => {
+const getNotificationHeader = async () => {
     try {
         const response = await axios.get('/api/get-notification');
         notifications.value = response.data.notifications || [];
@@ -34,16 +34,38 @@ const getNotification = async () => {
     }
 };
 
-const echo = window.Echo;
+const getNotification = () => {
+  window.Echo.channel('notification')
+    .listen('.received.notification', async (data) => {
+        console.log('Received data:', data);
+        try {
+            const response = await axios.get('/api/get-notification');
+            notifications.value = response.data.notifications || [];
+        } catch (error) {
+            console.error('Error fetching notifications:', error);
+        }
+    });
+};
 
-const pusherNotification = () => {
+const pushNotification = () => {
    /* window.Echo.connector.pusher.connection.bind('connected', () => {
         console.log('Laravel Echo successfully connected to Pusher');
     });*/
     window.Echo.channel('notification')
-        .listen('.test.notification', (data) => {
+        .listen('.received.notification', (data) => {
             console.log('Received data:', data);
+            adminUnreadCount.value += 1;
+        });
+};
 
+const readNotification = () => {
+   /* window.Echo.connector.pusher.connection.bind('connected', () => {
+        console.log('Laravel Echo successfully connected to Pusher');
+    });*/
+    window.Echo.channel('read-title')
+        .listen('.read.notification', (data) => {
+            console.log('Received data:', data);
+            adminUnreadCount.value -= 1;
         });
 };
 
@@ -81,8 +103,10 @@ onMounted(() => {
 
   currentDate.value = `${day}, ${date} ${month} ${year}`;
 
+    getNotificationHeader();
     getNotification();
-    pusherNotification();
+    pushNotification();
+    readNotification();
 });
 </script>
 <template>
@@ -111,15 +135,15 @@ onMounted(() => {
               <h5 class="dropdown-header-noti">
                 <span class="notification-title">Notifications</span>
               </h5>
-              <div class="d-flex align-items-center icon-box-profile" v-for="notification in notifications" :key="notification.id">
-                  <a :href="`/report?id=${notification.id}`">
+              <div class="icon-box-profile" v-for="notification in notifications" :key="notification.id">
+                  <a :href="`/report?id=${notification.id}`" class="d-flex align-items-center ">
 
                   <div class="icon-circle mr-3">
                     <i class="fas fa-sync-alt"></i>
                   </div>
                   <div>
                     <div style="line-height: 20px">
-                      <span class="status-text">{{ notification.title }}</span>
+                      <span class="status-text">{{ notification.message }}</span>
                     </div>
                     <div class="d-flex align-items-center muted-text mt-1">
                       <span class="time"
