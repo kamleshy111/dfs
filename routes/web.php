@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -38,27 +39,9 @@ Route::get('/pusher', function () {
 
 Route::view('pusher1','pusher');
 
-// Route::get('/dashboard', function () {
-//     return Inertia::render('Dashboard');
-// })->middleware(['auth', 'verified',  'role:admin'])->name('dashboard');
-
-// Route::get('/dashboard', function () {
-//     return Inertia::render('UserDashboard');
-// })->middleware(['auth', 'verified',  'role:user'])->name('dashboard');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', function () {
-        $user = Auth::user();
-        if ($user->role === 'admin') {
-            return Inertia::render('Dashboard', [
-                'role' => Auth::user()->role,  // Make sure 'role' is a field in the User model
-            ]);
-        } else {
-            return Inertia::render('UserDashboard', [
-                'role' => Auth::user()->role,  // Make sure 'role' is a field in the User model
-            ]);
-        }
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });
 
 
@@ -88,7 +71,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::group(['prefix' => 'devices'], function () {
         Route::get('/', [DeviceController::class, 'index'])->name('devices');
         Route::get('/create', [DeviceController::class, 'create'])->name('devices.create');
-        
+
         Route::post('/upload-excel', [DeviceController::class, 'importDevice'])->name('devices.upload-excel');
         Route::post('/import-chunk', [DeviceController::class, 'importChunk'])->name('devices.importChunk');
 

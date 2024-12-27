@@ -33,7 +33,7 @@ class NotificationAlert implements ShouldBroadcastNow
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('notification-alert'),
+            new PrivateChannel('notificationAlert'),
         ];
     }
 

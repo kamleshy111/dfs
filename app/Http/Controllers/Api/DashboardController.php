@@ -74,8 +74,8 @@ class DashboardController extends Controller
                 $lat_lng = [];
                 if (!empty($deviceAlert)) {
                     $lat_lng = [
-                        'lat' => floatval($deviceAlert['mlat'] ?? 0),
-                        'lng' => floatval($deviceAlert['mlng'] ?? 0)
+                        'lat' => floatval($device->mlat ?? 0),
+                        'lng' => floatval($device->mlng ?? 0)
                     ];
                 }
 
