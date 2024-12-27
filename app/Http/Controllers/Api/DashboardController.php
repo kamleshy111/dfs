@@ -71,26 +71,21 @@ class DashboardController extends Controller
                     $messageType = "inactive";
                 }
 
-                $lat_lng = [];
-                if (!empty($deviceAlert)) {
-                    $lat_lng = [
-                        'lat' => floatval($device->mlat ?? 0),
-                        'lng' => floatval($device->mlng ?? 0)
-                    ];
-                }
-
                 $locations[] = [
                     "position" => $this->getCoordinates($deviceAlert),
                     "title" => $device->device_id,
                     "content" => [
                         "device_id" => $device->device_id,
-                        'device_name' => 'Device Name' . $device->device_id,
+                        'device_name' => 'Device Name ' . $device->device_id,
                         'message' => $message,
                         'url' => '',
                         'message_type' => $messageType,
-                        'last_active' => $deviceAlert['gt'] ?? "",
+                        'last_active' => $device->last_active ?? "",
                         'photo' => 'https://img.freepik.com/free-vector/truck_53876-34798.jpg',
-                        'lat_lng' => $lat_lng,
+                        'lat_lng' => [
+                            'lat' => floatval($device->latitude ?? 0),
+                            'lng' => floatval($device->longitude ?? 0)
+                        ],
                     ]
                 ];
             }
