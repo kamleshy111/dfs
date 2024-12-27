@@ -30,11 +30,13 @@ class NotificationAlert implements ShouldBroadcastNow
      *
      * @return array<int, \Illuminate\Broadcasting\Channel>
      */
-    public function broadcastOn(): array
+    public function broadcastOn()
     {
-        return [
-            new PrivateChannel('notificationAlert'),
-        ];
+        // return [
+        //     new PrivateChannel('notificationAlert'),
+        // ];
+
+        return 'notificationAlert';
     }
 
     /**

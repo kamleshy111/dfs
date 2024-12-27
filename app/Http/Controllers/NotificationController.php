@@ -17,37 +17,6 @@ use Carbon\Carbon;
 
 class NotificationController extends Controller
 {
-    public function notification(Request $request,$vehicleId){
-
-      
-        $vehicle = Vehicle::select('vehicles.id', 'vehicles.device_id','vehicles.vehicle_register_number as vehicleRegisterNumber')
-                    ->where('vehicles.id', '=', $vehicleId)
-                    ->first();
-
-        $message = "My vehicle Register Number {$vehicle->vehicleRegisterNumber} is due for subscription renewal.";
-
-
-        $data = Alert::create([
-            'device_id' => $vehicle->device_id,
-            'latitude' => '999.89',
-            'longitude' => '-68886.77',
-            'location' => 'jaipur',
-            'status' => 'inactive',
-            'read_unread_status' => '0',
-            'captures' => '/storage/InvoicePhotos/67616b5176aa0.jpg',
-            'alert_type' => 'emergency',
-            'message' => $message,
-
-            
-        ]);
-
-        event(new NotificationCreate([
-          'vehicleId' => $data->vehicle_id,
-        ]));
-    
-        
-            return response()->json(['message' => 'Vehicle Renewal Reminder']);
-    }
 
     public function sendEmailVehicleRenewal()
     {

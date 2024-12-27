@@ -29,16 +29,16 @@ const validationErrors = ref({ startDate: "", endDate: "" });
 
 
 const NotificationCreateCount = () => {
-    window.Echo.channel('notification')
-        .listen('.received.notification', (data) => {
+    window.Echo.channel('notificationAlert')
+        .listen('.alert.notification', (data) => {
             console.log('Total Count data:', data);
             totalCount.value++;
         });
 };
 
 const notificationGetAll = () => {
-  window.Echo.channel('notification')
-    .listen('.received.notification', async (data) => {
+  window.Echo.channel('notificationAlert')
+    .listen('.alert.notification', async (data) => {
         console.log('Received all message:', data);
         try {
             const response = await axios.get('/api/allNotifications');
