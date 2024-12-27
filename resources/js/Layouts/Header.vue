@@ -213,7 +213,7 @@ onMounted(() => {
               <div class="icon-profile-bell">
                 <i class="bi bi-bell animate-bell"></i>
                 <!-- Notification badge for unread notifications -->
-                <span class="notification-badge">4</span>
+                <span class="notification-badge"></span>
               </div>
             </button>
             <ul
@@ -224,12 +224,6 @@ onMounted(() => {
               <h5 class="dropdown-header-noti">
                 <span class="notification-title">Notifications</span>
               </h5>
-
-              <div class="d-flex align-items-center icon-box-profile">
-                <div class="icon-circle mr-3">
-                  <i class="fas fa-sync-alt"></i>
-                </div>
-              </div>
               <div class="text-center mt-2">
                 <a :href="`/monitor`" class="status-text">view more</a>
               </div>
