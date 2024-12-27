@@ -10,7 +10,6 @@ import axios from 'axios';
 
 const notifications = ref([]);
 const adminUnreadCount = ref(0);
-const role = ref('admin');
 const props = defineProps({
     role: {
         type: String,
@@ -35,8 +34,8 @@ const getNotificationHeader = async () => {
 };
 
 const getNotification = () => {
-  window.Echo.channel('notification')
-    .listen('.received.notification', async (data) => {
+  window.Echo.channel('notificationAlert')
+    .listen('.alert.notification', async (data) => {
         console.log('Received data:', data);
         try {
             const response = await axios.get('/api/get-notification');
@@ -51,17 +50,14 @@ const pushNotification = () => {
    /* window.Echo.connector.pusher.connection.bind('connected', () => {
         console.log('Laravel Echo successfully connected to Pusher');
     });*/
-    window.Echo.channel('notification')
-        .listen('.received.notification', (data) => {
+    window.Echo.channel('notificationAlert')
+        .listen('.alert.notification', (data) => {
             console.log('Received data:', data);
             adminUnreadCount.value += 1;
         });
 };
 
 const readNotification = () => {
-   /* window.Echo.connector.pusher.connection.bind('connected', () => {
-        console.log('Laravel Echo successfully connected to Pusher');
-    });*/
     window.Echo.channel('read-title')
         .listen('.read.notification', (data) => {
             console.log('Received data:', data);
@@ -217,7 +213,7 @@ onMounted(() => {
               <div class="icon-profile-bell">
                 <i class="bi bi-bell animate-bell"></i>
                 <!-- Notification badge for unread notifications -->
-                <span class="notification-badge">4</span>
+                <span class="notification-badge"></span>
               </div>
             </button>
             <ul
@@ -228,69 +224,8 @@ onMounted(() => {
               <h5 class="dropdown-header-noti">
                 <span class="notification-title">Notifications</span>
               </h5>
-              <div class="d-flex align-items-center icon-box-profile">
-                <div class="icon-circle mr-3">
-                  <i class="fas fa-sync-alt"></i>
-                </div>
-                <div>
-                  <div style="line-height: 20px">
-                    <span class="status-text">Your bid is placed</span>
-                    <span class="text-muted"> waiting for auction ended</span>
-                  </div>
-                  <div class="d-flex align-items-center muted-text mt-1">
-                    <span class="time"
-                      ><i class="bi bi-clock mr-1"></i> 24 Minutes ago</span
-                    >
-                  </div>
-                </div>
-              </div>
-              <div class="d-flex align-items-center icon-box-profile">
-                <div class="icon-circle mr-3">
-                  <i class="fas fa-sync-alt"></i>
-                </div>
-                <div>
-                  <div style="line-height: 20px">
-                    <span class="status-text">Your bid is placed</span>
-                    <span class="text-muted"> waiting for auction ended</span>
-                  </div>
-                  <div class="d-flex align-items-center muted-text mt-1">
-                    <span class="time"
-                      ><i class="bi bi-clock mr-1"></i> 24 Minutes ago</span
-                    >
-                  </div>
-                </div>
-              </div>
-              <div class="d-flex align-items-center icon-box-profile">
-                <div class="icon-circle mr-3">
-                  <i class="fas fa-sync-alt"></i>
-                </div>
-                <div>
-                  <div style="line-height: 20px">
-                    <span class="status-text">Your bid is placed</span>
-                    <span class="text-muted"> waiting for auction ended</span>
-                  </div>
-                  <div class="d-flex align-items-center muted-text mt-1">
-                    <span class="time"
-                      ><i class="bi bi-clock mr-1"></i> 24 Minutes ago</span
-                    >
-                  </div>
-                </div>
-              </div>
-              <div class="d-flex align-items-center icon-box-profile">
-                <div class="icon-circle mr-3">
-                  <i class="fas fa-sync-alt"></i>
-                </div>
-                <div>
-                  <div style="line-height: 20px">
-                    <span class="status-text">Your bid is placed</span>
-                    <span class="text-muted"> waiting for auction ended</span>
-                  </div>
-                  <div class="d-flex align-items-center muted-text mt-1">
-                    <span class="time"
-                      ><i class="bi bi-clock mr-1"></i> 24 Minutes ago</span
-                    >
-                  </div>
-                </div>
+              <div class="text-center mt-2">
+                <a :href="`/monitor`" class="status-text">view more</a>
               </div>
             </ul>
           </div>

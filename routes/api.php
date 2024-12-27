@@ -28,10 +28,10 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::get('/get-devices', [DashboardController::class, 'getMapDevices'])->name('get-devices');
 
 # Role:User -> Monitor
-    Route::get('/get-device-notifications', [MonitorController::class, 'getNotifications'])->name('get-device-notifications');
+    // Route::get('/get-device-notifications', [MonitorController::class, 'getNotifications'])->name('get-device-notifications');
 
-    Route::get('/get-billing-invoices', [BillingController::class, 'getBillingInvoices'])->name('get-device-notifications');
-    Route::get('/get-devices-1', [MonitorController::class, 'getDevices'])->name('get-devices');
+    // Route::get('/get-billing-invoices', [BillingController::class, 'getBillingInvoices'])->name('get-device-notifications');
+    // Route::get('/get-devices-1', [MonitorController::class, 'getDevices'])->name('get-devices');
 
 ## START: Admin Routes
     Route::get('/get-admin-stats', [AdminDashboardController::class, 'getAdminStats']);

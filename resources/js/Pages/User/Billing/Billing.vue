@@ -51,41 +51,9 @@ const columns = [
     { data: 'deviceName' },
     { data: 'startData'},
     { data: 'duration'},
-    { data: 'expiresDate' },
-    {
-        title: 'Actions',
-        data: null,
-        render: (data, type, row) => {
-        return `
-            <div class="icon-all-dflex">
-              <a href="javascript:void(0);" class="btn btn-light action-btn notify-btn" data-device="${data.id}">
-                <i class="bi bi-bell"></i>
-              </a>
-              </div>
-            `;
-        }
-    }
+    { data: 'expiresDate' }
 ];
 
-onMounted(() => {
-  document.querySelectorAll(".notify-btn").forEach(button => {
-    button.addEventListener('click', () => {
-      const id = button.getAttribute('data-device');
-      RenewalDevices(id)
-    });
-  });
-});
-
-const RenewalDevices = async (id ) => {
-    try {
-        const response = await axios.get(`/notification/${id}`);
-        toast.success(response.data.message);
-        // devices.value = response.data.devices;
-    } catch (error) {
-        console.error("Error Vehicle Renewal Reminder:", error);
-        toast.error("Failed to message. Please try again.");
-    }
-};
 </script>
 
 <template>
@@ -130,7 +98,6 @@ const RenewalDevices = async (id ) => {
                   <th scope="col">Start Date</th>
                   <th scope="col">Duration</th>
                   <th scope="col">Expired Date</th>
-                  <th scope="col">Action</th>
                 </tr>
               </thead>
             </DataTable>

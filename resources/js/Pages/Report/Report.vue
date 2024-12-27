@@ -29,16 +29,16 @@ const validationErrors = ref({ startDate: "", endDate: "" });
 
 
 const NotificationCreateCount = () => {
-    window.Echo.channel('notification')
-        .listen('.received.notification', (data) => {
+    window.Echo.channel('notificationAlert')
+        .listen('.alert.notification', (data) => {
             console.log('Total Count data:', data);
             totalCount.value++;
         });
 };
 
 const notificationGetAll = () => {
-  window.Echo.channel('notification')
-    .listen('.received.notification', async (data) => {
+  window.Echo.channel('notificationAlert')
+    .listen('.alert.notification', async (data) => {
         console.log('Received all message:', data);
         try {
             const response = await axios.get('/api/allNotifications');
@@ -224,7 +224,6 @@ const toggleNotification = async (id) => {
                 <p>Location : {{ notification.location }}</p>
                 <p>Alert Type : {{ notification.alertType }}</p>
                 <p>Vehicle Register Number : {{ notification.vehicleRegisterNumber }}</p>
-                <p>Status : {{ notification.status }}</p>
                 <p  class="mt-2"><strong>Captures:</strong></p>
                   <img v-if="notification.captures" width="150px" class="p-1 invoice-image" :src="notification.captures" alt="Invoice photos">
                   <p v-else class="p-4">No Captures available</p>
@@ -251,7 +250,6 @@ const toggleNotification = async (id) => {
                   <li><b>Coordinates:</b> {{ notification.coordinates }}</li>
                   <li><b>Location:</b> {{ notification.location }}</li>
                   <li><b>Vehicle Register Number:</b> {{ notification.vehicleRegisterNumber }}</li>
-                  <li><b>Status:</b> {{ notification.status }}</li>
                 </ul>
                 <div class="col-md-4 col-12">
                 <p class="mt-2"><strong>Captures:</strong></p>

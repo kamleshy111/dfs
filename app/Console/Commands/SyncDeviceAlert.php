@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\Device;
 use App\Services\AlertService;
 use Illuminate\Console\Command;
+use App\Models\Alert;
 
 class SyncDeviceAlert extends Command
 {
@@ -74,14 +75,82 @@ class SyncDeviceAlert extends Command
                             'message_type' => $messageType,
                             'last_active' => $device->last_active ?? "",
                             'lat_lng' => [
-                                'lat' => floatval($device->mlat ?? 0),
-                                'lng' => floatval($device->mlng ?? 0)
+                                'lat' => floatval($device->latitude ?? 0),
+                                'lng' => floatval($device->longitude ?? 0)
                             ]
                         ]
                     ];
+
+                    $device_id = $device->device_id;
+
+                    $lat = floatval($device->latitude);
+                    $long = floatval($device->longitude);
+
+                    $deviceId = $device->id;
+
+                    $deviceAlertItem = $deviceAlertResult->first(function ($item) use ( $device_id ) {
+                        return $item['id'] === $device_id;
+                    });
+
+                    $alertType = "Normal";
+                    $alermAlert = '';
+
+                    $alertMessages = [
+                        'aq' => 'aq Alerm message',
+                        'adas1' => 'adas1 Alerm message',
+                        'adas2' => 'adas2 Alerm message',
+                        'dsm1' => 'dsm1 Alerm message',
+                        'dsm2' => 'dsm2 Alerm message',
+                        'bsd1' => 'bsd1 Alerm message',
+                        'bsd2' => 'bsd2 Alerm message',
+                        'cet' => 'cet Alerm message',
+                        'wc' => 'wc Alerm message',
+                        'p1' => 'p1 Alerm message',
+                    ];
+                    
+                    foreach ($alertMessages as $key => $message) {
+
+                        if (!empty($deviceAlertItem) && isset($deviceAlertItem[$key]) && $deviceAlertItem[$key] > 0) {
+                            $alermAlert = $message;
+                            $alertType = 'Danger';
+                            break;
+                        }
+                    }
+                    
+
+                    if($alermAlert){
+
+                        $alert = Alert::create([
+                            'device_id' => $deviceId,
+                            'latitude' => $lat ?? 0,
+                            'longitude' => $long ?? 0,
+                            'location' =>  '',
+                            'read_unread_status' => 0,
+                            'captures' => $deviceAlertItem["capture"] ?? '' ,
+                            'message' => $alermAlert ?? '--',
+                            'alert_type' => $alertType ?? '',
+                            
+                        ]);
+
+                        $allAlert[] = [
+                            "alertId" => $alert->id ?? 0,
+                            "deviceId" => $alert->device_id ?? 0,
+                            "latitude" => $alert->latitude ?? '',
+                            "longitude" => $alert->longitude ?? '',
+                            "location" => $alert->location ?? '',
+                            "read_unread_status" => $alert->read_unread_status ?? 0,
+                            "captures" => $alert->captures ?? '---',
+                            "message" => $alermAlert  ?? '',
+                            "alert_type" => $alert->alert_type ?? '',
+                        ];  
+                        
+                    }
+                    
                 }
 
             event(new NotificationCreate($locations));
+
+            event(new NotificationAlert($allAlert));
         }
     }
 }

@@ -51,13 +51,13 @@ const goBack = () => {
                 <h4 class="mt-2 client-name">Customer Name:  <span>{{ props.devices.customerFirstName }} {{ props.devices.customerLsatName }}</span></h4>
              
                 <p class="mt-2 client-name">Vehicle Type :  <span>{{ props.devices.vehicleType }}</span></p>
-                <p class="mt-2 client-name">Vehicle Name:  <span>{{ props.devices.vehicleName }}</span></p>
                 <p class="mt-2 client-name">Vehicle Register Number:  <span>{{ props.devices.vehicleRegisterNumber }}</span></p>
             
                 <p class="mt-2 client-name">SIM Operator :  <span>{{ props.devices.simOperator }}</span></p>
+                <p class="mt-2 client-name">SIM Card Number :  <span>{{ props.devices.simCardNumber }}</span></p>
               </div>
               <div class="col-md-4">
-                <p class="mt-2 client-name">SIM Card Number :  <span>{{ props.devices.simCardNumber }}</span></p>
+                
                 <p class="mt-2 client-name">IMEI Number :  <span>{{ props.devices.imeiNumber }}</span></p>
             
                 <p class="mt-2 client-name">Installation Date :  <span>{{ props.devices.installationDate }}</span></p>

@@ -131,11 +131,8 @@ Route::middleware(['auth', 'role:user'])->group(function () {
 
     # Monitor
     Route::group(['prefix' => 'monitor'], function () {
-        Route::get('/{device_id}', [MonitorController::class, 'index'])->name('monitor');
+        Route::get('/{device_id?}', [MonitorController::class, 'index'])->name('monitor');
     });
-
-    # Notification
-    Route::get('/notification/{vehicleId?}',[NotificationController::class, 'notification'])->name('notification');
 
     # send email Vehicle Renewal
     Route::get('/email/vehicle-renewal',[NotificationController::class, 'sendEmailVehicleRenewal'])->name('email.vehicle-renewal');

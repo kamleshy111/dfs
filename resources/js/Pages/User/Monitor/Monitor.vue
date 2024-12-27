@@ -27,7 +27,6 @@ const columns = [
     render: (data, type, row) => `${row.latitude}, ${row.longitude}`
   },
   {data: 'location' },
-  {data: 'status' },
   { 
     title: 'Captures', 
     render: (data, type, row) => {
@@ -50,9 +49,23 @@ const fetchNotifications = async () => {
   }
 };
 
+const getNotificationUser = () => {
+  window.Echo.channel('notificationAlert')
+    .listen('.alert.notification', async (data) => {
+        console.log('Received data:', data);
+        try {
+            const response = await axios.get('/api/user-notifications');
+            notifications.value = response.data.notifications || [];
+        } catch (error) {
+            console.error('Error fetching notifications:', error);
+        }
+    });
+};
+
 
 onMounted(() => {
   fetchNotifications();
+  getNotificationUser();
 });
 </script>
 
@@ -78,7 +91,6 @@ onMounted(() => {
                   <th scope="col">Device ID</th>
                   <th scope="col">Coordinates</th>
                   <th scope="col">Location</th>
-                  <th scope="col">Status</th>
                   <th scope="col">Captures</th>
                   <th scope="col">Message</th>
                   <th scope="col">Alert</th>
