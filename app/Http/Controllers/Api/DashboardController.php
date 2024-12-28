@@ -40,39 +40,28 @@ class DashboardController extends Controller
         }
 
         $locations = [];
-        $deviceIds = $devices->pluck('device_id')->implode(',');
-        $courseSyncService = app(AlertService::class);
-        $deviceCurrentStatus = $courseSyncService->getDeviceAlert($deviceIds);
-
-        $deviceAlertResult = collect([]);
-        if (isset($deviceCurrentStatus['result']) && $deviceCurrentStatus['result'] === 0) {
-            $deviceAlertResult = collect($deviceCurrentStatus['status']);
-        }
 
         foreach ($devices as $index => $device) {
             if( $status == 'all' || $status == $device->status ) {
                 $message = '';
                 $messageType = 'alert';
-                $deviceAlert = [];
-                $device_id = $device->device_id;
 
-                $deviceAlertItem = $deviceAlertResult->first(function ($item) use ($device_id) {
-                    return $item['id'] === $device_id;
-                });
-
-                if (empty($deviceAlertItem) || (isset($device['status']) && $device['status'] == 2)) {
-                    $message = $deviceAlertItem['message']?? "Device not found";
+                if (isset($device['status']) && $device['status'] == 2) {
+                    $message = "Device not found";
                     $messageType = "danger";
-                } else if (isset($device['status']) && $device['status'] == 1 && $deviceAlertItem['ol'] == 1){
-                    $deviceAlert = $deviceAlertItem;
+                } else if (isset($device['status']) && $device['status'] == 1){
                     $messageType = "normal";
-                } else if (isset($device['status']) && $device['status'] == 1 && $deviceAlertItem['ol'] == 0){
-                    $deviceAlert = $deviceAlertItem;
+                    $message = "Device is online";
+                } else if (isset($device['status']) && $device['status'] == 0){
                     $messageType = "inactive";
+                    $message = "Device is offline";
                 }
 
                 $locations[] = [
-                    "position" => $this->getCoordinates($deviceAlert),
+                    "position" => [
+                        'lat' => floatval($device->latitude ?? 0),
+                        'lng' => floatval($device->longitude ?? 0)
+                    ],
                     "title" => $device->device_id,
                     "content" => [
                         "device_id" => $device->device_id,
@@ -92,17 +81,7 @@ class DashboardController extends Controller
         }
 
         return response()->json([
-            'locations' => $locations,
-            'customer_id' => 1
+            'locations' => $locations
         ]);
-    }
-
-    public function getCoordinates($deviceAlert)
-    {
-
-        return [
-            'lat' => floatval($deviceAlert['mlat'] ?? 0),
-            'lng' => floatval($deviceAlert['mlng'] ?? 0)
-        ];
     }
 }
