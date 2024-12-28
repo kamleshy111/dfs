@@ -53,6 +53,7 @@ class SyncDeviceAlert extends Command
 
             $updatedDevices = Device::get();
             $locations = [];
+            $allAlert = [];
             foreach ($updatedDevices as $index => $device) {
                     $messageType = 'alert';
                     if ($device->status == 2) {
