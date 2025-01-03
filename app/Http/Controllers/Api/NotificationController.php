@@ -36,7 +36,7 @@ class NotificationController extends Controller
                             'vehicles.vehicle_register_number',
                         )
                         ->leftJoin('devices', 'alerts.device_id', '=', 'devices.id')
-                        ->leftJoin('vehicles', 'devices.id', '=', 'vehicles.device_id') 
+                        ->leftJoin('vehicles', 'devices.id', '=', 'vehicles.device_id')
                         ->leftJoin('customers', 'vehicles.customer_id', '=', 'customers.id');
 
         // Filter by search vehicle registerSearch
@@ -103,7 +103,7 @@ class NotificationController extends Controller
             'notifications' => $notifications,
             'totalCount' => $notifications->total(),
         ]);
-        
+
 
     }
 
@@ -113,12 +113,12 @@ class NotificationController extends Controller
                         ->orderBy('created_at', 'desc')
                         ->take(10)
                         ->get();
-    
+
             $notifications = $data->map(function($item) {
-      
+
                 $assignedDate = Carbon::create($item->created_at);
                 $currentDate = Carbon::now();
-        
+
                 $minutesDifference = $assignedDate->diffInMinutes($currentDate);
                 if($minutesDifference < 1440 && $minutesDifference >= 60) {
                     $comment_date = round($minutesDifference/60) . ' hours ago';
@@ -144,9 +144,9 @@ class NotificationController extends Controller
 
     public function markAsRead($id) {
 
-        
+
         $notification = Alert::findOrFail($id);
- 
+
         $notification->update(['read_unread_status' => 1]);
 
         event(new NotificationRead([
@@ -166,7 +166,7 @@ class NotificationController extends Controller
                    'alerts.captures', 'alerts.message', 'alerts.alert_type', 'alerts.created_at as date', 'devices.device_id as deviceId', 'customers.id as customerId',
                     )
                     ->leftJoin('devices', 'alerts.device_id', '=', 'devices.id')
-                    ->leftJoin('vehicles', 'devices.id', '=', 'vehicles.device_id') 
+                    ->leftJoin('vehicles', 'devices.id', '=', 'vehicles.device_id')
                     ->leftJoin('customers', 'vehicles.customer_id', '=', 'customers.id')
                     ->where('customers.Id', $customerId)
                     ->get();
@@ -189,5 +189,5 @@ class NotificationController extends Controller
             'notifications' => $notifications,
         ]);
     }
-    
+
 }

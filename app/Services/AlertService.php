@@ -18,18 +18,25 @@ class AlertService
         $this->apiBaseUrl = $apiTokenService->apiBaseUrl;
     }
 
-    public function getDeviceAlert($deviceId = 0)
+    public function getDeviceAlert($deviceId = 0, $begintime = '2024-11-12 16:00:00', $endtime = '2024-12-13 12:00:00')
     {
         $this->deviceId = $deviceId;
         try {
             $accessToken = $this->apiTokenService->getAccessToken();
-            $response = Http::get($this->apiBaseUrl . '/StandardApiAction_getDeviceStatus.action',[
+            $response = Http::get($this->apiBaseUrl . '/StandardApiAction_queryPhoto.action', [
+                'jsession' => $accessToken,
+                'devIdno' => $this->deviceId,
+                'begintime' => $begintime,
+                'endtime' => $endtime,
+            ]);
+            /*$response = Http::get($this->apiBaseUrl . '/StandardApiAction_getDeviceStatus.action',[
                 'jsession' => $accessToken,
                 'devIdno' => $this->deviceId,
                 'toMap' => '1',
                 'driver' => '0',
                 'language' => 'zh',
-            ]);
+            ]);*/
+
 
             if ($response->successful()) {
                 $xmlContent = $response->body();

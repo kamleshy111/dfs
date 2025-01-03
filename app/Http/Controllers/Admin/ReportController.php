@@ -12,14 +12,14 @@ use Carbon\Carbon;
 
 class ReportController extends Controller
 {
-    public function index(Request $request){ 
+    public function index(Request $request){
 
         $notificationsId = $request->query('id');
         $notification = Alert::find($notificationsId);
 
         if ($notification) {
             $notification->read_unread_status = 1;
-            $notification->save(); 
+            $notification->save();
 
             $notificationsId = $notification->id;
         }

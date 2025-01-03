@@ -8,42 +8,38 @@ use Illuminate\Support\Facades\Http;
 
 class DeviceInfoService
 {
-    protected $apiTokenService;
-    protected $courseRepository;
-    protected $apiBaseUrl;
+    protected ApiTokenService $apiTokenService;
+    public string $apiBaseUrl;
+    public string $deviceId;
 
-    public function __construct(ApiTokenService $apiTokenService, CourseRepository $courseRepository)
+    public function __construct(ApiTokenService $apiTokenService)
     {
         $this->apiTokenService = $apiTokenService;
-        $this->courseRepository = $courseRepository;
-        $this->apiBaseUrl = AppSettings::where('key', 'ispring-api-base-url')->value('value');
+        $this->apiBaseUrl = $apiTokenService->apiBaseUrl;
     }
 
-    public function index()
+    public function getDeviceStatus($deviceId = 0)
     {
+        $this->deviceId = $deviceId;
         try {
             $accessToken = $this->apiTokenService->getAccessToken();
-            $response = Http::withToken($accessToken)->get($this->apiBaseUrl . '/department');
+            $response = Http::get($this->apiBaseUrl . '/StandardApiAction_getDeviceStatus.action',[
+                'jsession' => $accessToken,
+                'devIdno' => $this->deviceId,
+                'toMap' => '1',
+                'driver' => '0',
+                'language' => 'zh',
+            ]);
+
 
             if ($response->successful()) {
                 $xmlContent = $response->body();
-                // Parse the XML
-                $xml = simplexml_load_string($xmlContent);
-                $json = json_encode($xml);
-                $jsonDepartmentData = json_decode($json, true);
-                $departments = $jsonDepartmentData['department'] ?? [];
-                return collect($departments);
+                return json_decode($xmlContent, true);
             } else {
-                throw new \Exception('Failed to sync courses: ' . $response->body());
+                throw new \Exception('Failed to get alert: ' . $response->body());
             }
         } catch (Exception $e) {
-            logger()->error('Failed to sync courses: ' . $e->getMessage());
-        }
-    }
-
-    public function dropDownOptions() {
-        if (!empty($this->index())) {
-            return $this->index()->pluck('name', 'departmentId');
+            logger()->error('Failed to get alert: ' . $e->getMessage());
         }
     }
 }

@@ -82,10 +82,10 @@ const getData = async(page = 1) =>{
         device_id: deviceId.value,
         startDate: startDate.value,
         endDate: endDate.value,
-        
+
       },
     });
-    
+
     notifications.value = res.data.notifications;
     totalCount.value = res.data.totalCount;
   } catch (error) {
@@ -111,10 +111,10 @@ onMounted(() => {
 const toggleNotification = async (id) => {
   const notification = notifications.value.data.find((n) => n.id === id);
   if (notification) {
-   
+
     if (notification.readUnreadStatus === 0) {
       try {
-        // Update notification read unread status 
+        // Update notification read unread status
         await axios.post(`/api/notifications/${id}/mark-as-read`);
         notification.readUnreadStatus = 1;
       } catch (error) {
@@ -209,7 +209,7 @@ const toggleNotification = async (id) => {
                 <div class="icon-circle mr-3">
                   <i class="fas fa-sync-alt"></i>
                 </div>
-               
+
                 <div class="notification-content">
                   <p><span class="highlight">{{ notification.message }}</span></p>
                   <small>{{ notification.date }}</small>
@@ -227,7 +227,7 @@ const toggleNotification = async (id) => {
                 <p  class="mt-2"><strong>Captures:</strong></p>
                   <img v-if="notification.captures" width="150px" class="p-1 invoice-image" :src="notification.captures" alt="Invoice photos">
                   <p v-else class="p-4">No Captures available</p>
-                
+
               </div>
             </div>
 
@@ -261,8 +261,8 @@ const toggleNotification = async (id) => {
               </div>
             </div>
           </div>
-          <Bootstrap5Pagination 
-                :data="notifications" 
+          <Bootstrap5Pagination
+                :data="notifications"
                 @pagination-change-page="getData"
             />
         </div>

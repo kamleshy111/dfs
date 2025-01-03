@@ -21,3 +21,27 @@ if (!function_exists('formatAmount')) {
         return number_format($amount, $precision); // Less than 1000
     }
 }
+
+if (!function_exists('alarmTypeDescription')) {
+
+    function alarmTypeDescription($alarmType = 0)
+    {
+       $errorList = [
+            '622' => 'Smoking Alarm Level One Start',
+            '623' => 'Smoking Alarm Level Two Start',
+            '624' => 'Distracted Driving Alarm Level One Start',
+            '625' => 'Distracted Driving Alarm Level Two Start',
+            '626' => 'Driver Abnormal Alarm Level One Start',
+            '627' => 'Driver Abnormal Alarm Level Two Start',
+            '628' => 'Automatic Capture Event Level One Start',
+            '629' => 'Automatic Capture Event Level Two Start',
+            '630' => 'Driver Change Event Level One Start',
+            '631' => 'Driver Change Event Level Two Start',
+            '632' => 'Tire Pressure Alarm Start',
+        ];
+
+        return $errorList[$alarmType] ?? '';
+    }
+}
+
+

@@ -35,8 +35,7 @@ class NotificationAlert implements ShouldBroadcastNow
         // return [
         //     new PrivateChannel('notificationAlert'),
         // ];
-
-        return 'notificationAlert';
+        return new Channel('notificationAlert');
     }
 
     /**
