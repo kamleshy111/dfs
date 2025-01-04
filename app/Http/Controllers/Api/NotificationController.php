@@ -35,7 +35,7 @@ class NotificationController extends Controller
                             'devices.device_id as deviceId',
                             'vehicles.vehicle_register_number',
                         )
-                        ->leftJoin('devices', 'alerts.device_id', '=', 'devices.id')
+                        ->leftJoin('devices', 'alerts.device_id', '=', 'devices.device_id')
                         ->leftJoin('vehicles', 'devices.id', '=', 'vehicles.device_id')
                         ->leftJoin('customers', 'vehicles.customer_id', '=', 'customers.id');
 

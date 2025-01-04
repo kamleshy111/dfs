@@ -23,7 +23,7 @@ const props = defineProps({
 
 const currentDate = ref("");
 
-const getNotificationHeader = async () => {
+const fetchNotifications = async () => {
     try {
         const response = await axios.get('/api/get-notification');
         notifications.value = response.data.notifications || [];
@@ -33,36 +33,13 @@ const getNotificationHeader = async () => {
     }
 };
 
-const getNotification = () => {
-  window.Echo.channel('notificationAlert')
-    .listen('.alert.notification', async (data) => {
-        console.log('Received data:', data);
-        try {
-            const response = await axios.get('/api/get-notification');
-            notifications.value = response.data.notifications || [];
-        } catch (error) {
-            console.error('Error fetching notifications:', error);
-        }
-    });
-};
-
-const pushNotification = () => {
-   /* window.Echo.connector.pusher.connection.bind('connected', () => {
-        console.log('Laravel Echo successfully connected to Pusher');
-    });*/
-    window.Echo.channel('notificationAlert')
-        .listen('.alert.notification', (data) => {
-            console.log('Received data:', data);
-            adminUnreadCount.value += 1;
-        });
-};
-
 const readNotification = () => {
+    window.Echo.channel('notificationAlert')
+        .listen('.alert.notification', fetchNotifications);
+
     window.Echo.channel('read-title')
-        .listen('.read.notification', (data) => {
-            console.log('Received data:', data);
-            adminUnreadCount.value -= 1;
-        });
+        .listen('.read.notification', fetchNotifications);
+
 };
 
 onMounted(() => {
@@ -99,9 +76,7 @@ onMounted(() => {
 
   currentDate.value = `${day}, ${date} ${month} ${year}`;
 
-    getNotificationHeader();
-    getNotification();
-    pushNotification();
+    fetchNotifications();
     readNotification();
 });
 </script>
