@@ -82,10 +82,10 @@ const getData = async(page = 1) =>{
         device_id: deviceId.value,
         startDate: startDate.value,
         endDate: endDate.value,
-
+        
       },
     });
-
+    
     notifications.value = res.data.notifications;
     totalCount.value = res.data.totalCount;
   } catch (error) {
@@ -111,10 +111,10 @@ onMounted(() => {
 const toggleNotification = async (id) => {
   const notification = notifications.value.data.find((n) => n.id === id);
   if (notification) {
-
+   
     if (notification.readUnreadStatus === 0) {
       try {
-        // Update notification read unread status
+        // Update notification read unread status 
         await axios.post(`/api/notifications/${id}/mark-as-read`);
         notification.readUnreadStatus = 1;
       } catch (error) {
@@ -122,6 +122,18 @@ const toggleNotification = async (id) => {
       }
     }
     openNotificationId.value = openNotificationId.value === id ? null : id;
+  }
+};
+
+// Download image method
+const downloadImage = (notification) => {
+  if (notification.captures) {
+    const link = document.createElement('a');
+    link.href = notification.captures;
+    link.download = 'alert-capture.jpg';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 };
 </script>
@@ -209,25 +221,12 @@ const toggleNotification = async (id) => {
                 <div class="icon-circle mr-3">
                   <i class="fas fa-sync-alt"></i>
                 </div>
-
+               
                 <div class="notification-content">
                   <p><span class="highlight">{{ notification.message }}</span></p>
                   <small>{{ notification.date }}</small>
                 </div>
                 <i class="unread-dot"></i>
-              </div>
-              <div v-show="openNotificationId === notification.id" class="notification-details">
-                <p>Message : {{ notification.message }}</p>
-                <p>Device Id : {{ notification.deviceId }}</p>
-                <p>Customer Name : {{ notification.customerName }}</p>
-                <p>Coordinates : {{ notification.coordinates }} </p>
-                <p>Location : {{ notification.location }}</p>
-                <p>Alert Type : {{ notification.alertType }}</p>
-                <p>Vehicle Register Number : {{ notification.vehicleRegisterNumber }}</p>
-                <p  class="mt-2"><strong>Captures:</strong></p>
-                  <img v-if="notification.captures" width="150px" class="p-1 invoice-image" :src="notification.captures" alt="Invoice photos">
-                  <p v-else class="p-4">No Captures available</p>
-
               </div>
             </div>
 
@@ -252,17 +251,23 @@ const toggleNotification = async (id) => {
                   <li><b>Vehicle Register Number:</b> {{ notification.vehicleRegisterNumber }}</li>
                 </ul>
                 <div class="col-md-4 col-12">
-                <p class="mt-2"><strong>Captures:</strong></p>
-                <div class="capture-container">
-                  <img v-if="notification.captures"  class="p-1 invoice-image" :src="notification.captures" alt="Invoice photos">
-                  <p v-else class="p-4">No Captures available</p>
-                </div>
+
+                <button  style="font-size: 15px; padding: 7px 13px !important;"
+                    v-if="notification.captures"  @click="downloadImage(notification)" class="p-2 bg-blue-500 text-white rounded" >
+                    Download Photo
+                </button>
+
+                <button style="font-size: 15px; padding: 7px 13px !important;"
+                    v-else  class="p-2 bg-gray-500 text-white rounded cursor-not-allowed"  disabled >
+                    Download Photo
+                </button>
+                
               </div>
               </div>
             </div>
           </div>
-          <Bootstrap5Pagination
-                :data="notifications"
+          <Bootstrap5Pagination 
+                :data="notifications" 
                 @pagination-change-page="getData"
             />
         </div>

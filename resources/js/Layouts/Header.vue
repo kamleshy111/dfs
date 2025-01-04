@@ -46,6 +46,19 @@ const getNotification = () => {
     });
 };
 
+const getNotificationUpdate = () => {
+  window.Echo.channel('read-title')
+    .listen('.read.notification', async (data) => {
+        console.log('Received data datttttt:', data);
+        try {
+            const response = await axios.get('/api/get-notification');
+            notifications.value = response.data.notifications || [];
+        } catch (error) {
+            console.error('Error fetching notifications:', error);
+        }
+    });
+};
+
 const pushNotification = () => {
    /* window.Echo.connector.pusher.connection.bind('connected', () => {
         console.log('Laravel Echo successfully connected to Pusher');
@@ -100,6 +113,7 @@ onMounted(() => {
   currentDate.value = `${day}, ${date} ${month} ${year}`;
 
     getNotificationHeader();
+    getNotificationUpdate();
     getNotification();
     pushNotification();
     readNotification();
