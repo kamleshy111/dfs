@@ -93,8 +93,8 @@ const NotificationCreate = () => {
     console.log('data dashboardLink :');
     window.Echo.channel('notification')
         .listen('.received.notification', (data) => {
-            console.log('Total Count data dashboardLink :', data);
-            locations.value = data;
+            locations.value = data.locations;
+            adminStats.value = data.adminStats;
         });
 };
 
