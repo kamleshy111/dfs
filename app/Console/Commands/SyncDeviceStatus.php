@@ -38,52 +38,68 @@ class SyncDeviceStatus extends Command
 
         if (isset($deviceCurrentStatus['result']) && $deviceCurrentStatus['result'] === 0) {
             $deviceAlertResult = collect($deviceCurrentStatus['status']);
-            foreach ($deviceAlertResult as $data) {
-                Device::updateOrCreate(
-                    [
-                        'device_id' => $data['id']
-                    ],
-                    [
+
+            // Batch update devices
+            $deviceAlertResult->each(function ($data) {
+                Device::where('device_id', $data['id'])
+                    ->where('status', '!=', $data['ol'])
+                    ->update([
                         'status' => $data['ol'],
                         'latitude' => $data['mlat'],
                         'longitude' => $data['mlng'],
                         'last_active' => $data['gt'],
-                    ]
-                );
-            }
+                    ]);
+            });
 
-            $updatedDevices = Device::get();
-            $locations = [];
-            foreach ($updatedDevices as $index => $device) {
-                $messageType = 'alert';
-                if ($device->status == 2) {
-                    $messageType = "danger";
-                } else if ($device->status == 1) {
-                    $messageType = "normal";
-                } else if ($device->status == 0) {
-                    $messageType = "inactive";
-                }
+            $devices = Device::all();
+            $active_device_count = $devices->where('status', 1)->count();
+            $expired_device_count = $devices->where('status', 2)->count();
+            $inactive_device_count = $devices->where('status', 0)->count();
+            $all_device_count = $devices->count();
 
-                $locations[] = [
+             $adminStats = [
+                'all_device_count'      => $all_device_count,
+                'active_device_count'   => $active_device_count,
+                'expired_device_count'  => $expired_device_count,
+                'inactive_device_count' => $inactive_device_count
+                ];
+
+            // Fetch updated devices and prepare locations in a single loop
+            $locations = $devices->map(function ($device) {
+                $messageType = match ($device->status) {
+                    2 => 'danger',
+                    1 => 'normal',
+                    default => 'inactive',
+                };
+
+                return [
                     "position" => [
                         'lat' => floatval($device->latitude ?? 0),
-                        'lng' => floatval($device->longitude ?? 0)
+                        'lng' => floatval($device->longitude ?? 0),
                     ],
                     "title" => $device->device_id,
                     "content" => [
                         "device_id" => $device->device_id,
-                        'device_name' => 'Device Name' . $device->device_id,
+                        'device_name' => 'Device Name ' . $device->device_id,
                         'message_type' => $messageType,
                         'last_active' => $device->last_active ?? "",
                         'lat_lng' => [
                             'lat' => floatval($device->latitude ?? 0),
-                            'lng' => floatval($device->longitude ?? 0)
-                        ]
-                    ]
+                            'lng' => floatval($device->longitude ?? 0),
+                        ],
+                    ],
                 ];
+            })->all();
 
-                event(new NotificationCreate($locations));
-            }
+            $result = [
+                'adminStats' =>$adminStats,
+                'locations' =>$locations
+            ];
+
+
+            // Trigger notification event
+            event(new NotificationCreate($result));
         }
+
     }
 }

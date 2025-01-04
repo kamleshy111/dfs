@@ -11,9 +11,9 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
         $view = $user->role === 'admin' ? 'Dashboard' : 'UserDashboard';
-
         return Inertia::render($view, [
             'role' => $user->role, // Ensure 'role' exists in the User model
+            'userId' => $user->id, // Ensure 'role' exists in the User model
         ]);
     }
 
