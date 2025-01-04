@@ -7,8 +7,10 @@ use App\Events\NotificationCreate;
 use App\Models\Customer;
 use App\Models\Device;
 use App\Services\AlertService;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use App\Models\Alert;
+use Illuminate\Support\Facades\Cache;
 
 class SyncDeviceAlert extends Command
 {
@@ -33,7 +35,12 @@ class SyncDeviceAlert extends Command
     {
         $deviceIds = Device::pluck('device_id')->implode(',');
         $courseSyncService = app(AlertService::class);
-        $deviceCurrentStatus = $courseSyncService->getDeviceAlert($deviceIds);
+        // Retrieve the last end time from the cache or set it to now if not found
+        $lastEndTime = Cache::get('device_alert_last_end_time', Carbon::now('Asia/Kolkata')->subSeconds(10)->toDateTimeString());
+        $startTime = $lastEndTime;
+        $endTime = Carbon::now('Asia/Kolkata')->toDateTimeString();
+
+        $deviceCurrentStatus = $courseSyncService->getDeviceAlert($deviceIds, $startTime, $endTime);
 
         if (isset($deviceCurrentStatus['result']) && $deviceCurrentStatus['result'] === 0) {
             $deviceAlertResult = collect($deviceCurrentStatus['infos']);
@@ -69,5 +76,6 @@ class SyncDeviceAlert extends Command
                 event(new NotificationAlert($allAlert));
             }
         }
+        Cache::put('device_alert_last_end_time', $endTime, 60); // Cache duration in seconds
     }
 }
