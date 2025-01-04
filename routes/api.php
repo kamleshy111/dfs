@@ -25,7 +25,7 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::get('/editCustomers/{customerID}/devices/{deviceId?}', [CustomerDeviceController::class, 'getDevicesByEditCustomer']);
 
 # Role:User -> Devies
-    Route::get('/get-devices', [DashboardController::class, 'getMapDevices'])->name('get-devices');
+    Route::get('/get-devices/{userId?}', [DashboardController::class, 'getMapDevices'])->name('get-devices');
 
 # Role:User -> Monitor
     // Route::get('/get-device-notifications', [MonitorController::class, 'getNotifications'])->name('get-device-notifications');
@@ -34,24 +34,24 @@ Route::middleware('auth:sanctum')->group(function(){
     // Route::get('/get-devices-1', [MonitorController::class, 'getDevices'])->name('get-devices');
 
 ## START: Admin Routes
-    Route::get('/get-admin-stats', [AdminDashboardController::class, 'getAdminStats']);
+    Route::get('/get-admin-stats/{userId?}', [AdminDashboardController::class, 'getAdminStats']);
 
 # user device notification get
-Route::get('/user-notifications', [NotificationController::class, 'userNotifications']); 
+Route::get('/user-notifications', [NotificationController::class, 'userNotifications']);
 
 ## END: Admin Routes
 });
 
 
 Route::middleware('auth:sanctum', 'role:admin')->group(function(){
-    
-# admin notification show header 
-    Route::get('/get-notification', [NotificationController::class, 'getNotification']); 
 
-#read notification    
+# admin notification show header
+    Route::get('/get-notification', [NotificationController::class, 'getNotification']);
+
+#read notification
     Route::post('/notifications/{id?}/mark-as-read', [NotificationController::class, 'markAsRead']);
 
-#all notification 
-    Route::get('allNotifications', [NotificationController::class, 'index'])->name('allNotification'); 
+#all notification
+    Route::get('allNotifications', [NotificationController::class, 'index'])->name('allNotification');
 
 });
