@@ -318,6 +318,13 @@ class ClientsController extends Controller
 
                 CustomerDevice::where('customer_id', $id)->delete();
 
+                Device::where('user_id', $userId)
+                        ->update([
+                            'user_id' => null,
+                            'email' => null,
+                            'secondary_email' => null,
+                        ]);
+
                 Vehicle::where('customer_id', $id)->delete();
 
                 // Commit the transaction

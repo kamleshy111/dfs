@@ -51,45 +51,42 @@ class SyncDeviceAlert extends Command
 
                 $deviceIds = is_array($deviceIds) ? $deviceIds : [$deviceIds];
 
-                $customerEmails = Device::whereIn('devices.device_id', $deviceIds)
-                                    ->join('vehicles', 'devices.id', '=', 'vehicles.device_id')
-                                    ->join('devices as d2', 'vehicles.device_id', '=', 'd2.id')  // Alias the second join
-                                    ->join('customers', 'vehicles.customer_id', '=', 'customers.id')
-                                    ->select('customers.email')
-                                    ->first();
+                $customerEmails = Device::whereIn('device_id', $deviceIds)->pluck('email')->toArray();
 
-                $allAlert = $deviceAlertResult->map(function ($item) {
-                    $alert = Alert::create([
-                        'device_id' => $item['devIdno'],
-                        'latitude' => $item['jingDu'] ?? 0,
-                        'longitude' => $item['weiDu'] ?? 0,
-                        'location' =>  $item['position'] ?? '',
-                        'read_unread_status' => 0,
-                        'captures' => $item["downloadUrl"] ?? '' ,
-                        'message' => alarmTypeDescription($item['alarmType']),
-                        'alert_type' => $item['alarmType'] ?? '',
-                        'created_at' => $item['fileTimeStr'] ?? '',
-                        'updated_at' => $item['updateTimeStr'] ?? '',
-                    ]);
+                if (!empty($customerEmails)) {
 
-                    return [
-                        "alertId" => $alert->id ?? 0,
-                        "deviceId" => $alert->device_id ?? 0,
-                        "latitude" => $alert->latitude ?? '',
-                        "longitude" => $alert->longitude ?? '',
-                        "location" => $alert->location ?? '',
-                        "read_unread_status" => $alert->read_unread_status ?? 0,
-                        "captures" => $alert->captures ?? '---',
-                        "message" => $alert->message  ?? '',
-                        "alert_type" => $alert->alert_type ?? '',
-                    ];
-                })->toArray();
+                    $allAlert = $deviceAlertResult->map(function ($item) {
+                        $alert = Alert::create([
+                            'device_id' => $item['devIdno'],
+                            'latitude' => $item['jingDu'] ?? 0,
+                            'longitude' => $item['weiDu'] ?? 0,
+                            'location' =>  $item['position'] ?? '',
+                            'read_unread_status' => 0,
+                            'captures' => $item["downloadUrl"] ?? '' ,
+                            'message' => alarmTypeDescription($item['alarmType']),
+                            'alert_type' => $item['alarmType'] ?? '',
+                            'created_at' => $item['fileTimeStr'] ?? '',
+                            'updated_at' => $item['updateTimeStr'] ?? '',
+                        ]);
 
+                        return [
+                            "alertId" => $alert->id ?? 0,
+                            "deviceId" => $alert->device_id ?? 0,
+                            "latitude" => $alert->latitude ?? '',
+                            "longitude" => $alert->longitude ?? '',
+                            "location" => $alert->location ?? '',
+                            "read_unread_status" => $alert->read_unread_status ?? 0,
+                            "captures" => $alert->captures ?? '---',
+                            "message" => $alert->message  ?? '',
+                            "alert_type" => $alert->alert_type ?? '',
+                        ];
+                    })->toArray();
 
-                // Send email
-                Mail::to($customerEmails)->send(new AlertDeviceDetail($allAlert));
-
-                event(new NotificationAlert($allAlert));
+                    if (!empty($allAlert)) {
+                        Mail::to($customerEmails)->send(new AlertDeviceDetail($allAlert));
+                        event(new NotificationAlert($allAlert));
+                    }
+                }
             }
         }
         Cache::put('device_alert_last_end_time', $endTime, 60); // Cache duration in seconds
