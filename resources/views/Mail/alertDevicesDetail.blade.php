@@ -11,16 +11,33 @@
     
     <p>We detected an alert for your device. Below are the details:</p>
 
-    <ul>
-        <li><strong>Device ID:</strong> {{ $alertDevice['deviceId'] }}</li>
-        <li><strong>Device Name:</strong> {{ $alertDevice['latitude'] }}</li>
-        <li><strong>Alert Type:</strong> {{ $alertDevice['longitude'] }}</li>
-        <li><strong>Timestamp:</strong> {{ $alertDevice['location'] }}</li>
+    <table>
+        <thead>
+            <tr>
+                <th>Device ID</th>
+                <th>Device Name</th>
+                <th>Alert Type</th>
+                <th>Timestamp</th>
+                <th>Capture</th>
+                <th>Message</th>
+                <th>Alert Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($alertDevices as $alertDevice)
+                <tr>
+                    <td>{{ $alertDevice['deviceId'] }}</td>
+                    <td>{{ $alertDevice['latitude'] }}</td>
+                    <td>{{ $alertDevice['longitude'] }}</td>
+                    <td>{{ $alertDevice['location'] }}</td>
+                    <td>{{ $alertDevice['captures'] }}</td>
+                    <td>{{ $alertDevice['message'] }}</td>
+                    <td>{{ $alertDevice['alert_type'] }}</td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
 
-        <li><strong>Timestamp:</strong> {{ $alertDevice['captures'] }}</li>
-        <li><strong>Timestamp:</strong> {{ $alertDevice['message'] }}</li>
-        <li><strong>Timestamp:</strong> {{ $alertDevice['alert_type'] }}</li>
-    </ul>
 
     <p>If you need further assistance, feel free to contact us.</p>
 

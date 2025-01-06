@@ -56,7 +56,7 @@ class SyncDeviceAlert extends Command
                                     ->join('devices as d2', 'vehicles.device_id', '=', 'd2.id')  // Alias the second join
                                     ->join('customers', 'vehicles.customer_id', '=', 'customers.id')
                                     ->select('customers.email')
-                                    ->get();
+                                    ->first();
 
                 $allAlert = $deviceAlertResult->map(function ($item) {
                     $alert = Alert::create([

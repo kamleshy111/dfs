@@ -41,7 +41,7 @@ class AlertDeviceDetail extends Mailable
     {
         return new Content(
             view: 'Mail.alertDevicesDetail',
-            with: ['alertDevice' => $this->alertDevice]
+            with: ['alertDevices' => $this->alertDevice]
         );
     }
 
