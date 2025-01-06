@@ -4,6 +4,8 @@ namespace App\Console\Commands;
 
 use App\Events\NotificationAlert;
 use App\Events\NotificationCreate;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\AlertDeviceDetail;
 use App\Models\Customer;
 use App\Models\Device;
 use App\Services\AlertService;
@@ -46,6 +48,16 @@ class SyncDeviceAlert extends Command
             $deviceAlertResult = collect($deviceCurrentStatus['infos']);
 
             if (!empty($deviceAlertResult) && $deviceAlertResult->isNotEmpty()) {
+
+                $deviceIds = is_array($deviceIds) ? $deviceIds : [$deviceIds];
+
+                $customerEmails = Device::whereIn('devices.device_id', $deviceIds)
+                                    ->join('vehicles', 'devices.id', '=', 'vehicles.device_id')
+                                    ->join('devices as d2', 'vehicles.device_id', '=', 'd2.id')  // Alias the second join
+                                    ->join('customers', 'vehicles.customer_id', '=', 'customers.id')
+                                    ->select('customers.email')
+                                    ->get();
+
                 $allAlert = $deviceAlertResult->map(function ($item) {
                     $alert = Alert::create([
                         'device_id' => $item['devIdno'],
@@ -72,6 +84,10 @@ class SyncDeviceAlert extends Command
                         "alert_type" => $alert->alert_type ?? '',
                     ];
                 })->toArray();
+
+
+                // Send email
+                Mail::to($customerEmails)->send(new AlertDeviceDetail($allAlert));
 
                 event(new NotificationAlert($allAlert));
             }
