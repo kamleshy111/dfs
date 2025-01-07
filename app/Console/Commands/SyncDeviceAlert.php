@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Events\NotificationAlert;
 use App\Events\NotificationCreate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\AlertDeviceDetail;
 use App\Models\Customer;
@@ -35,27 +36,24 @@ class SyncDeviceAlert extends Command
      */
     public function handle()
     {
-        $deviceIds = Device::pluck('device_id')->implode(',');
+        $deviceArray = Device::pluck('email', 'device_id')->toArray();
+        $deviceIds = implode(',', array_keys($deviceArray));
+
         $courseSyncService = app(AlertService::class);
         // Retrieve the last end time from the cache or set it to now if not found
-        $lastEndTime = Cache::get('device_alert_last_end_time', Carbon::now('Asia/Kolkata')->subSeconds(10)->toDateTimeString());
+        Log::info(Carbon::now('Asia/Aqtobe')->subSeconds(30)->toDateTimeString() . 'start >>> ');
+        $lastEndTime = Cache::get('device_alert_last_end_time', Carbon::now('Asia/Aqtobe')->subSeconds(30)->toDateTimeString());
+        $lastEndTime = '2025-01-07 14:08:33';
         $startTime = $lastEndTime;
-        $endTime = Carbon::now('Asia/Kolkata')->toDateTimeString();
+        $endTime = Carbon::now('Asia/Aqtobe')->toDateTimeString();
 
         $deviceCurrentStatus = $courseSyncService->getDeviceAlert($deviceIds, $startTime, $endTime);
-
         if (isset($deviceCurrentStatus['result']) && $deviceCurrentStatus['result'] === 0) {
             $deviceAlertResult = collect($deviceCurrentStatus['infos']);
-
+            Log::info($startTime . 'start if >>> ');
+            Log::info([$deviceAlertResult]);
             if (!empty($deviceAlertResult) && $deviceAlertResult->isNotEmpty()) {
-
-                $deviceIds = is_array($deviceIds) ? $deviceIds : [$deviceIds];
-
-                $customerEmails = Device::whereIn('device_id', $deviceIds)->pluck('email')->toArray();
-
-                if (!empty($customerEmails)) {
-
-                    $allAlert = $deviceAlertResult->map(function ($item) {
+                    $allAlert = $deviceAlertResult->map(function ($item) use($deviceArray) {
                         $alert = Alert::create([
                             'device_id' => $item['devIdno'],
                             'latitude' => $item['jingDu'] ?? 0,
@@ -68,6 +66,10 @@ class SyncDeviceAlert extends Command
                             'created_at' => $item['fileTimeStr'] ?? '',
                             'updated_at' => $item['updateTimeStr'] ?? '',
                         ]);
+
+                        //send notification
+                        $customerEmail = $deviceArray[$item['devIdno']] ?? '';
+                        Mail::to($customerEmail)->send(new AlertDeviceDetail($alert));
 
                         return [
                             "alertId" => $alert->id ?? 0,
@@ -83,10 +85,8 @@ class SyncDeviceAlert extends Command
                     })->toArray();
 
                     if (!empty($allAlert)) {
-                        Mail::to($customerEmails)->send(new AlertDeviceDetail($allAlert));
                         event(new NotificationAlert($allAlert));
                     }
-                }
             }
         }
         Cache::put('device_alert_last_end_time', $endTime, 60); // Cache duration in seconds

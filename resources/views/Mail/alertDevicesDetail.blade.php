@@ -8,7 +8,7 @@
 <body>
     <h1>Device Alert Notification</h1>
     <p>Hello,</p>
-    
+
     <p>We detected an alert for your device. Below are the details:</p>
 
     <table>
@@ -24,17 +24,15 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($alertDevices as $alertDevice)
-                <tr>
-                    <td>{{ $alertDevice['deviceId'] }}</td>
-                    <td>{{ $alertDevice['latitude'] }}</td>
-                    <td>{{ $alertDevice['longitude'] }}</td>
-                    <td>{{ $alertDevice['location'] }}</td>
-                    <td>{{ $alertDevice['captures'] }}</td>
-                    <td>{{ $alertDevice['message'] }}</td>
-                    <td>{{ $alertDevice['alert_type'] }}</td>
-                </tr>
-            @endforeach
+        <tr>
+            <td>{{ $alertDevices->deviceId }}</td>
+            <td>{{ $alertDevices->latitude }}</td>
+            <td>{{ $alertDevices->longitude }}</td>
+            <td>{{ $alertDevices->location }}</td>
+            <td>{{ $alertDevices->captures }}</td>
+            <td>{{ $alertDevices->message }}</td>
+            <td>{{ $alertDevices->alert_type }}</td>
+        </tr>
         </tbody>
     </table>
 
