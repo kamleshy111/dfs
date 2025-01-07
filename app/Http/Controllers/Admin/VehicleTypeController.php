@@ -79,9 +79,23 @@ class VehicleTypeController extends Controller
             return response()->json(["message" => $validated]);
         }
 
+        $customerId = $request->input('customerId');
+        $deviceId = $request->input('deviceId');
+
+        if(!empty($deviceId)){
+            $userDetail = Customer::where('id', $customerId)->select('user_id', 'email', 'secondary_email')->first();
+
+            Device::where('id', $deviceId)
+                    ->update([
+                        'user_id' => $userDetail->user_id,
+                        'email' => $userDetail->email,
+                        'secondary_email' => $userDetail->secondary_email,
+                    ]);
+        }
+
         // Create a new Vehicle
         $vehicle = Vehicle::create([
-            'customer_id' => $request->input('customerId'),
+            'customer_id' => $customerId,
             'device_id' => $request->input('deviceId') ?? 0,
             'vehicle_register_number' => $request->input('vehicleRegisterNumber'),
             'vehicle_type' => $request->input('vehicleType'),
@@ -270,11 +284,25 @@ class VehicleTypeController extends Controller
             return response()->json(["message" => $validated]);
         }
 
+        $customerId = $request->input('customer_id');
+        $deviceId = $request->input('device_id');
+
+        if(!empty($deviceId)){
+            $userDetail = Customer::where('id', $customerId)->select('user_id', 'email', 'secondary_email')->first();
+
+            Device::where('id', $deviceId)
+                    ->update([
+                        'user_id' => $userDetail->user_id,
+                        'email' => $userDetail->email,
+                        'secondary_email' => $userDetail->secondary_email,
+                    ]);
+        }
+
         $vehicle = Vehicle::where('id',$id)->first();
 
         if($vehicle) {
 
-            $vehicle->customer_id = $request->input("customer_id");
+            $vehicle->customer_id = $customerId;
             $vehicle->device_id = $request->input("device_id") ?? 0;
             $vehicle->vehicle_register_number = $request->input('vehicle_register_number');
             $vehicle->vehicle_type  = $request->input("vehicle_type");
