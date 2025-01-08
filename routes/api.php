@@ -43,7 +43,7 @@ Route::get('/user-notifications', [NotificationController::class, 'userNotificat
 });
 
 
-Route::middleware('auth:sanctum', 'role:admin')->group(function(){
+Route::middleware('auth:sanctum')->group(function(){
 
 # admin notification show header
     Route::get('/get-notification', [NotificationController::class, 'getNotification']);

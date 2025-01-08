@@ -17,6 +17,9 @@ class NotificationController extends Controller
 {
     public function index(Request $request){
 
+        $userId = Auth::user()->id;
+        $user = Auth::user()->role === 'user';
+
         $query = Alert::query()
                         ->select(
                             'alerts.id',
@@ -38,6 +41,10 @@ class NotificationController extends Controller
                         ->leftJoin('devices', 'alerts.device_id', '=', 'devices.device_id')
                         ->leftJoin('vehicles', 'devices.id', '=', 'vehicles.device_id')
                         ->leftJoin('customers', 'vehicles.customer_id', '=', 'customers.id');
+
+        if ($user) {
+            $query->where('customers.user_id', $userId);
+        }
 
         // Filter by search vehicle registerSearch
         if ($request->filled('vehicleRegisterSearch')) {
@@ -72,6 +79,9 @@ class NotificationController extends Controller
             $createdDate = Carbon::create($item->date);
             $currentDate = Carbon::now();
 
+            $formatted_date = $createdDate->format('Y-m-d');
+            $formatted_time = $createdDate->format('H:i:s');
+
             $minutesDifference = $createdDate->diffInMinutes($currentDate);
 
             if ($minutesDifference < 1440 && $minutesDifference >= 60) {
@@ -95,6 +105,8 @@ class NotificationController extends Controller
                 'coordinates' => ('Lat:  '.$item->latitude ?? ' ') . ' ' . ('Lon:  '.$item->longitude ?? ' '),
                 'status' => $item->status ?? '',
                 'date' => $formattedDate,
+                'dateFormatted' => $formatted_date,
+                'timeFormatted' => $formatted_time,
             ];
         });
 

@@ -199,6 +199,24 @@ onMounted(() => {
               <h5 class="dropdown-header-noti">
                 <span class="notification-title">Notifications</span>
               </h5>
+              <div class="icon-box-profile" v-for="notification in notifications" :key="notification.id">
+                <a :href="`/report?id=${notification.id}`" class="d-flex align-items-center ">
+
+                  <div class="icon-circle mr-3">
+                    <i class="fas fa-sync-alt"></i>
+                  </div>
+                  <div>
+                    <div style="line-height: 20px">
+                      <span class="status-text">{{ notification.message }}</span>
+                    </div>
+                    <div class="d-flex align-items-center muted-text mt-1">
+                      <span class="time"
+                        ><i class="bi bi-clock mr-1"></i> {{ notification.date }}</span
+                      >
+                    </div>
+                  </div>
+                </a>
+              </div>
               <div class="text-center mt-2">
                 <a :href="`/monitor`" class="status-text">view more</a>
               </div>

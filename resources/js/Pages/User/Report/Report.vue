@@ -12,7 +12,11 @@ const props = defineProps({
   notificationsId: {
     type: Number,
     required: false,
-  }
+  },
+  user: {
+    type: String,
+    required: true,
+  },
 });
 
 const openNotificationId = ref(null);
@@ -172,37 +176,33 @@ const downloadImage = (notification) => {
 
         </div>
         <div class="row align-items-center mt-4 notifications-searchbar ">
-            <div class="form-group col-md-4">
-              <input v-model="customerName" type="text" class="form-control pe-5" placeholder="" @input="getData" />
-              <label for="customerName" class="form-label">Customer Name</label>
-            </div>
-
-
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
               <input v-model="deviceId" type="text" class="form-control" placeholder="" @input="getData" />
               <label for="deviceId" class="form-label">Device Id</label>
             </div>
 
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
               <input v-model="vehicleRegister" type="text" class="form-control" placeholder="" @input="getData" />
               <label for="vehicleRegister" class="form-label">Vehicle Register Number</label>
             </div>
-        </div>
-        <div class="row align-items-center mt-3 notifications-searchbar-border">
-          <div class="form-group row align-items-center col-md-8 mx-auto">
+
+            <div class="col-md-6 form-group  notifications-searchbar-border">
+          <div class="form-group m-0 row align-items-center">
               <div class="form-group m-0 col-md-6">
                 <input type="date" v-model="startDate" @input="getData" class="form-control" />
                 <label for="startDate" class="form-label">Start Date</label>
                 <small v-if="validationErrors.startDate" class="text-danger">{{ validationErrors.startDate }}</small>
 
               </div>
-              <div class="form-group m-0 col-md-6 boder-class">
+              <div class="form-group m-0 col-md-6 pr-[12px] boder-class">
                 <input type="date" v-model="endDate" @input="getData" class="form-control" />
                 <label for="endDate" class="form-label">End Date</label>
                 <small v-if="validationErrors.endDate" class="text-danger">{{ validationErrors.endDate }}</small>
               </div>
             </div>
         </div>
+        </div>
+        
 
       </div>
 
@@ -251,7 +251,6 @@ const downloadImage = (notification) => {
               </div>
               <div v-show="openNotificationId === notification.id" class="notification-details row">
                 <ul class="col-md-8 col-12 list-group-notification">
-                  <li><b>Customer Name:</b> {{ notification.customerName }}</li>
                   <li><b>Device Id:</b> {{ notification.deviceId }}</li>
                   <li><b>Location:</b> <a :href="`/devices/map/${notification.id}`">{{ notification.location }}</a></li>
                 </ul>
