@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Alert;
 use Carbon\Carbon;
@@ -24,8 +24,9 @@ class ReportController extends Controller
             $notificationsId = $notification->id;
         }
 
-        return Inertia::render('Report/Report',[
-            'user' => Auth::user(),
+        $view = Auth::user()->role === 'admin' ? 'Report/Report' : 'User/Report/Report';
+
+        return Inertia::render($view, [
             'notificationsId' => $notificationsId,
         ]);
     }

@@ -49,6 +49,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::group(['prefix' => 'report'], function () {
+        Route::get('/', [ReportController::class, 'index'])->name('report');
+    });
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
@@ -98,9 +102,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::delete('/destroy/{id}', [VehicleTypeController::class, 'destroy'])->name('vehicle-type.destroy');
     });
 
-    Route::group(['prefix' => 'report'], function () {
-        Route::get('/', [ReportController::class, 'index'])->name('report');
-    });
+ 
 
     //Billing Route
     Route::group(['prefix' => 'all-billing'], function () {
