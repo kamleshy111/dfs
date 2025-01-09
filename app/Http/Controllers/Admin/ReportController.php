@@ -18,7 +18,14 @@ class ReportController extends Controller
         $notification = Alert::find($notificationsId);
 
         if ($notification) {
-            $notification->read_unread_status = 1;
+
+            $admin = Auth::user()->role === 'admin';
+
+            if(!empty($admin)){
+                $notification->read_unread_status = 1;
+            }else{
+                $notification->user_re_un_status = 1;
+            }
             $notification->save();
 
             $notificationsId = $notification->id;

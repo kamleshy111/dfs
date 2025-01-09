@@ -19,6 +19,7 @@ const openNotificationId = ref(null);
 
 const notifications = ref([]);
 const totalCount = ref("");
+const todayCount = ref("");
 const vehicleRegister = ref("");
 const customerName = ref("");
 const deviceId = ref("");
@@ -86,8 +87,9 @@ const getData = async(page = 1) =>{
       },
     });
     
-    notifications.value = res.data.notifications;
-    totalCount.value = res.data.totalCount;
+    notifications.value = res.data.notifications || [];
+    totalCount.value = res.data.totalCount  || 0;
+    todayCount.value = res.data.todayCount || 0;
   } catch (error) {
     console.error('Error fetching data:', error);
   }
@@ -211,6 +213,7 @@ const downloadImage = (notification) => {
           <!-- Header -->
           <div class="notification-header">
             <h5>Notifications <span class="badge bg-primary">{{ totalCount }}</span></h5>
+            <h5 class="ml-3">today <span class="badge bg-primary">{{ todayCount }}</span></h5>
             <span class="mark-all">Mark all as read</span>
           </div>
 

@@ -23,6 +23,7 @@ const openNotificationId = ref(null);
 
 const notifications = ref([]);
 const totalCount = ref("");
+const todayCount = ref("");
 const vehicleRegister = ref("");
 const customerName = ref("");
 const deviceId = ref("");
@@ -92,6 +93,7 @@ const getData = async(page = 1) =>{
     
     notifications.value = res.data.notifications;
     totalCount.value = res.data.totalCount;
+    todayCount.value = res.data.todayCount;
   } catch (error) {
     console.error('Error fetching data:', error);
   }
@@ -116,11 +118,11 @@ const toggleNotification = async (id) => {
   const notification = notifications.value.data.find((n) => n.id === id);
   if (notification) {
    
-    if (notification.readUnreadStatus === 0) {
+    if (notification.userReUnStatus === 0) {
       try {
         // Update notification read unread status 
         await axios.post(`/api/notifications/${id}/mark-as-read`);
-        notification.readUnreadStatus = 1;
+        notification.userReUnStatus = 1;
       } catch (error) {
         console.error("Error marking notification as read:", error);
       }
@@ -211,12 +213,13 @@ const downloadImage = (notification) => {
           <!-- Header -->
           <div class="notification-header">
             <h5>Notifications <span class="badge bg-primary">{{ totalCount }}</span></h5>
+            <h5 class="ml-3">today <span class="badge bg-primary">{{ todayCount }}</span></h5>
             <span class="mark-all">Mark all as read</span>
           </div>
 
           <!-- Notification List -->
           <div class="notifications-list" v-for="notification in notifications.data" :key="notification.id">
-            <div class="notification-main" v-if="notification.readUnreadStatus === 0">
+            <div class="notification-main" v-if="notification.userReUnStatus === 0">
               <div class="notification-item" @click="toggleNotification(notification.id)">
                 <div class="icon-circle mr-3">
                   <i class="fas fa-sync-alt"></i>
@@ -235,7 +238,7 @@ const downloadImage = (notification) => {
             </div>
 
             <!-- Notification Item 3 -->
-            <div class="notification-main" v-if="notification.readUnreadStatus === 1">
+            <div class="notification-main" v-if="notification.userReUnStatus === 1">
               <div class="notification-item" @click="toggleNotification(notification.id)">
                 <div class="icon-circle mr-3">
                   <i class="fas fa-sync-alt"></i>

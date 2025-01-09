@@ -83,7 +83,6 @@ onMounted(() => {
 <template>
   <header class="header-main">
     <div
-      v-if="role === 'admin'"
       class="d-flex justify-content-between align-items-center py-3 mb-4 border-bottom"
     >
       <div class="w-50">
@@ -106,7 +105,7 @@ onMounted(() => {
               <h5 class="dropdown-header-noti">
                 <span class="notification-title">Notifications</span>
               </h5>
-              <div class="icon-box-profile" v-for="notification in notifications" :key="notification.id">
+              <div class="icon-box-profile" v-for="notification in notifications.slice(0, 10)" :key="notification.id">
                   <a :href="`/report?id=${notification.id}`" class="d-flex align-items-center ">
 
                   <div class="icon-circle mr-3">
@@ -170,100 +169,6 @@ onMounted(() => {
             </ul>
           </div>
         </div>
-
-        <button class="toggle-btn">☰</button>
-      </div>
-    </div>
-    <div
-      v-else
-      class="d-flex justify-content-between align-items-center py-3 mb-4 border-bottom"
-    >
-      <div class="w-50">
-        <p class="header-date">Today is {{ currentDate }}</p>
-      </div>
-      <div class="d-flex align-items-center w-50 justify-content-end">
-        <div class="icon-profile">
-          <div class="dropdown">
-            <button class="dropdown-toggle show" type="button" data-bs-toggle="dropdown" aria-expanded="true">
-              <div class="icon-profile-bell">
-                <i class="bi bi-bell animate-bell"></i>
-                <!-- Notification badge for unread notifications -->
-                <span class="notification-badge"></span>
-              </div>
-            </button>
-            <ul
-              class="dropdown-menu notification-dropdown"
-              aria-labelledby="notificationDropdown"
-              data-popper-placement="bottom-end"
-            >
-              <h5 class="dropdown-header-noti">
-                <span class="notification-title">Notifications</span>
-              </h5>
-              <div class="icon-box-profile" v-for="notification in notifications" :key="notification.id">
-                <a :href="`/report?id=${notification.id}`" class="d-flex align-items-center ">
-
-                  <div class="icon-circle mr-3">
-                    <i class="fas fa-sync-alt"></i>
-                  </div>
-                  <div>
-                    <div style="line-height: 20px">
-                      <span class="status-text">{{ notification.message }}</span>
-                    </div>
-                    <div class="d-flex align-items-center muted-text mt-1">
-                      <span class="time"
-                        ><i class="bi bi-clock mr-1"></i> {{ notification.date }}</span
-                      >
-                    </div>
-                  </div>
-                </a>
-              </div>
-              <div class="text-center mt-2">
-                <a :href="`/monitor`" class="status-text">view more</a>
-              </div>
-            </ul>
-          </div>
-          <div class="dropdown img-header">
-            <img
-              src="https://via.placeholder.com/40"
-              alt="Profile"
-              class="rounded-circle"
-              style="cursor: pointer"
-              data-bs-toggle="dropdown"
-              aria-expanded="true"
-            />
-            <ul
-              class="dropdown-menu mt-2 p-2"
-              data-popper-placement="bottom-end"
-              style="
-                position: absolute;
-                inset: 0px 0px auto auto;
-                margin: 0px;
-                transform: translate(0px, 42px);
-              "
-            >
-              <li
-                class="nav-link d-flex px-0 justify-content-between align-items-center mb-2"
-              >
-                <a class="dropdown-item" :href="route('profile.edit')"
-                  >Profile</a
-                >
-                <i class="bi bi-person dropdown-icon"></i>
-              </li>
-              <li class="nav-item">
-                <ResponsiveNavLink
-                  :href="route('logout')"
-                  method="post"
-                  as="button"
-                  class="nav-link d-flex px-0 justify-content-between align-items-center"
-                >
-                  Log Out
-                  <i class="bi bi-box-arrow-left dropdown-icon"></i>
-                </ResponsiveNavLink>
-              </li>
-            </ul>
-          </div>
-        </div>
-
         <button class="toggle-btn">☰</button>
       </div>
     </div>
