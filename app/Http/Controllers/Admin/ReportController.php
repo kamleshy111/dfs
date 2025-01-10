@@ -15,6 +15,7 @@ class ReportController extends Controller
     public function index(Request $request){
 
         $notificationsId = $request->query('id');
+        $deviceId  = $request->query('deviceId');
         $notification = Alert::find($notificationsId);
 
         if ($notification) {
@@ -34,6 +35,7 @@ class ReportController extends Controller
         $view = Auth::user()->role === 'admin' ? 'Report/Report' : 'User/Report/Report';
 
         return Inertia::render($view, [
+            'deviceId' => $deviceId,
             'notificationsId' => $notificationsId,
         ]);
     }
