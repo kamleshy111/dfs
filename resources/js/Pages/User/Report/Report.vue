@@ -17,6 +17,11 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  deviceId: {
+    type: String,
+    required: false,
+    defoult: '',
+  }
 });
 
 const openNotificationId = ref(null);
@@ -26,7 +31,7 @@ const totalCount = ref("");
 const todayCount = ref("");
 const vehicleRegister = ref("");
 const customerName = ref("");
-const deviceId = ref("");
+const deviceId = ref(props.deviceId || "");
 const startDate = ref(null);
 const endDate = ref(null);
 

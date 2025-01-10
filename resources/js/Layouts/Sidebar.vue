@@ -113,12 +113,7 @@ $(document).ready(function() {
                 <i class="bi bi-grid-fill mr-3"></i>Dashboard
               </NavLink>
             </li>
-            <li class="nav-item">
-              <!-- <a class="nav-link collapsed" data-bs-toggle="collapse" data-bs-target="#devices-nav"
-                                href="#">
-                                <i class="bi bi-truck-front-fill mr-3"></i><span>Devices</span>
-                                <i class="bi bi-chevron-down chevron-icon ml-3"></i>
-                            </a> -->
+            <!-- <li class="nav-item">
               <NavLink
                 :href="route('monitor', 1)"
                 :active="route().current('monitor')"
@@ -126,12 +121,7 @@ $(document).ready(function() {
               >
                 <i class="bi bi-truck-front-fill mr-3"></i>Devices
               </NavLink>
-            </li>
-            <!-- <li class="nav-item">
-                            <NavLink :href="route('monitor', 1)" :active="route().current('monitor')" class="nav-link">
-                                <i class="bi bi-grid-fill mr-3"></i>Monitor
-                            </NavLink>
-                        </li> -->
+            </li> -->
 
             <li class="nav-item">
               <NavLink
@@ -152,9 +142,6 @@ $(document).ready(function() {
                 <i class="bi bi-credit-card-fill mr-3"></i>Report
               </NavLink>
             </li>
-            <!-- <li class="nav-item">
-                            <a class="nav-link" href="#"><i class="bi bi-pie-chart-fill mr-3"></i>Report</a>
-                        </li> -->
           </template>
           <li class="nav-item">
               <ResponsiveNavLink
