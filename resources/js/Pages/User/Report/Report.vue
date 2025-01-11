@@ -196,13 +196,13 @@ const downloadImage = (notification) => {
             <div class="col-md-6 form-group  notifications-searchbar-border">
           <div class="form-group m-0 row align-items-center">
               <div class="form-group m-0 col-md-6">
-                <input type="date" v-model="startDate" @input="getData" class="form-control" />
+                <input type="datetime-local" v-model="startDate" @input="getData" class="form-control form-main" />
                 <label for="startDate" class="form-label">Start Date</label>
                 <small v-if="validationErrors.startDate" class="text-danger">{{ validationErrors.startDate }}</small>
 
               </div>
               <div class="form-group m-0 col-md-6 pr-[12px] boder-class">
-                <input type="date" v-model="endDate" @input="getData" class="form-control" />
+                <input type="datetime-local" v-model="endDate" @input="getData" class="form-control form-mains" />
                 <label for="endDate" class="form-label">End Date</label>
                 <small v-if="validationErrors.endDate" class="text-danger">{{ validationErrors.endDate }}</small>
               </div>
@@ -412,7 +412,14 @@ const downloadImage = (notification) => {
       border-radius: 5px;
       transition: max-height 0.3s ease-out, padding 0.3s ease-out;
   }
-
+  .form-main {
+    border-right: none;
+    border-radius: 5px 0px 0px 5px;
+  }
+  .form-mains {
+      border-left: none;
+      border-radius: 0px 5px 5px 0px;
+  }
   @media (max-width: 767px){
       .notification-content p {
       margin: 0;

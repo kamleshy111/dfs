@@ -63,8 +63,8 @@ class NotificationController extends Controller
         // Date range filter
         if ($request->filled('startDate') && $request->filled('endDate')) {
             $query->whereBetween('alerts.created_at', [
-                Carbon::parse($request->startDate)->startOfDay(),
-                Carbon::parse($request->endDate)->endOfDay(),
+                Carbon::parse($request->startDate),
+                Carbon::parse($request->endDate),
             ]);
         }
 
@@ -79,7 +79,7 @@ class NotificationController extends Controller
             $currentDate = Carbon::now();
 
             $formatted_date = $createdDate->format('Y-m-d');
-            $formatted_time = $createdDate->format('H:i:s');
+            $formatted_time = $createdDate->format('h:i A');
 
             $minutesDifference = $createdDate->diffInMinutes($currentDate);
 

@@ -198,13 +198,13 @@ const downloadImage = (notification) => {
         <div class="row align-items-center mt-3 notifications-searchbar-border">
           <div class="form-group row align-items-center col-md-8 mx-auto">
               <div class="form-group m-0 col-md-6">
-                <input type="date" v-model="startDate" @input="getData" class="form-control" />
+                <input type="datetime-local" v-model="startDate" @input="getData" class="form-control" />
                 <label for="startDate" class="form-label">Start Date</label>
                 <small v-if="validationErrors.startDate" class="text-danger">{{ validationErrors.startDate }}</small>
 
               </div>
               <div class="form-group m-0 col-md-6 boder-class">
-                <input type="date" v-model="endDate" @input="getData" class="form-control" />
+                <input type="datetime-local" v-model="endDate" @input="getData" class="form-control" />
                 <label for="endDate" class="form-label">End Date</label>
                 <small v-if="validationErrors.endDate" class="text-danger">{{ validationErrors.endDate }}</small>
               </div>
