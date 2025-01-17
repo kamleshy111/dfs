@@ -17,15 +17,21 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  deviceId: {
+    type: String,
+    required: false,
+    defoult: '',
+  }
 });
 
 const openNotificationId = ref(null);
 
 const notifications = ref([]);
 const totalCount = ref("");
+const todayCount = ref("");
 const vehicleRegister = ref("");
 const customerName = ref("");
-const deviceId = ref("");
+const deviceId = ref(props.deviceId || "");
 const startDate = ref(null);
 const endDate = ref(null);
 
@@ -92,6 +98,7 @@ const getData = async(page = 1) =>{
     
     notifications.value = res.data.notifications;
     totalCount.value = res.data.totalCount;
+    todayCount.value = res.data.todayCount;
   } catch (error) {
     console.error('Error fetching data:', error);
   }
@@ -116,11 +123,11 @@ const toggleNotification = async (id) => {
   const notification = notifications.value.data.find((n) => n.id === id);
   if (notification) {
    
-    if (notification.readUnreadStatus === 0) {
+    if (notification.userReUnStatus === 0) {
       try {
         // Update notification read unread status 
         await axios.post(`/api/notifications/${id}/mark-as-read`);
-        notification.readUnreadStatus = 1;
+        notification.userReUnStatus = 1;
       } catch (error) {
         console.error("Error marking notification as read:", error);
       }
@@ -189,13 +196,13 @@ const downloadImage = (notification) => {
             <div class="col-md-6 form-group  notifications-searchbar-border">
           <div class="form-group m-0 row align-items-center">
               <div class="form-group m-0 col-md-6">
-                <input type="date" v-model="startDate" @input="getData" class="form-control" />
+                <input type="datetime-local" v-model="startDate" @input="getData" class="form-control form-main" />
                 <label for="startDate" class="form-label">Start Date</label>
                 <small v-if="validationErrors.startDate" class="text-danger">{{ validationErrors.startDate }}</small>
 
               </div>
               <div class="form-group m-0 col-md-6 pr-[12px] boder-class">
-                <input type="date" v-model="endDate" @input="getData" class="form-control" />
+                <input type="datetime-local" v-model="endDate" @input="getData" class="form-control form-mains" />
                 <label for="endDate" class="form-label">End Date</label>
                 <small v-if="validationErrors.endDate" class="text-danger">{{ validationErrors.endDate }}</small>
               </div>
@@ -211,12 +218,13 @@ const downloadImage = (notification) => {
           <!-- Header -->
           <div class="notification-header">
             <h5>Notifications <span class="badge bg-primary">{{ totalCount }}</span></h5>
+            <h5 class="ml-3">today <span class="badge bg-primary">{{ todayCount }}</span></h5>
             <span class="mark-all">Mark all as read</span>
           </div>
 
           <!-- Notification List -->
           <div class="notifications-list" v-for="notification in notifications.data" :key="notification.id">
-            <div class="notification-main" v-if="notification.readUnreadStatus === 0">
+            <div class="notification-main" v-if="notification.userReUnStatus === 0">
               <div class="notification-item" @click="toggleNotification(notification.id)">
                 <div class="icon-circle mr-3">
                   <i class="fas fa-sync-alt"></i>
@@ -235,7 +243,7 @@ const downloadImage = (notification) => {
             </div>
 
             <!-- Notification Item 3 -->
-            <div class="notification-main" v-if="notification.readUnreadStatus === 1">
+            <div class="notification-main" v-if="notification.userReUnStatus === 1">
               <div class="notification-item" @click="toggleNotification(notification.id)">
                 <div class="icon-circle mr-3">
                   <i class="fas fa-sync-alt"></i>
@@ -404,7 +412,14 @@ const downloadImage = (notification) => {
       border-radius: 5px;
       transition: max-height 0.3s ease-out, padding 0.3s ease-out;
   }
-
+  .form-main {
+    border-right: none;
+    border-radius: 5px 0px 0px 5px;
+  }
+  .form-mains {
+      border-left: none;
+      border-radius: 0px 5px 5px 0px;
+  }
   @media (max-width: 767px){
       .notification-content p {
       margin: 0;

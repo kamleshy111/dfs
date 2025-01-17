@@ -20,23 +20,22 @@ class NotificationController extends Controller
         $userId = Auth::user()->id;
         $user = Auth::user()->role === 'user';
 
-        $query = Alert::query()
-                        ->select(
-                            'alerts.id',
-                            'alerts.device_id',
-                            'alerts.latitude',
-                            'alerts.longitude',
-                            'alerts.location',
-                            'alerts.status',
-                            'alerts.read_unread_status',
-                            'alerts.captures',
-                            'alerts.message',
-                            'alerts.alert_type',
-                            'alerts.created_at as date',
-                            'customers.first_name',
-                            'customers.last_name',
-                            'devices.device_id as deviceId',
-                            'vehicles.vehicle_register_number',
+        $todayCount = Alert::select('alerts.id')
+                        ->when($user, function ($query) use ($userId) {
+                            return $query->leftJoin('devices', 'alerts.device_id', '=', 'devices.device_id')
+                                ->where('devices.user_id', $userId)
+                                ->whereDate('alerts.created_at', today());
+                        }, function ($query) {
+                            return $query->whereDate('alerts.created_at', today());
+                        })
+                        ->count();
+
+
+        $query = Alert::query()->select(
+                            'alerts.id','alerts.device_id','alerts.latitude','alerts.longitude','alerts.location',
+                            'alerts.status','alerts.read_unread_status','alerts.user_re_un_status','alerts.captures',
+                            'alerts.message','alerts.alert_type','alerts.created_at as date','customers.first_name',
+                            'customers.last_name','devices.device_id as deviceId','vehicles.vehicle_register_number',
                         )
                         ->leftJoin('devices', 'alerts.device_id', '=', 'devices.device_id')
                         ->leftJoin('vehicles', 'devices.id', '=', 'vehicles.device_id')
@@ -64,8 +63,8 @@ class NotificationController extends Controller
         // Date range filter
         if ($request->filled('startDate') && $request->filled('endDate')) {
             $query->whereBetween('alerts.created_at', [
-                Carbon::parse($request->startDate)->startOfDay(),
-                Carbon::parse($request->endDate)->endOfDay(),
+                Carbon::parse($request->startDate),
+                Carbon::parse($request->endDate),
             ]);
         }
 
@@ -80,7 +79,7 @@ class NotificationController extends Controller
             $currentDate = Carbon::now();
 
             $formatted_date = $createdDate->format('Y-m-d');
-            $formatted_time = $createdDate->format('H:i:s');
+            $formatted_time = $createdDate->format('h:i A');
 
             $minutesDifference = $createdDate->diffInMinutes($currentDate);
 
@@ -98,6 +97,7 @@ class NotificationController extends Controller
                 'customerName' => ($item->first_name ?? '') . ' ' . ($item->last_name ?? ''),
                 'message' => $item->message ?? '',
                 'readUnreadStatus' => $item->read_unread_status ?? '',
+                'userReUnStatus' => $item->user_re_un_status ?? '',
                 'alertType' => $item->alert_type ?? '',
                 'vehicleRegisterNumber' => $item->vehicle_register_number ?? '',
                 'captures' => $item->captures ? asset($item->captures) : '',
@@ -113,6 +113,8 @@ class NotificationController extends Controller
 
         return response()->json([
             'notifications' => $notifications,
+            // 'unreadCount' => $unreadCount,
+            'todayCount' => $todayCount,
             'totalCount' => $notifications->total(),
         ]);
 
@@ -121,11 +123,22 @@ class NotificationController extends Controller
 
     public function getNotification(){
 
-        $data = Alert::where('read_unread_status', 0)
-                        ->orderBy('created_at', 'desc')
-                        ->take(10)
-                        ->get();
+        $userId = Auth::id();
+        $user = Auth::user()->role === 'user';
 
+        $data = Alert::select('alerts.*')
+                    ->when($user, function ($query) use ($userId) {
+                        return $query->leftJoin('devices', 'alerts.device_id', '=', 'devices.device_id')
+                                    ->where('alerts.user_re_un_status', 0)
+                                    ->where('devices.user_id', $userId);
+                    }, function ($query) {
+                        return $query->where('alerts.read_unread_status', 0);
+                    })
+                    ->orderByDesc('alerts.created_at')
+                    ->get();
+
+        
+    
             $notifications = $data->map(function($item) {
 
                 $assignedDate = Carbon::create($item->created_at);
@@ -147,10 +160,9 @@ class NotificationController extends Controller
                 ];
             });
 
-            $adminUnreadCount = Alert::where('read_unread_status', 0)->count();
            return response()->json([
                 'notifications' => $notifications,
-                'adminUnreadCount' => $adminUnreadCount,
+                'adminUnreadCount' => $notifications->count(),
             ]);
     }
 
@@ -159,7 +171,13 @@ class NotificationController extends Controller
 
         $notification = Alert::findOrFail($id);
 
-        $notification->update(['read_unread_status' => 1]);
+        $user = Auth::user()->role === 'user';
+        
+        if (!empty($user)) {
+            $notification->update(['user_re_un_status' => 1]);
+        } else {
+            $notification->update(['read_unread_status' => 1]);
+        }
 
         event(new NotificationRead([
            'title' =>  'Notification read',

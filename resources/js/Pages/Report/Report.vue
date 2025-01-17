@@ -12,6 +12,11 @@ const props = defineProps({
   notificationsId: {
     type: Number,
     required: false,
+  },
+  deviceId: {
+    type: String,
+    required: false,
+    defoult: '',
   }
 });
 
@@ -19,9 +24,10 @@ const openNotificationId = ref(null);
 
 const notifications = ref([]);
 const totalCount = ref("");
+const todayCount = ref("");
 const vehicleRegister = ref("");
 const customerName = ref("");
-const deviceId = ref("");
+const deviceId = ref(props.deviceId || "");
 const startDate = ref(null);
 const endDate = ref(null);
 
@@ -86,8 +92,9 @@ const getData = async(page = 1) =>{
       },
     });
     
-    notifications.value = res.data.notifications;
-    totalCount.value = res.data.totalCount;
+    notifications.value = res.data.notifications || [];
+    totalCount.value = res.data.totalCount  || 0;
+    todayCount.value = res.data.todayCount || 0;
   } catch (error) {
     console.error('Error fetching data:', error);
   }
@@ -191,13 +198,13 @@ const downloadImage = (notification) => {
         <div class="row align-items-center mt-3 notifications-searchbar-border">
           <div class="form-group row align-items-center col-md-8 mx-auto">
               <div class="form-group m-0 col-md-6">
-                <input type="date" v-model="startDate" @input="getData" class="form-control" />
+                <input type="datetime-local" v-model="startDate" @input="getData" class="form-control" />
                 <label for="startDate" class="form-label">Start Date</label>
                 <small v-if="validationErrors.startDate" class="text-danger">{{ validationErrors.startDate }}</small>
 
               </div>
               <div class="form-group m-0 col-md-6 boder-class">
-                <input type="date" v-model="endDate" @input="getData" class="form-control" />
+                <input type="datetime-local" v-model="endDate" @input="getData" class="form-control" />
                 <label for="endDate" class="form-label">End Date</label>
                 <small v-if="validationErrors.endDate" class="text-danger">{{ validationErrors.endDate }}</small>
               </div>
@@ -211,6 +218,7 @@ const downloadImage = (notification) => {
           <!-- Header -->
           <div class="notification-header">
             <h5>Notifications <span class="badge bg-primary">{{ totalCount }}</span></h5>
+            <h5 class="ml-3">today <span class="badge bg-primary">{{ todayCount }}</span></h5>
             <span class="mark-all">Mark all as read</span>
           </div>
 

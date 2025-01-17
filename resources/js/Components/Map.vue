@@ -43,7 +43,9 @@
                   <li>Message: {{ selectedInfoWindow.message }}</li>
                   <li>Status: {{ selectedInfoWindow.message_type }}</li>
                   <li>Last Active: {{ selectedInfoWindow.last_active }}</li>
-                  <a :href="'/monitor/' + selectedInfoWindow.device_id" target="_blank">View Details</a>
+                  <!-- <a :href="'/monitor/' + selectedInfoWindow.device_id" target="_blank">View Details</a> -->
+                  <a :href="`/report?deviceId=${selectedInfoWindow.device_id}`" target="_blank">View Details</a>
+                  
                 </ul>
               </div>
             </div>
