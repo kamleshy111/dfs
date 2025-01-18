@@ -88,10 +88,10 @@ const getData = async(page = 1) =>{
         device_id: deviceId.value,
         startDate: startDate.value,
         endDate: endDate.value,
-        
+
       },
     });
-    
+
     notifications.value = res.data.notifications || [];
     totalCount.value = res.data.totalCount  || 0;
     todayCount.value = res.data.todayCount || 0;
@@ -118,10 +118,10 @@ onMounted(() => {
 const toggleNotification = async (id) => {
   const notification = notifications.value.data.find((n) => n.id === id);
   if (notification) {
-   
+
     if (notification.readUnreadStatus === 0) {
       try {
-        // Update notification read unread status 
+        // Update notification read unread status
         await axios.post(`/api/notifications/${id}/mark-as-read`);
         notification.readUnreadStatus = 1;
       } catch (error) {
@@ -218,7 +218,7 @@ const downloadImage = (notification) => {
           <!-- Header -->
           <div class="notification-header">
             <h5>Notifications <span class="badge bg-primary">{{ totalCount }}</span></h5>
-            <h5 class="ml-3">today <span class="badge bg-primary">{{ todayCount }}</span></h5>
+            <h5 class="ml-3">Today <span class="badge bg-primary">{{ todayCount }}</span></h5>
             <span class="mark-all">Mark all as read</span>
           </div>
 
@@ -229,7 +229,7 @@ const downloadImage = (notification) => {
                 <div class="icon-circle mr-3">
                   <i class="fas fa-sync-alt"></i>
                 </div>
-               
+
                 <div class="notification-content">
                   <div class="notification-content-sub">
                     <p><span class="highlight">{{ notification.message }}</span><b class="ml-2">Vehicle Register Number:</b> {{ notification.vehicleRegisterNumber }}</p>
@@ -274,13 +274,13 @@ const downloadImage = (notification) => {
                     v-else  class="p-2 bg-gray-500 text-white rounded cursor-not-allowed"  disabled >
                     Download Photo
                 </button>
-                
+
               </div>
               </div>
             </div>
           </div>
-          <Bootstrap5Pagination 
-                :data="notifications" 
+          <Bootstrap5Pagination
+                :data="notifications"
                 @pagination-change-page="getData"
             />
         </div>
