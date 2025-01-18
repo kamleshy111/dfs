@@ -41,11 +41,14 @@ class SyncDeviceAlert extends Command
 
         $courseSyncService = app(AlertService::class);
         // Retrieve the last end time from the cache or set it to now if not found
-        Log::info(Carbon::now('Asia/Aqtobe')->subSeconds(30)->toDateTimeString() . 'start >>> ');
-        $lastEndTime = Cache::get('device_alert_last_end_time', Carbon::now('Asia/Aqtobe')->subSeconds(30)->toDateTimeString());
-        $lastEndTime = '2025-01-07 14:08:33';
+        $lastEndTime = Cache::get('device_alert_last_end_time', Carbon::now('Asia/Aqtobe')
+            ->subSeconds(290)->toDateTimeString());
+        //$lastEndTime = '2025-01-07 14:08:33';
         $startTime = $lastEndTime;
+        Log::info($startTime . 'start >>> ');
+
         $endTime = Carbon::now('Asia/Aqtobe')->toDateTimeString();
+        Log::info($endTime . 'current time(end time)  >>> ');
 
         $deviceCurrentStatus = $courseSyncService->getDeviceAlert($deviceIds, $startTime, $endTime);
         if (isset($deviceCurrentStatus['result']) && $deviceCurrentStatus['result'] === 0) {
@@ -53,7 +56,7 @@ class SyncDeviceAlert extends Command
             Log::info($startTime . 'start if >>> ');
             Log::info([$deviceAlertResult]);
             if (!empty($deviceAlertResult) && $deviceAlertResult->isNotEmpty()) {
-                    $allAlert = $deviceAlertResult->map(function ($item) use($deviceArray) {
+                    $allAlert = $deviceAlertResult->map(function ($item) use($deviceArray, $endTime) {
                         $alert = Alert::create([
                             'device_id' => $item['devIdno'],
                             'latitude' => $item['jingDu'] ?? 0,
@@ -69,7 +72,12 @@ class SyncDeviceAlert extends Command
 
                         //send notification
                         $customerEmail = $deviceArray[$item['devIdno']] ?? '';
-                        Mail::to($customerEmail)->send(new AlertDeviceDetail($alert));
+                      //  Mail::to($customerEmail)->send(new AlertDeviceDetail($alert));
+                        $endTime = $item['fileTimeStr'] ?? $endTime;
+                        $date = Carbon::createFromFormat('Y-m-d H:i:s', $endTime);
+                        $dateWithOneSecondAdded = $date->addSecond();
+                        Log::info($dateWithOneSecondAdded . " in inner 2");
+                        Cache::put('device_alert_last_end_time', $dateWithOneSecondAdded, 300);
 
                         return [
                             "alertId" => $alert->id ?? 0,
@@ -89,6 +97,5 @@ class SyncDeviceAlert extends Command
                     }
             }
         }
-        Cache::put('device_alert_last_end_time', $endTime, 60); // Cache duration in seconds
     }
 }

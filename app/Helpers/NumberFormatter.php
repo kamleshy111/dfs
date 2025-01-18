@@ -27,6 +27,8 @@ if (!function_exists('alarmTypeDescription')) {
     function alarmTypeDescription($alarmType = 0)
     {
        $errorList = [
+            '618' => 'Fatigue Driving Alarm Level One Start',
+            '619' => 'Fatigue Driving Alarm Level Two Start',
             '622' => 'Smoking Alarm Level One Start',
             '623' => 'Smoking Alarm Level Two Start',
             '624' => 'Distracted Driving Alarm Level One Start',

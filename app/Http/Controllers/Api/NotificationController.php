@@ -137,8 +137,8 @@ class NotificationController extends Controller
                     ->orderByDesc('alerts.created_at')
                     ->get();
 
-        
-    
+
+
             $notifications = $data->map(function($item) {
 
                 $assignedDate = Carbon::create($item->created_at);
@@ -172,7 +172,7 @@ class NotificationController extends Controller
         $notification = Alert::findOrFail($id);
 
         $user = Auth::user()->role === 'user';
-        
+
         if (!empty($user)) {
             $notification->update(['user_re_un_status' => 1]);
         } else {
