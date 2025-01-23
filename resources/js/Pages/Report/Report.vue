@@ -23,8 +23,8 @@ const props = defineProps({
 const openNotificationId = ref(null);
 
 const notifications = ref([]);
-const totalCount = ref("");
-const todayCount = ref("");
+const totalCount = ref(0);
+const todayCount = ref(0);
 const vehicleRegister = ref("");
 const customerName = ref("");
 const deviceId = ref(props.deviceId || "");
@@ -33,15 +33,6 @@ const endDate = ref(null);
 
 const validationErrors = ref({ startDate: "", endDate: "" });
 
-
-const NotificationCreateCount = () => {
-    window.Echo.channel('notificationAlert')
-        .listen('.alert.notification', (data) => {
-            console.log('Total Count data:', data);
-            totalCount.value++;
-        });
-};
-
 const notificationGetAll = () => {
   window.Echo.channel('notificationAlert')
     .listen('.alert.notification', async (data) => {
@@ -49,6 +40,8 @@ const notificationGetAll = () => {
         try {
             const response = await axios.get('/api/allNotifications');
             notifications.value = response.data.notifications;
+            totalCount.value = response.data.totalCount || 0;
+            todayCount.value = response.data.todayCount || 0;
         } catch (error) {
             console.error('Error fetching notifications:', error);
         }
@@ -111,7 +104,6 @@ onMounted(() => {
       openNotificationId.value = props.notificationsId;
     };
     getData();
-    NotificationCreateCount();
     notificationGetAll();
 });
 
