@@ -8,4 +8,4 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote')->hourly();
 
 Schedule::command('app:sync-device-status')->everyMinute();
-Schedule::command('app:sync-device-alert')->everyFifteenSeconds();
+Schedule::command('app:sync-device-alert')->everyFiveSeconds();

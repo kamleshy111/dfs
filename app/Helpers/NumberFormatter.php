@@ -27,13 +27,13 @@ if (!function_exists('alarmTypeDescription')) {
     function alarmTypeDescription($alarmType = 0)
     {
        $errorList = [
-            '618' => 'Fatigue Driving Alarm Level One Start',
+            '618' => 'Driver is trying to sleep. It is high risk.',
             '619' => 'Fatigue Driving Alarm Level Two Start',
             '622' => 'Smoking Alarm Level One Start',
             '623' => 'Smoking Alarm Level Two Start',
-            '624' => 'Distracted Driving Alarm Level One Start',
+            '624' => 'Driver is not careful.',
             '625' => 'Distracted Driving Alarm Level Two Start',
-            '626' => 'Driver Abnormal Alarm Level One Start',
+            '626' => 'Driver is absent.',
             '627' => 'Driver Abnormal Alarm Level Two Start',
             '628' => 'Automatic Capture Event Level One Start',
             '629' => 'Automatic Capture Event Level Two Start',
