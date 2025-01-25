@@ -53,9 +53,9 @@ class SyncDeviceAlert extends Command
         $deviceCurrentStatus = $courseSyncService->getDeviceAlert($deviceIds, $startTime, $endTime);
         if (isset($deviceCurrentStatus['result']) && $deviceCurrentStatus['result'] === 0) {
             $deviceAlertResult = collect($deviceCurrentStatus['infos']);
-            Log::info($startTime . 'start if >>> ');
-            Log::info([$deviceAlertResult]);
+            
             if (!empty($deviceAlertResult) && $deviceAlertResult->isNotEmpty()) {
+                Log::info([$deviceAlertResult]);
                     $allAlert = $deviceAlertResult->map(function ($item) use($deviceArray, $endTime) {
                         $alert = Alert::create([
                             'device_id' => $item['devIdno'],
@@ -76,7 +76,6 @@ class SyncDeviceAlert extends Command
                         $endTime = $item['fileTimeStr'] ?? $endTime;
                         $date = Carbon::createFromFormat('Y-m-d H:i:s', $endTime);
                         $dateWithOneSecondAdded = $date->addSecond();
-                        Log::info($dateWithOneSecondAdded . " in inner 2");
                         Cache::put('device_alert_last_end_time', $dateWithOneSecondAdded, 300);
 
                         return [
