@@ -253,7 +253,7 @@ const downloadImage = (notification) => {
                 <ul class="col-md-8 col-12 list-group-notification">
                   <li><b>Customer Name:</b> {{ notification.customerName }}</li>
                   <li><b>Device Id:</b> {{ notification.deviceId }}</li>
-                  <li><b>Location:</b> <a :href="`/devices/map/${notification.id}`">{{ notification.location }}</a></li>
+                  <li><b>Location:</b> <a :href="`/devices/map/${notification.deviceId}`">{{ notification.location }}</a></li>
                 </ul>
                 <div class="col-md-4 col-12">
 

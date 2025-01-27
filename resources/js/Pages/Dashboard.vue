@@ -90,11 +90,12 @@ const adminStats = ref({
 const selected_filter = ref('all');
 
 const NotificationCreate = () => {
-    console.log('data dashboardLink :');
     window.Echo.channel('notification')
         .listen('.received.notification', (data) => {
-            locations.value = data.locations;
-            adminStats.value = data.adminStats;
+            console.log(data);
+            console.log("hit hua hai");
+            loadMapData();
+            getAdminStats();
         });
 };
 

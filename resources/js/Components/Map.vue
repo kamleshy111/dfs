@@ -43,9 +43,8 @@
                   <li>Message: {{ selectedInfoWindow.message }}</li>
                   <li>Status: {{ selectedInfoWindow.message_type }}</li>
                   <li>Last Active: {{ selectedInfoWindow.last_active }}</li>
-                  <!-- <a :href="'/monitor/' + selectedInfoWindow.device_id" target="_blank">View Details</a> -->
                   <a :href="`/report?deviceId=${selectedInfoWindow.device_id}`" target="_blank">View Details</a>
-                  
+
                 </ul>
               </div>
             </div>
@@ -58,8 +57,6 @@
   <script setup>
   import { ref, onMounted } from "vue";
   import { GoogleMap, AdvancedMarker } from "vue3-google-map";
-  import Pusher from "pusher-js";
-  import toastr from "toastr";
 
   const props = defineProps({
     mapId: { type: String, default: "4504f8b37365c3d0" },
@@ -74,59 +71,29 @@
   const getMarkerOptions = (location) => {
     const iconElement = document.createElement("div");
     iconElement.innerHTML = `<i class="bi bi-truck"></i>`;
-    iconElement.style.fontSize = "20px";
+    iconElement.style.fontSize = "18px";
     iconElement.style.width = "20px";
     iconElement.style.height = "20px";
-    iconElement.style.color = "#FFF";
 
-    let iconType = '';
-    if (location && location.content && location.content.message_type == 'danger') {
+    iconElement.style.color = location.content.icon_color;
+
+    let iconType = location.content.background_color;
+    /*if (location && location.content && location.content.message_type == 'danger') {
         iconType = 'c32222';
     } else if (location && location.content && location.content.message_type == 'inactive') {
         iconType = 'a1a19f';
     } else {
         iconType = '385be8';
-    }
+    }*/
 
     const pin = new google.maps.marker.PinElement({
       glyph: iconElement,
       glyphColor: "#ff8300",
-      background: "#" + iconType,
-      borderColor: "#" + iconType
+      background: iconType,
+      borderColor: iconType
     });
 
     return pin;
-  };
-
-  const pusherNotification = () => {
-      // Ensure Echo is already initialized
-      const echo = window.Echo;
-      echo.channel('notification') // Replace with the actual channel name
-          .listen('TestNotification', (data) => { // Replace with the actual event name
-              console.log('Received data:', data);
-
-              // Display Toastr notification with icons and inline content
-              if (data && role.value === 'admin') {
-                  toastr.info(
-                      `<div class="notification-content">
-          <i class="fas fa-user"></i> <span>${data.vehicleId}</span>
-          <i class="fas fa-user"></i> <span>${data.title}</span>
-          <i class="fas fa-book" style="margin-left: 20px;"></i> <span>${data.body}</span>
-        </div>`,
-                      'New Post Notification',
-                      {
-                          closeButton: true,
-                          progressBar: true,
-                          timeOut: 0, // Set timeOut to 0 to make it persist until closed
-                          extendedTimeOut: 0, // Ensure the notification stays open
-                          positionClass: 'toast-top-right',
-                          enableHtml: true,
-                      }
-                  );
-              } else {
-                  console.error('Invalid data received:', data);
-              }
-          });
   };
 
   onMounted(() => {
