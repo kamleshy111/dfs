@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Device extends Model
 {
-    protected $fillable = ['device_id','order_id','company_name','date_time', 'invoice_photos', 'status', 'latitude', 'longitude', 'last_active', 'user_id', 'email', 'secondary_email',];
+    protected $fillable = ['device_id','order_id','company_name','date_time', 'invoice_photos', 'status', 'alert_status', 'latitude', 'longitude', 'last_active', 'user_id', 'email', 'secondary_email',];
 
     // Device model
     public function customers()

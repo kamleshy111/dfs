@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\Device;
 use App\Services\AlertService;
 use App\Services\DeviceInfoService;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use App\Models\Alert;
 
@@ -38,20 +39,41 @@ class SyncDeviceStatus extends Command
 
         if (isset($deviceCurrentStatus['result']) && $deviceCurrentStatus['result'] === 0) {
             $deviceAlertResult = collect($deviceCurrentStatus['status']);
+            $currentTime = Carbon::now('Asia/Kolkata')->format('Y-m-d H:i:s.0');
 
             // Batch update devices
-            $deviceAlertResult->each(function ($data) {
+            $deviceAlertResult->each(function ($data) use($currentTime) {
+               $newData = [
+                    'status' => $data['ol'],
+                    'latitude' => $data['mlat'],
+                    'longitude' => $data['mlng'],
+                ];
+
+                if (!empty($data['ol'])) {
+                    $newData['last_active'] =  $currentTime;
+                }
+
+                // Count alerts for this device in the last 2 minutes
+                $twoMinutesAgo = Carbon::now()->subMinutes(2);
+                $alertCount = Alert::where('device_id', $data['id'])
+                    ->where('created_at', '>=', $twoMinutesAgo)
+                    ->count();
+
+                if ($alertCount === 0) {
+                    $newData['alert_status'] = 0; // Normal
+                } elseif ($alertCount > 0 && $alertCount <= 5) {
+                    $newData['alert_status'] = 1; // Warning
+                } elseif ($alertCount > 5 && $alertCount <= 10) {
+                    $newData['alert_status'] = 2; // Critical
+                } else {
+                    $newData['alert_status'] = 3; // Danger
+                }
+
                 Device::where('device_id', $data['id'])
-                    ->where('status', '!=', $data['ol'])
-                    ->update([
-                        'status' => $data['ol'],
-                        'latitude' => $data['mlat'],
-                        'longitude' => $data['mlng'],
-                        'last_active' => $data['gt'],
-                    ]);
+                    ->update($newData);
             });
 
-            $devices = Device::all();
+            /*$devices = Device::all();
             $active_device_count = $devices->where('status', 1)->count();
             $expired_device_count = $devices->where('status', 2)->count();
             $inactive_device_count = $devices->where('status', 0)->count();
@@ -66,10 +88,17 @@ class SyncDeviceStatus extends Command
 
             // Fetch updated devices and prepare locations in a single loop
             $locations = $devices->map(function ($device) {
-                $messageType = match ($device->status) {
-                    2 => 'danger',
-                    1 => 'normal',
-                    default => 'inactive',
+                $deviceStatus = match ($device->status) {
+                    2 => 'expired',
+                    1 => 'online',
+                    default => 'Offline',
+                };
+
+                $alertStatus = match ($device->status) {
+                    3 => 'Danger',
+                    2 => 'Critical',
+                    1 => 'Warning',
+                    default => 'Normal',
                 };
 
                 return [
@@ -81,7 +110,8 @@ class SyncDeviceStatus extends Command
                     "content" => [
                         "device_id" => $device->device_id,
                         'device_name' => 'Device Name ' . $device->device_id,
-                        'message_type' => $messageType,
+                        'device_status' => $deviceStatus,
+                        'alert_status' => $alertStatus,
                         'last_active' => $device->last_active ?? "",
                         'lat_lng' => [
                             'lat' => floatval($device->latitude ?? 0),
@@ -94,8 +124,10 @@ class SyncDeviceStatus extends Command
             $result = [
                 'adminStats' =>$adminStats,
                 'locations' =>$locations
+            ];*/
+            $result = [
+                true
             ];
-
 
             // Trigger notification event
             event(new NotificationCreate($result));

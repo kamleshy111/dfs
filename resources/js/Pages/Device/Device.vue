@@ -49,7 +49,7 @@ const columns = [
               <a href="/devices/${data.id}/view" class="btn btn-light action-btn"><i class="bi bi-eye-fill"></i> </a>
               <a class="btn btn-warning text-white action-btn" href="devices/${data.id}/edit" ><i class="bi bi-pencil-fill"></i> </a>
               <button class="btn-danger  action-btn delete-btn" data-id="${data.id}"><i class="bi bi-trash-fill"></i></button>
-              <a class="btn btn-warning action-btn" href="devices/map/${data.id}"> <i class="bi bi-geo-alt-fill"></i></a>
+              <a class="btn btn-warning action-btn" href="devices/map/${data.deviceId}"> <i class="bi bi-geo-alt-fill"></i></a>
               </div>
             `;
     },
@@ -204,7 +204,7 @@ $(document).ready(function() {
                     <i class="bi bi-plus-circle-fill mr-2"></i>Add New Device
                   </button>
                  </a>
-                 
+
                 <a :href="route('devices.map')">
                   <button class="btn btn-primary btn-custom">
                     <i class="bi bi-geo-alt-fill mr-2"></i>View on Map
@@ -229,7 +229,7 @@ $(document).ready(function() {
                     <i class="bi bi-plus-circle-fill mr-2"></i>Add New Device
                   </button>
                  </a>
-                 
+
                 <a :href="route('devices.map')">
                   <button class="btn btn-primary btn-custom">
                     <i class="bi bi-geo-alt-fill mr-2"></i>View on Map
