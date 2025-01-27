@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use Illuminate\Console\Command;
 use App\Models\Alert;
 use Illuminate\Support\Facades\Cache;
+use App\Jobs\alertMail;
 
 class SyncDeviceAlert extends Command
 {
@@ -72,7 +73,9 @@ class SyncDeviceAlert extends Command
 
                         //send notification
                         $customerEmail = $deviceArray[$item['devIdno']] ?? '';
-                      //  Mail::to($customerEmail)->send(new AlertDeviceDetail($alert));
+                        if ($customerEmail) {
+                            alertMail::dispatch($alert, $customerEmail);
+                        }
                         $endTime = $item['fileTimeStr'] ?? $endTime;
                         $date = Carbon::createFromFormat('Y-m-d H:i:s', $endTime);
                         $dateWithOneSecondAdded = $date->addSecond();

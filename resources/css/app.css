@@ -213,19 +213,18 @@ body {
 }
 .notification-badge {
     position: absolute;
-    top: -5px;
-    right: -5px;
+    top: -10px;
+    right: -10px;
     background-color: var(--light-color);
     color: white;
-    font-size: 10px;
-    width: 16px;
-    height: 15px;
+    font-size: 8px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: bold;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    padding: 5px 4px;
 }
 .icon-profile .bi i{
     font-size: 15px;
