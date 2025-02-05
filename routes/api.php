@@ -48,6 +48,9 @@ Route::middleware('auth:sanctum')->group(function(){
 # admin notification show header
     Route::get('/get-notification', [NotificationController::class, 'getNotification']);
 
+# report Export
+    Route::get('/notificationsExport', [NotificationController::class, 'getnotificationsExport']);
+
 #read notification
     Route::post('/notifications/{id?}/mark-as-read', [NotificationController::class, 'markAsRead']);
 

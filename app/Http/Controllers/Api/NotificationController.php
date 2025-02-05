@@ -123,19 +123,20 @@ class NotificationController extends Controller
 
     public function getNotification(){
 
-        $userId = Auth::id();
-        $user = Auth::user()->role === 'user';
+        $user = Auth::user();
+        $userId = $user->id ?? null;
+        $userRole = $user->role ?? null;
 
         $data = Alert::select('alerts.*')
-                    ->when($user, function ($query) use ($userId) {
-                        return $query->leftJoin('devices', 'alerts.device_id', '=', 'devices.device_id')
-                                    ->where('alerts.user_re_un_status', 0)
-                                    ->where('devices.user_id', $userId);
-                    }, function ($query) {
-                        return $query->where('alerts.read_unread_status', 0);
-                    })
-                    ->orderByDesc('alerts.created_at')
-                    ->get();
+                        ->when($userRole === 'user', function ($query) use ($userId) {
+                            return $query->leftJoin('devices', 'alerts.device_id', '=', 'devices.device_id')
+                                ->where('alerts.user_re_un_status', 0)
+                                ->where('devices.user_id', $userId);
+                        }, function ($query) {
+                            return $query->where('alerts.read_unread_status', 0);
+                        })
+                        ->orderByDesc('alerts.created_at')
+                        ->get();
 
 
 
@@ -220,4 +221,87 @@ class NotificationController extends Controller
         ]);
     }
 
+    public function getnotificationsExport(Request $request) {
+
+        $userId = Auth::user()->id;
+        $user = Auth::user()->role === 'user';
+
+        $query = Alert::query()->select(
+                            'alerts.id','alerts.device_id','alerts.latitude','alerts.longitude','alerts.location',
+                            'alerts.status','alerts.read_unread_status','alerts.user_re_un_status','alerts.captures',
+                            'alerts.message','alerts.alert_type','alerts.created_at as date','customers.first_name',
+                            'customers.last_name','devices.device_id as deviceId','vehicles.vehicle_register_number',
+                        )
+                        ->leftJoin('devices', 'alerts.device_id', '=', 'devices.device_id')
+                        ->leftJoin('vehicles', 'devices.id', '=', 'vehicles.device_id')
+                        ->leftJoin('customers', 'vehicles.customer_id', '=', 'customers.id');
+
+        if ($user) {
+            $query->where('customers.user_id', $userId);
+        }
+
+        // Filter by search vehicle registerSearch
+        if ($request->filled('vehicleRegisterSearch')) {
+            $query->where('vehicles.vehicle_register_number', 'like', '%' . $request->vehicleRegisterSearch . '%');
+        }
+
+        // Filter by device ID
+        if ($request->filled('device_id')) {
+            $query->where('devices.device_id', 'like', '%' . $request->device_id . '%');
+        }
+
+        // Filter by customer name
+        if ($request->filled('customerSearch')) {
+            $query->whereRaw("CONCAT(customers.first_name, ' ', customers.last_name) LIKE ?", ['%' . $request->customerSearch . '%']);
+        }
+
+        // Date range filter
+        if ($request->filled('startDate') && $request->filled('endDate')) {
+            $query->whereBetween('alerts.created_at', [
+                Carbon::parse($request->startDate, 'Asia/Kolkata')->setTimezone('UTC'),
+                Carbon::parse($request->endDate, 'Asia/Kolkata')->setTimezone('UTC'),
+            ]);
+        }
+
+        // Order by date and paginate
+        $notifications = $query->orderBy('alerts.created_at', 'desc')->get();
+
+        // Format the data
+        $formattedNotifications = $notifications->map(function ($item) {
+            $createdDate = Carbon::create($item->date);
+            $currentDate = Carbon::now();
+
+            $formatted_date = $createdDate->format('Y-m-d');
+            $formatted_time =  $createdDate->timezone('Asia/Kolkata')->format('h:i A');
+
+            $minutesDifference = $createdDate->diffInMinutes($currentDate);
+
+            if ($minutesDifference < 1440 && $minutesDifference >= 60) {
+                $formattedDate = round($minutesDifference / 60) . ' hours ago';
+            } elseif ($minutesDifference < 60) {
+                $formattedDate = round($minutesDifference) . ' minutes ago';
+            } else {
+                $formattedDate = $createdDate->format('j F, Y');
+            }
+
+            return [
+                'id' => $item->id ?? 0,
+                'deviceId' => $item->deviceId ?? 0,
+                'customerName' => ($item->first_name ?? '') . ' ' . ($item->last_name ?? ''),
+                'message' => $item->message ?? '',
+                'alertType' => $item->alert_type ?? '',
+                'vehicleRegisterNumber' => $item->vehicle_register_number ?? '',
+                'captures' => $item->captures ? asset($item->captures) : '',
+                'location' => $item->location ??  '',
+                'status' => $item->status ?? '',
+                'date' => $formattedDate,
+                'dateFormatted' => $formatted_date,
+                'timeFormatted' => $formatted_time,
+            ];
+        });
+
+        return response()->json([
+            'notifications' => $formattedNotifications,
+        ]);
+    }
 }
