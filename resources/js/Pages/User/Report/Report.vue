@@ -62,6 +62,59 @@ const notificationGetAll = () => {
 };
 
 
+const exportDataToCSV = async () => {
+  let notificationsData = [];
+  try {
+    const res = await axios.get(`api/notificationsExport`, {
+      params: {
+        vehicleRegisterSearch: vehicleRegister.value,
+        customerSearch : customerName.value,
+        device_id: deviceId.value,
+        startDate: startDate.value,
+        endDate: endDate.value,
+
+      },
+    });
+    notificationsData = res.data.notifications || [];
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+  
+  
+  if (!Array.isArray(notificationsData) || notificationsData.length === 0) {
+    alert("No data to export");
+    return;
+  }
+
+  // Function to escape CSV special characters
+  const escapeCsvValue = (value) => {
+    if (value === null || value === undefined) {
+      return '';
+    }
+    // Convert to string and escape any quotes or commas by enclosing in quotes
+    value = value.toString();
+    if (value.includes('"') || value.includes(',')) {
+      return `"${value.replace(/"/g, '""')}"`;  // Escape double quotes by doubling them
+    }
+    return value;
+  };
+
+  // Convert JSON data to CSV format
+  const csvContent = "data:text/csv;charset=utf-8," +
+    "Device Id,Vehicle Register Number,Customer Name,Date,Time,Message,Location\n" + 
+    notificationsData.map(notification => 
+      `${escapeCsvValue(notification.deviceId)},${escapeCsvValue(notification.vehicleRegisterNumber)},${escapeCsvValue(notification.customerName)},${escapeCsvValue(notification.dateFormatted)},${escapeCsvValue(notification.timeFormatted)},${escapeCsvValue(notification.message)},${escapeCsvValue(notification.location)}`
+    ).join("\n");
+
+  // Create a downloadable link
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", "report.csv");
+  document.body.appendChild(link);
+  link.click();
+};
+
 // Validate the date range
 const validateDates = () => {
   validationErrors.value.startDate = "";
@@ -165,11 +218,9 @@ const downloadImage = (notification) => {
                   <i class="bi bi-three-dots-vertical"></i>
               </button>
               <div class="d-none d-md-flex" id="desktopButtons">
-                <a :href="route('devices.map')">
-                  <button class="btn btn-primary btn-custom">
-                    <i class="bi bi-geo-alt-fill mr-2"></i>View on Map
-                  </button>
-                </a>
+                <button class="btn btn-primary btn-custom" @click="exportDataToCSV">
+                  Report Export
+                </button>
               </div>
 
               <!-- Popup mobile menu -->
