@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\ClientRegistration;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -34,7 +35,7 @@ class ClientsController extends Controller
                 'email' => $item->email ?? '',
                 'phone' => $item->phone ?? '',
                 'created_at' => \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') ?? '',
-    
+
             ];
         });
 
@@ -94,14 +95,13 @@ class ClientsController extends Controller
             // // Prepare email data
             $loginData = [
                 'title' => 'Your Account  Has Been Create Successfully ',
-                'body' => 'Pless find Account Login.',
+                'body' => 'Please find Account Login details here..',
                 'email' => $user->email,
                 'password' => $password,
             ];
 
             // Send email
-            Mail::to($user->email)->send(new SendLoginDetail($loginData));
-
+            ClientRegistration::dispatch($loginData, $user->email);
 
             // Create a new Customer
             $customer = new Customer;
