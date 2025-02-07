@@ -130,7 +130,7 @@ onMounted(() => {
           </div>
           <div class="dropdown img-header">
             <img
-              src="https://via.placeholder.com/40"
+              src="https://img.icons8.com/officel/40/user.png"
               alt="Profile"
               class="rounded-circle"
               style="cursor: pointer"
