@@ -6,6 +6,7 @@
       :center="center"
       :zoom="zoom"
       @click="selectedInfoWindow = null"
+      class="my-custom-class"
     >
       <!-- Render Markers -->
       <AdvancedMarker
