@@ -57,7 +57,7 @@ const columns = [
     <AuthenticatedLayout>
     <div class="my-3">
         <div class="form-container shadow">
-            <div class="table-container">
+            <div class="table-container new-client-table">
              <div class="d-flex justify-content-between align-items-center">
     <h4 class="responsive-btn">
         <i class="bi bi-people-fill mr-2"></i>All Clients
