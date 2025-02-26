@@ -2,7 +2,11 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
+use GuzzleHttp\Client;
 use Illuminate\Foundation\Application;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
@@ -18,6 +22,7 @@ use App\Http\Controllers\Admin\BillingController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\User\BillingController as UserBillingController;
 use App\Http\Controllers\NotificationController;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 
 // Route::get('/', function () {
@@ -102,7 +107,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::delete('/destroy/{id}', [VehicleTypeController::class, 'destroy'])->name('vehicle-type.destroy');
     });
 
- 
+
 
     //Billing Route
     Route::group(['prefix' => 'all-billing'], function () {
@@ -139,6 +144,29 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     # send email Vehicle Renewal
     Route::get('/email/vehicle-renewal',[NotificationController::class, 'sendEmailVehicleRenewal'])->name('email.vehicle-renewal');
 
+});
+
+Route::get('/download-proxy', function (Request $request) {
+    $fileUrl = $request->query('url');
+
+    // Validate the URL to prevent abuse
+    if (!filter_var($fileUrl, FILTER_VALIDATE_URL) || strpos($fileUrl, 'http://119.23.104.221:6611/') !== 0) {
+        abort(403, 'Invalid file URL.');
+    }
+
+    // Fetch the file using Laravel's HTTP client
+    $response = Http::withOptions(['stream' => true])->get($fileUrl);
+    if ($response->failed()) {
+        abort(404, 'File not found.');
+    }
+
+    // Stream the file to the user
+    return response()->streamDownload(function () use ($response) {
+        echo $response->body();
+    }, basename(parse_url($fileUrl, PHP_URL_PATH)), [
+        'Content-Type' => $response->header('Content-Type'),
+        'Content-Disposition' => 'attachment; filename="' . basename(parse_url($fileUrl, PHP_URL_PATH)) . '"',
+    ]);
 });
 
 
