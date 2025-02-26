@@ -65,8 +65,8 @@ const exportDataToCSV = async () => {
   } catch (error) {
     console.error('Error fetching data:', error);
   }
-  
-  
+
+
   if (!Array.isArray(notificationsData) || notificationsData.length === 0) {
     alert("No data to export");
     return;
@@ -87,8 +87,8 @@ const exportDataToCSV = async () => {
 
   // Convert JSON data to CSV format
   const csvContent = "data:text/csv;charset=utf-8," +
-    "Device Id,Vehicle Register Number,Customer Name,Date,Time,Message,Location\n" + 
-    notificationsData.map(notification => 
+    "Device Id,Vehicle Register Number,Customer Name,Date,Time,Message,Location\n" +
+    notificationsData.map(notification =>
       `${escapeCsvValue(notification.deviceId)},${escapeCsvValue(notification.vehicleRegisterNumber)},${escapeCsvValue(notification.customerName)},${escapeCsvValue(notification.dateFormatted)},${escapeCsvValue(notification.timeFormatted)},${escapeCsvValue(notification.message)},${escapeCsvValue(notification.location)}`
     ).join("\n");
 
@@ -180,14 +180,22 @@ const toggleNotification = async (id) => {
 // Download image method
 const downloadImage = (notification) => {
   if (notification.captures) {
-    const link = document.createElement('a');
-    link.href = notification.captures;
-    link.download = 'alert-capture.jpg';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+      // Encode the URL to pass it as a query parameter
+      const proxyUrl = `/download-proxy?url=${encodeURIComponent(notification.captures)}`;
+
+      // Create a hidden <a> tag to force download
+      const link = document.createElement("a");
+      link.href = proxyUrl;
+      link.setAttribute("download", ""); // Forces download
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
   }
 };
+
+const getSecureDownloadURL = (url) => {
+    return `/download-proxy?url=${encodeURIComponent(url)}`;
+}
 </script>
 <template>
   <Head title="device" />
@@ -298,16 +306,11 @@ const downloadImage = (notification) => {
                   <li><b>Location:</b> <a :href="`/devices/map/${notification.deviceId}`">{{ notification.location }}</a></li>
                 </ul>
                 <div class="col-md-4 col-12">
-
-                <button  style="font-size: 15px; padding: 7px 13px !important;"
-                    v-if="notification.captures"  @click="downloadImage(notification)" class="p-2 bg-blue-500 text-white rounded" >
-                    Download Photo
-                </button>
-
-                <button style="font-size: 15px; padding: 7px 13px !important;"
-                    v-else  class="p-2 bg-gray-500 text-white rounded cursor-not-allowed"  disabled >
-                    Download Photo
-                </button>
+                    <button style="font-size: 15px; padding: 7px 13px !important;"
+                            v-if="notification.captures" class="p-2 bg-blue-500 text-white rounded"
+                            @click="downloadImage(notification)">Download Photo</button>
+                    <button style="font-size: 15px; padding: 7px 13px !important;"
+                            v-else class="p-2 bg-blue-500 text-white rounded" disabled>Download Photo</button>
 
               </div>
               </div>
