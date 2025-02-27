@@ -1371,7 +1371,9 @@ div.dt-container .dt-paging .dt-paging-button.current:hover {
     padding: 17px 15px;
     border-radius: 0 4px 4px 0px;
 }
-  
+.main-text-1, .main-text-3 {
+    display: none;
+}
   
 
 
@@ -1436,7 +1438,7 @@ div.dt-container .dt-paging .dt-paging-button.current:hover {
     }
     .table-container h4 {
         width: 60%;
-        font-size: 16px;
+        font-size: 19px;
     }
     .right-box {
         margin: 0 0 50px 0;
@@ -1554,6 +1556,7 @@ div.dt-container .dt-paging .dt-paging-button.current:hover {
 
     .login-container {
         width: 100% !important;
+        min-height: 80vh;
     }
 
     .login-btn {
@@ -1574,10 +1577,10 @@ div.dt-container .dt-paging .dt-paging-button.current:hover {
         transform: translate3d(100px, 43px, 0px) !important;
     }
     .table-container {
-        padding: 15px 0px 15px 0px !important;
+        padding: 15px 15px 15px 15px !important;
     }
     .my-custom-class {
-        height: 50vh !important;
+        height: 100vh !important;
     }
     .icon-profile-bell {
         height: 30px !important;
@@ -1610,6 +1613,18 @@ div.dt-container .dt-paging .dt-paging-button.current:hover {
     }
     .login-box, .info-box {
         padding: 20px;
+    }
+    .new-header-dates {
+        display: none;
+    }
+    .main-text-4, .main-text-5, .main-text-2 {
+        display: none;
+    }
+    .main-text-3 {
+        display: block;
+    }
+    .new-main-slider-cont {
+        display: none !important;
     }
 
 }

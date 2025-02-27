@@ -205,7 +205,8 @@ const getSecureDownloadURL = (url) => {
       <div class="table-container new-client-table">
 
         <div class="d-flex justify-content-between align-items-center">
-            <h4><i class="fa fa-filter mr-2"></i>Filters Notifications </h4>
+            <h4 class="main-filters-2"><i class="fa fa-filter mr-2"></i>Filters Notifications </h4>
+            <h4 class="main-filters-1"><i class="fa fa-file-alt mr-2"></i>Reports</h4>
 
            <div class="text-end mobile-btn-responsive">
               <!-- Mobile menu button -->
@@ -221,35 +222,47 @@ const getSecureDownloadURL = (url) => {
 
         </div>
         <div class="row align-items-center mt-4 notifications-searchbar ">
-            <div class="form-group col-md-4">
+            <div class="form-group new-form-groop-1 col-md-4">
               <input v-model="customerName" type="text" class="form-control pe-5" placeholder="" @input="getData" />
               <label for="customerName" class="form-label">Customer Name</label>
             </div>
 
 
-            <div class="form-group col-md-4">
+            <div class="form-group new-form-groop-2 col-md-4">
               <input v-model="deviceId" type="text" class="form-control" placeholder="" @input="getData" />
               <label for="deviceId" class="form-label">Device Id</label>
             </div>
 
-            <div class="form-group col-md-4">
+            <div class="form-group name-vechicle-number col-md-4">
               <input v-model="vehicleRegister" type="text" class="form-control" placeholder="" @input="getData" />
               <label for="vehicleRegister" class="form-label">Vehicle Register Number</label>
             </div>
+
+            <div class="form-group new-form-group-3 col-md-4">
+            <label for="vehicleRegister" class="form-label">Vehicle Register Number</label>
+            <div class="custom-dropdown">
+              <select v-model="vehicleRegister" class="form-control custom-select custom-width" @change="getData">
+                <option value="" disabled selected>Select Vehicle Register Number</option>
+                <option value="ABC123">ABC123</option>
+                <option value="XYZ456">XYZ456</option>
+                <option value="LMN789">LMN789</option>
+              </select>
+            </div>
+          </div>
         </div>
         <div class="row align-items-center mt-3 notifications-searchbar-border">
           <div class="form-group row align-items-center col-md-8 mx-auto">
-              <div class="form-group m-0 col-md-6">
-                <input type="datetime-local" v-model="startDate" @input="getData" class="form-control" />
-                <label for="startDate" class="form-label">Start Date</label>
-                <small v-if="validationErrors.startDate" class="text-danger">{{ validationErrors.startDate }}</small>
+            <div class="form-group m-0 col-md-6">
+              <input type="date" v-model="startDate" @input="getData" class="form-control" />
+              <label for="startDate" class="form-label">Start Date</label>
+              <small v-if="validationErrors.startDate" class="text-danger">{{ validationErrors.startDate }}</small>
+            </div>
 
-              </div>
-              <div class="form-group m-0 col-md-6 boder-class">
-                <input type="datetime-local" v-model="endDate" @input="getData" class="form-control" />
-                <label for="endDate" class="form-label">End Date</label>
-                <small v-if="validationErrors.endDate" class="text-danger">{{ validationErrors.endDate }}</small>
-              </div>
+            <div class="form-group m-0 col-md-6 boder-class">
+              <input type="date" v-model="endDate" @input="getData" class="form-control" />
+              <label for="endDate" class="form-label">End Date</label>
+              <small v-if="validationErrors.endDate" class="text-danger">{{ validationErrors.endDate }}</small>
+            </div>
             </div>
         </div>
 
@@ -332,6 +345,59 @@ const getSecureDownloadURL = (url) => {
   }
 </style>
 <style scoped>
+ .form-group {
+    position: relative;
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-label {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+  }
+
+  .custom-dropdown {
+    position: relative;
+  }
+  .new-form-group-3 {
+    display: none;
+}
+
+  .custom-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+    width: 100%;
+    transition: border-color 0.3s ease;
+  }
+
+  .custom-select:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+
+  .custom-select option {
+    padding: 10px;
+  }
+
+  /* Custom Arrow */
+  .custom-select::after {
+    content: "▼";
+    font-size: 1rem;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+.main-filters-1{
+  display: none;
+}
 .notification-content-sub {
     display: flex;
     gap: 20px;
@@ -485,6 +551,16 @@ const getSecureDownloadURL = (url) => {
 .notifications-searchbar-border {
     margin-top: 0 !important;
 }
+.main-filters-1, .new-form-group-3 {
+    display: block;
+}
+.main-filters-2, .new-form-groop-1, .new-form-groop-2, .name-vechicle-number {
+    display: none;
+}
+
+
+
+
   }
 
 

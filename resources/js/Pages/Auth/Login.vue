@@ -41,9 +41,11 @@ const submit = () => {
         <div class="col-md-7 d-flex justify-content-center align-items-center p-0">
             <div class="login-box w-100">
               <div class="welcome-text text-left mb-4">
-                <h4>Hello</h4>
-                <h2>Welcome Back!</h2>
-                <p>Enter Your Email And Choose Password To Setup Your Account</p>
+                <h4 class="main-text-4">Hello</h4>
+                <h4 class="main-text-1">Hello</h4>
+                <h2 class="main-text-5">Welcome Back!</h2>
+                <h2 class="main-text-3">Login</h2>
+                <p class="main-text-2">Enter Your Email And Choose Password To Setup Your Account</p>
               </div>
               <form @submit.prevent="submit">
                 <div class="relative">
@@ -112,7 +114,7 @@ const submit = () => {
               </form>
             </div>
         </div>
-    <div class="col-md-5 second-box-content d-flex flex-column justify-content-center align-items-center p-0">
+    <div class="col-md-5 second-box-content d-flex flex-column justify-content-center align-items-center p-0 new-main-slider-cont">
         <SliderComponent />
     </div>
 </div>

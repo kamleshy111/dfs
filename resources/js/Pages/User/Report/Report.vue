@@ -210,7 +210,7 @@ const downloadImage = (notification) => {
       <div class="table-container">
 
         <div class="d-flex justify-content-between align-items-center">
-            <h4><i class="fa fa-filter mr-2"></i>Filters Notifications </h4>
+            <h4><i class="fa fa-filter mr-2"></i>Reports</h4>
 
            <div class="text-end mobile-btn-responsive">
               <!-- Mobile menu button -->
@@ -235,29 +235,35 @@ const downloadImage = (notification) => {
 
         </div>
         <div class="row align-items-center mt-4 notifications-searchbar ">
-            <div class="form-group col-md-3">
+            <div class="form-group main-inp-groops-2 col-md-3">
               <input v-model="deviceId" type="text" class="form-control" placeholder="" @input="getData" />
               <label for="deviceId" class="form-label">Device Id</label>
             </div>
 
             <div class="form-group col-md-3">
-              <input v-model="vehicleRegister" type="text" class="form-control" placeholder="" @input="getData" />
-              <label for="vehicleRegister" class="form-label">Vehicle Register Number</label>
+              <select v-model="vehicleRegister" class="form-control" @change="getData">
+                <option value="" disabled selected>Select Vehicle Register Number</option>
+                <option v-for="vehicle in vehicles" :key="vehicle.id" :value="vehicle.number">
+                  {{ vehicle.number }}
+                </option>
+              </select>
+              <!-- <label for="vehicleRegister" class="form-label">Vehicle Register Number</label> -->
             </div>
+
+
 
             <div class="col-md-6 form-group  notifications-searchbar-border">
           <div class="form-group m-0 row align-items-center">
-              <div class="form-group m-0 col-md-6">
-                <input type="datetime-local" v-model="startDate" @input="getData" class="form-control form-main" />
-                <label for="startDate" class="form-label">Start Date</label>
-                <small v-if="validationErrors.startDate" class="text-danger">{{ validationErrors.startDate }}</small>
-
-              </div>
-              <div class="form-group m-0 col-md-6 pr-[12px] boder-class">
-                <input type="datetime-local" v-model="endDate" @input="getData" class="form-control form-mains" />
-                <label for="endDate" class="form-label">End Date</label>
-                <small v-if="validationErrors.endDate" class="text-danger">{{ validationErrors.endDate }}</small>
-              </div>
+             <div class="form-group m-0 col-md-6">
+              <input type="date" v-model="startDate" @input="getData" class="form-control form-main" />
+              <label for="startDate" class="form-label">Start Date</label>
+              <small v-if="validationErrors.startDate" class="text-danger">{{ validationErrors.startDate }}</small>
+            </div>
+            <div class="form-group m-0 col-md-6 pr-[12px] boder-class">
+              <input type="date" v-model="endDate" @input="getData" class="form-control form-mains" />
+              <label for="endDate" class="form-label">End Date</label>
+              <small v-if="validationErrors.endDate" class="text-danger">{{ validationErrors.endDate }}</small>
+            </div>
             </div>
         </div>
         </div>
@@ -505,6 +511,9 @@ const downloadImage = (notification) => {
 }
 .notifications-searchbar-border {
     margin-top: 0 !important;
+}
+.main-inp-groops-2 {
+    display: none;
 }
   }
 
