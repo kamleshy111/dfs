@@ -206,7 +206,7 @@ const getSecureDownloadURL = (url) => {
 
         <div class="d-flex justify-content-between align-items-center">
             <h4 class="main-filters-2"><i class="fa fa-filter mr-2"></i>Filters Notifications </h4>
-            <h4 class="main-filters-1"><i class="fa fa-file-alt mr-2"></i>Reports</h4>
+            <!-- <h4 class="main-filters-1"><i class="fa fa-file-alt mr-2"></i>Reports</h4> -->
 
            <div class="text-end mobile-btn-responsive">
               <!-- Mobile menu button -->
@@ -243,9 +243,6 @@ const getSecureDownloadURL = (url) => {
             <div class="custom-dropdown">
               <select v-model="vehicleRegister" class="form-control custom-select custom-width" @change="getData">
                 <option value="" disabled selected>Select Vehicle Register Number</option>
-                <option value="ABC123">ABC123</option>
-                <option value="XYZ456">XYZ456</option>
-                <option value="LMN789">LMN789</option>
               </select>
             </div>
           </div>
@@ -287,7 +284,7 @@ const getSecureDownloadURL = (url) => {
 
                 <div class="notification-content">
                   <div class="notification-content-sub">
-                    <p><span class="highlight">{{ notification.message }}</span><b class="ml-2">Vehicle Register Number:</b> {{ notification.vehicleRegisterNumber }}</p>
+                    <p class="main-notify-sub"><span class="highlight">{{ notification.message }}</span><b class="ml-2">Vehicle Register Number:</b> {{ notification.vehicleRegisterNumber }}</p>
                     <p class="bi bi-calendar "><span class="ml-1">{{ notification.dateFormatted }}</span></p>
                     <p class="bi bi-clock "><span class="ml-1">{{ notification.timeFormatted }}</span></p>
                  </div>
@@ -305,7 +302,7 @@ const getSecureDownloadURL = (url) => {
                 </div>
                 <div class="notification-content">
                   <div class="notification-content-sub">
-                    <p><span class="highlight">{{ notification.message }}</span><b class="ml-2">Vehicle Register Number:</b> {{ notification.vehicleRegisterNumber }}</p>
+                    <p class="main-notify-sub"><span class="highlight">{{ notification.message }}</span><b class="ml-2">Vehicle Register Number:</b> {{ notification.vehicleRegisterNumber }}</p>
                     <p class="bi bi-calendar "><span class="ml-1">{{ notification.dateFormatted }}</span></p>
                     <p class="bi bi-clock "><span class="ml-1">{{ notification.timeFormatted }}</span></p>
                   </div>
@@ -554,7 +551,7 @@ const getSecureDownloadURL = (url) => {
 .main-filters-1, .new-form-group-3 {
     display: block;
 }
-.main-filters-2, .new-form-groop-1, .new-form-groop-2, .name-vechicle-number {
+.new-form-groop-1, .name-vechicle-number {
     display: none;
 }
 

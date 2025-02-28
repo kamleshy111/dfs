@@ -235,12 +235,12 @@ const downloadImage = (notification) => {
 
         </div>
         <div class="row align-items-center mt-4 notifications-searchbar ">
-            <div class="form-group main-inp-groops-2 col-md-3">
+            <!-- <div class="form-group main-inp-groops-2 col-md-3">
               <input v-model="deviceId" type="text" class="form-control" placeholder="" @input="getData" />
               <label for="deviceId" class="form-label">Device Id</label>
-            </div>
+            </div> -->
 
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-5">
               <select v-model="vehicleRegister" class="form-control" @change="getData">
                 <option value="" disabled selected>Select Vehicle Register Number</option>
                 <option v-for="vehicle in vehicles" :key="vehicle.id" :value="vehicle.number">
@@ -252,7 +252,7 @@ const downloadImage = (notification) => {
 
 
 
-            <div class="col-md-6 form-group  notifications-searchbar-border">
+            <div class="col-md-7 form-group  notifications-searchbar-border">
           <div class="form-group m-0 row align-items-center">
              <div class="form-group m-0 col-md-6">
               <input type="date" v-model="startDate" @input="getData" class="form-control form-main" />
@@ -260,12 +260,18 @@ const downloadImage = (notification) => {
               <small v-if="validationErrors.startDate" class="text-danger">{{ validationErrors.startDate }}</small>
             </div>
             <div class="form-group m-0 col-md-6 pr-[12px] boder-class">
-              <input type="date" v-model="endDate" @input="getData" class="form-control form-mains" />
+              <input type="date" v-model="endDate" @input="getData" class="form-control form-mains new-form-main" />
               <label for="endDate" class="form-label">End Date</label>
               <small v-if="validationErrors.endDate" class="text-danger">{{ validationErrors.endDate }}</small>
             </div>
             </div>
         </div>
+
+        <div class="" id="desktopButtons">
+                <button class="btn btn-primary btn-custom">
+                  Search
+                </button>
+              </div>
         </div>
         
 
@@ -284,17 +290,17 @@ const downloadImage = (notification) => {
           <div class="notifications-list" v-for="notification in notifications.data" :key="notification.id">
             <div class="notification-main" v-if="notification.userReUnStatus === 0">
               <div class="notification-item" @click="toggleNotification(notification.id)">
-                <div class="icon-circle mr-3">
+                <!-- <div class="icon-circle mr-3">
                   <i class="fas fa-sync-alt"></i>
-                </div>
+                </div> -->
                
                 <div class="notification-content">
                   <div class="notification-content-sub">
-                    <p><span class="highlight">{{ notification.message }}</span><b class="ml-2">Vehicle Register Number:</b> {{ notification.vehicleRegisterNumber }}</p>
+                    <p class="main-notify-sub"><span class="highlight">{{ notification.message }}</span><b class="ml-2">Vehicle Register Number:</b> {{ notification.vehicleRegisterNumber }}</p>
                     <p class="bi bi-calendar "><span class="ml-1">{{ notification.dateFormatted }}</span></p>
                     <p class="bi bi-clock "><span class="ml-1">{{ notification.timeFormatted }}</span></p>
                  </div>
-                  <small>{{ notification.date }}</small>
+                  <small class="text-small-1">{{ notification.date }}</small>
                 </div>
                 <i class="unread-dot"></i>
               </div>
@@ -303,22 +309,22 @@ const downloadImage = (notification) => {
             <!-- Notification Item 3 -->
             <div class="notification-main" v-if="notification.userReUnStatus === 1">
               <div class="notification-item" @click="toggleNotification(notification.id)">
-                <div class="icon-circle mr-3">
+                <!-- <div class="icon-circle mr-3">
                   <i class="fas fa-sync-alt"></i>
-                </div>
+                </div> -->
                 <div class="notification-content">
                   <div class="notification-content-sub">
-                    <p><span class="highlight">{{ notification.message }}</span><b class="ml-2">Vehicle Register Number:</b> {{ notification.vehicleRegisterNumber }}</p>
+                    <p class="main-notify-sub"><span class="highlight">{{ notification.message }}</span><b class="ml-2">Vehicle Register Number:</b> {{ notification.vehicleRegisterNumber }}</p>
                     <p class="bi bi-calendar "><span class="ml-1">{{ notification.dateFormatted }}</span></p>
                     <p class="bi bi-clock "><span class="ml-1">{{ notification.timeFormatted }}</span></p>
                   </div>
-                  <small>{{ notification.date }}</small>
+                  <small class="text-small-1">{{ notification.date }}</small>
                 </div>
               </div>
               <div v-show="openNotificationId === notification.id" class="notification-details row">
                 <ul class="col-md-8 col-12 list-group-notification">
-                  <li><b>Device Id:</b> {{ notification.deviceId }}</li>
-                  <li><b>Location:</b> <a :href="`/devices/map/${notification.id}`">{{ notification.location }}</a></li>
+                  <!-- <li><b>Device Id:</b> {{ notification.deviceId }}</li> -->
+                  <li><b>Location:</b> <a :href="`/devices/map/${notification.id}`">View on Map</a></li>
                 </ul>
                 <div class="col-md-4 col-12">
 
@@ -364,6 +370,7 @@ const downloadImage = (notification) => {
 }
 .list-group-notification{
   list-style-type: disc;
+  font-size: 14px;
 }
 .notifications-searchbar-border .boder-class .form-control[data-v-9e7b69c8] {
     border-right: 1px solid rgb(209 213 219) !important;
@@ -400,6 +407,8 @@ const downloadImage = (notification) => {
   }
   .notification-header .badge {
       background: #2196f3 !important;
+      padding: 5px 5px;
+      font-size: 10px;
   }
 
   .notification-header .mark-all {
@@ -432,10 +441,10 @@ const downloadImage = (notification) => {
       background-color: #f1f1f1ba;
   }
 
-  .notification-item .icon-circle {
+  /* .notification-item .icon-circle {
       background-color: #2196f3;
       color: #fff;
-  }
+  } */
   .notification-content {
       flex-grow: 1;
   }
@@ -481,18 +490,31 @@ const downloadImage = (notification) => {
   @media (max-width: 767px){
       .notification-content p {
       margin: 0;
-      font-size: 12px;
+      font-size: 11px;
   }
   .notification-item {
-      padding: 12px 10px;
+      padding: 5px 12px;
   }
-  .icon-circle {
-      width: 50px;
-      font-size: 20px;
-  }
-  .unread-dot {
-      width: 10px;
-  }
+  /* .icon-circle {
+        width: 25px;
+        font-size: 12px;
+        height: 25px;
+        margin-right: 12px !important;
+        display: none;
+  } */
+  .notification-content-sub {
+    display: flex;
+    gap: 10px;
+}
+.text-small-1 {
+    font-size: 12px !important;
+}
+.new-form-main {
+    margin-bottom: 0px !important;
+}
+.main-notify-sub {
+    width: 140px;
+}
   .notifications-searchbar-border .boder-class .form-control {
     border-right:  1px solid rgb(209 213 219) !important;
     border-left:  1px solid rgb(209 213 219) !important;

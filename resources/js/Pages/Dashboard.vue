@@ -65,65 +65,6 @@
                 </div>
             </div>
 
-                <div class="dropdowns-1" id="dropdown-section-1">
-                <input class="form-control dropdown-toggle" type="text" id="filterDropdown" placeholder="Select Filter" aria-expanded="false" readonly data-bs-toggle="dropdown">
-
-                <ul class="dropdown-menu" aria-labelledby="filterDropdown" style="left: 23px;">
-                    <li @click="reloadMarkers('all')">
-                    <a class="dropdown-item" href="#">
-                        <div class="dropdown-item-content">
-                        <div class="d-flex align-items-center justify-content-between w-100">
-                            <div class="device-info">
-                            <h4>{{ adminStats.all_device_count }}</h4>
-                            <p>All Devices</p>
-                            </div>
-                            <i v-if="selected_filter == 'all'" class="bi bi-check-circle-fill selected-icon"></i>
-                        </div>
-                        </div>
-                    </a>
-                    </li>
-                    <li @click="reloadMarkers(1)">
-                    <a class="dropdown-item" href="#">
-                        <div class="dropdown-item-content">
-                        <div class="d-flex align-items-center justify-content-between w-100">
-                            <div class="device-info">
-                            <h4>{{ adminStats.active_device_count }}</h4>
-                            <p>Active Devices</p>
-                            </div>
-                            <i v-if="selected_filter == 1" class="bi bi-check-circle-fill selected-icon"></i>
-                        </div>
-                        </div>
-                    </a>
-                    </li>
-                    <li @click="reloadMarkers(0)">
-                    <a class="dropdown-item" href="#">
-                        <div class="dropdown-item-content">
-                        <div class="d-flex align-items-center justify-content-between w-100">
-                            <div class="device-info">
-                            <h4>{{ adminStats.inactive_device_count }}</h4>
-                            <p>Inactive Devices</p>
-                            </div>
-                            <i v-if="selected_filter == 0" class="bi bi-check-circle-fill selected-icon"></i>
-                        </div>
-                        </div>
-                    </a>
-                    </li>
-                    <li @click="reloadMarkers(2)">
-                    <a class="dropdown-item" href="#">
-                        <div class="dropdown-item-content">
-                        <div class="d-flex align-items-center justify-content-between w-100">
-                            <div class="device-info">
-                            <h4>{{ adminStats.expired_device_count }}</h4>
-                            <p>Expired Devices</p>
-                            </div>
-                            <i v-if="selected_filter == 2" class="bi bi-check-circle-fill selected-icon"></i>
-                        </div>
-                        </div>
-                    </a>
-                    </li>
-                </ul>
-                </div>
-
 
 
             <div class="row table-container m-0">
@@ -283,9 +224,6 @@ const getAdminStats = () => {
   }
   #dropdown-section-1 {
     display: block;
-}
-.main-all-box-content-2 {
-    display: none;
 }
   .device-info h4 {
     font-size: 16px;
