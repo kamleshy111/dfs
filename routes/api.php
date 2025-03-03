@@ -24,7 +24,7 @@ Route::middleware('auth:sanctum')->group(function(){
 #Customer Edite select devices
     Route::get('/editCustomers/{customerID}/devices/{deviceId?}', [CustomerDeviceController::class, 'getDevicesByEditCustomer']);
 
-# Role:User -> Devies
+# Role:User -> Devies mapDevices
     Route::get('/get-devices/{userId?}', [DashboardController::class, 'getMapDevices'])->name('get-devices');
 
 # Role:User -> Monitor
@@ -35,6 +35,9 @@ Route::middleware('auth:sanctum')->group(function(){
 
 ## START: Admin Routes
     Route::get('/get-admin-stats/{userId?}', [AdminDashboardController::class, 'getAdminStats']);
+
+## Device Status Routes
+Route::get('/get-device-status', [AdminDashboardController::class, 'getDeviceStatus']);
 
 # user device notification get
 Route::get('/user-notifications', [NotificationController::class, 'userNotifications']);

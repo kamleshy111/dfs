@@ -144,6 +144,8 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     # send email Vehicle Renewal
     Route::get('/email/vehicle-renewal',[NotificationController::class, 'sendEmailVehicleRenewal'])->name('email.vehicle-renewal');
 
+
+    Route::get('devices/map/{id?}', [DeviceController::class, 'viewMap'])->name('devices.map');
 });
 
 Route::get('/download-proxy', function (Request $request) {
