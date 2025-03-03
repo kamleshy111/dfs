@@ -3,74 +3,78 @@
     <Head title="Dashboards" />
 
     <AuthenticatedLayout>
-        <div class="container my-3">
-            <!-- Summary Cards -->
-            <div class="row main-all-box-content-2">
-                <div class="col-12 col-md-6 col-lg-3 filter-div" @click="reloadMarkers('all')">
-                    <div class="card-summary">
-                      <div class="card-summary-icon">
-                        <i class="bi bi-car-front"></i>
-                        <div class="icon-box">
-                            <h4>{{ adminStats.all_device_count }}</h4>
-                            <p>All Devices</p>
-                        </div>
-                      </div>
-                        <div class="selected_class">
-                            <i v-if="selected_filter == 'all'" class="bi bi-check-circle-fill"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-6 col-lg-3 filter-div"  @click="reloadMarkers(1)">
-                    <div class="card-summary">
-                      <div class="card-summary-icon">
-                        <i class="bi bi-car-front"></i>
-                        <div class="icon-box">
-                            <h4>{{ adminStats.active_device_count }}</h4>
-                            <p>Active Devices</p>
-                        </div>
-                      </div>
-                        <div class="selected_class">
-                            <i v-if="selected_filter == 1" class="bi bi-check-circle-fill"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-6 col-lg-3 filter-div"  @click="reloadMarkers(0)">
-                    <div class="card-summary">
-                      <div class="card-summary-icon">
-                        <i class="bi bi-car-front"></i>
-                        <div class="icon-box">
-                            <h4>{{ adminStats.inactive_device_count }}</h4>
-                            <p>Inactive Devices</p>
-
-                        </div>
-                      </div>
-                        <div class="selected_class">
-                            <i v-if="selected_filter == 0" class="bi bi-check-circle-fill"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-6 col-lg-3 filter-div"  @click="reloadMarkers(2)">
-                    <div class="card-summary">
-                      <div class="card-summary-icon">
-                        <i class="bi bi-car-front"></i>
-                        <div class="icon-box">
-                            <h4>{{ adminStats.expired_device_count }}</h4>
-                            <p>Expired Devices</p>
-                        </div>
-                      </div>
-                        <div class="selected_class">
-                            <i v-if="selected_filter == 2" class="bi bi-check-circle-fill"></i>
-                        </div>
-                    </div>
-                </div>
+     <div class="container my-3">
+      <!-- Summary Cards -->
+      <div class="dropdowns-1">
+        <button
+          class="btn dropdown-toggles-1 main-btn-sec-1"
+          type="button"
+          id="dropdownMenuButton"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          <li
+            @click="reloadMarkers('all')"
+            class="dropdown-itemse drop-li-down"
+          >
+            <div class="card-summarys-1 card-icons-1">
+              <div class="icon-box">
+                <h4>{{ adminStats.all_device_count }}</h4>
+                <p>All Devices</p>
+              </div>
+              <div class="selected_class-1 select-card-icn">
+                <i
+                  v-if="selected_filter == 'all'"
+                  class="bi bi-chevron-down main-chevron-down"
+                ></i>
+              </div>
             </div>
-
-
-
-            <div class="row table-container m-0">
-                <Map :locations="locations" :zoom="5" />
+          </li>
+        </button>
+        <ul
+          class="dropdown-menu button-menu-drop-1"
+          aria-labelledby="dropdownMenuButton"
+        >
+          <li @click="reloadMarkers(1)" class="dropdown-itemse">
+            <div class="card-summarys-1">
+              <div class="icon-box">
+                <h4>{{ adminStats.active_device_count }}</h4>
+                <p>Active Devices</p>
+              </div>
+              <!-- <div class="selected_class">
+                    <i v-if="selected_filter == 1" class="bi bi-check-circle-fill"></i>
+                </div> -->
             </div>
-        </div>
+          </li>
+          <li @click="reloadMarkers(0)" class="dropdown-itemse">
+            <div class="card-summarys-1">
+              <div class="icon-box">
+                <h4>{{ adminStats.inactive_device_count }}</h4>
+                <p>Inactive Devices</p>
+              </div>
+              <!-- <div class="selected_class">
+                    <i v-if="selected_filter == 0" class="bi bi-check-circle-fill"></i>
+                </div> -->
+            </div>
+          </li>
+          <li @click="reloadMarkers(2)" class="dropdown-itemse">
+            <div class="card-summarys-1">
+              <div class="icon-box">
+                <h4>{{ adminStats.expired_device_count }}</h4>
+                <p>Expired Devices</p>
+              </div>
+              <!-- <div class="selected_class">
+                    <i v-if="selected_filter == 2" class="bi bi-check-circle-fill"></i>
+                </div> -->
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="row table-container m-0">
+        <Map :locations="locations" :zoom="5" />
+      </div>
+    </div>
     </AuthenticatedLayout>
 </template>
 
@@ -216,6 +220,66 @@ const getAdminStats = () => {
 }
 .dropdown {
     margin-bottom: 0px !important;
+}
+
+.dropdown-toggles-1 {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 0px;
+  font-size: 16px;
+  border-radius: 8px;
+  transition: background-color 0.3s;
+  box-shadow: none;
+}
+.dropdown-menu {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 0;
+  border: 1px solid #ddd;
+  width: 331px;
+}
+
+.dropdown-itemse {
+  padding: 0px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border-bottom: 1px solid #ddd;
+}
+.card-summarys-1 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: none !important;
+  border: 1px solid #00000094;
+  padding: 12px 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+#dropdownMenuButton {
+  width: 100%;
+}
+.icon-box {
+  margin-left: 10px;
+  text-align: left;
+  color: black;
+}
+.main-chevron-down {
+  color: black;
+  font-size: 22px;
+}
+
+.selected_class-1 {
+  display: flex;
+  align-items: center;
+}
+
+.bi-check-circle-fill {
+  color: #28a745;
+  font-size: 18px;
+}
+.button-menu-drop-1 {
+  top: -15px !important;
 }
 
 @media (max-width: 768px) {
