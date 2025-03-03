@@ -324,7 +324,7 @@ const downloadImage = (notification) => {
               <div v-show="openNotificationId === notification.id" class="notification-details row">
                 <ul class="col-md-8 col-12 list-group-notification">
                   <!-- <li><b>Device Id:</b> {{ notification.deviceId }}</li> -->
-                  <li><b>Location:</b> <a :href="`/devices/map/${notification.id}`">View on Map</a></li>
+                  <li><b>Location:</b> <a :href="`/devices/map/${notification.deviceId}`">View on Map</a></li>
                 </ul>
                 <div class="col-md-4 col-12">
 

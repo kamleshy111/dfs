@@ -45,4 +45,24 @@ class AdminDashboardController extends Controller
         ]);
     }
 
+    public function getDeviceStatus(Request $request){
+   
+        $devices = Device::select('status', 'device_id', 'date_time')->get();
+
+        $deviceStatus = $devices->map(function ($device) {
+            return [
+                'deviceId' => $device->device_id,
+                'status' => $device->status,
+                'dateTime' => $device->date_time,
+            ];
+        });
+
+        $deviceCount = $devices->count();
+
+        return response()->json([
+            'deviceCount' => $deviceCount,
+            'deviceStatus' => $deviceStatus,
+        ]);
+    }
+
 }
