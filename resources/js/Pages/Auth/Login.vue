@@ -37,13 +37,11 @@ const submit = () => {
     <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
       {{ status }}
     </div>
-    <div class="row w-100 align-items-stretch">
-        <div class="col-md-7 d-flex justify-content-center align-items-center p-0">
+    <div class="row align-items-stretch">
+        <div class="col-md-7 w-100 main-class-top">
             <div class="login-box w-100">
               <div class="welcome-text text-left mb-4">
-                <h4>Hello</h4>
-                <h2>Welcome Back!</h2>
-                <p>Enter Your Email And Choose Password To Setup Your Account</p>
+                <h2 class="main-text-3">Login</h2>
               </div>
               <form @submit.prevent="submit">
                 <div class="relative">
@@ -102,7 +100,7 @@ const submit = () => {
                 <div class="mt-6 flex items-center justify-end">
 
                   <PrimaryButton
-                    class="ms-4 login-btn btn-block py-3 justify-content-center h-[56px]"
+                    class="login-btn btn-block py-3 justify-content-center h-[56px]"
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
                   >
@@ -112,9 +110,9 @@ const submit = () => {
               </form>
             </div>
         </div>
-    <div class="col-md-5 second-box-content d-flex flex-column justify-content-center align-items-center p-0">
+    <!-- <div class="col-md-5 second-box-content d-flex flex-column justify-content-center align-items-center p-0 new-main-slider-cont">
         <SliderComponent />
-    </div>
+    </div> -->
 </div>
   </GuestLayout>
 </template>

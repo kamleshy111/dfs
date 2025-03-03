@@ -39,6 +39,7 @@ body {
     padding: 20px 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     min-height: 100vh;
+    transition: left 0.3s ease;
 }
 
 .siderbar {
@@ -416,7 +417,6 @@ a.page-link {
 
 
 .login-container {
-    display: flex;
     min-height: 100vh;
 }
 
@@ -542,12 +542,10 @@ a.page-link {
 }
 
 .login-container {
-    display: flex;
-    min-height: 100vh;
-    width: 72%;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    width: 40%;
+}
+.main-class-top{
+    margin-top: 100px;
 }
 
 .table-container h4 {
@@ -1371,7 +1369,7 @@ div.dt-container .dt-paging .dt-paging-button.current:hover {
     padding: 17px 15px;
     border-radius: 0 4px 4px 0px;
 }
-  
+
   
 
 
@@ -1436,7 +1434,7 @@ div.dt-container .dt-paging .dt-paging-button.current:hover {
     }
     .table-container h4 {
         width: 60%;
-        font-size: 16px;
+        font-size: 19px;
     }
     .right-box {
         margin: 0 0 50px 0;
@@ -1474,8 +1472,18 @@ div.dt-container .dt-paging .dt-paging-button.current:hover {
       }
     
 
-    .sidebar{
-        display: none;
+      .sidebar {
+        display: block;
+    }
+    .siderbar {
+        position: fixed;
+        left: -210px;
+        top: 0;
+        z-index: 9999;
+        transition: left 0.3s ease;
+    }
+    .siderbar.active {
+        left: 0;
     }
 
     .responsive-btn {
@@ -1554,6 +1562,7 @@ div.dt-container .dt-paging .dt-paging-button.current:hover {
 
     .login-container {
         width: 100% !important;
+        min-height: 80vh;
     }
 
     .login-btn {
@@ -1570,14 +1579,15 @@ div.dt-container .dt-paging .dt-paging-button.current:hover {
     .dropdown-menu.notification-dropdown.show {
         box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
         border: 0;
-        width: 260px !important;
-        transform: translate3d(100px, 43px, 0px) !important;
+        width: 300px !important;
+        transform: translate3d(-170px, 43px, 0px) !important;
     }
     .table-container {
-        padding: 15px 0px 15px 0px !important;
+        padding: 15px 15px 15px 15px !important;
     }
     .my-custom-class {
-        height: 50vh !important;
+        height: 100vh !important;
+        padding: 0px;
     }
     .icon-profile-bell {
         height: 30px !important;
@@ -1610,6 +1620,15 @@ div.dt-container .dt-paging .dt-paging-button.current:hover {
     }
     .login-box, .info-box {
         padding: 20px;
+    }
+    .new-header-dates {
+        display: none;
+    }
+    .main-text-3 {
+        display: block;
+    }
+    .new-main-slider-cont {
+        display: none !important;
     }
 
 }

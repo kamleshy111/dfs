@@ -50,3 +50,5 @@ createInertiaApp({
         color: '#4B5563', // Configure progress bar color
     },
 });
+
+

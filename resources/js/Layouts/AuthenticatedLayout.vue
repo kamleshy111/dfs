@@ -29,20 +29,39 @@
 <script>
 import Sidebar from './Sidebar.vue';
 import Header from './Header.vue';
-import { computed } from 'vue';
-import { usePage } from '@inertiajs/vue3'; // For Inertia.js
+import { computed, ref, onMounted } from 'vue';
+import { usePage } from '@inertiajs/vue3';
 
 export default {
     props: {
         header: {
             type: String,
-            required: false, // Make it optional
+            required: false,
         },
     },
     components: { Sidebar, Header },
     setup() {
-        const { props } = usePage(); // Get props from Inertia
-        const role = computed(() => props.auth?.user?.role || 'user'); // Default to user if no role is found
+        const { props } = usePage();
+        const role = computed(() => props.auth?.user?.role || 'user');
+
+        // Sidebar toggle logic
+        const siderbar = ref(null);
+        const toggleSidebar = () => {
+            if (siderbar.value) {
+                siderbar.value.classList.toggle('active');
+            }
+        };
+
+        onMounted(() => {
+            // Get sidebar element after component is mounted
+            siderbar.value = document.querySelector('.siderbar');
+            const toggleBtn = document.querySelector('.toggle-btn');
+            
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', toggleSidebar);
+            }
+        });
+
         return { role };
     },
 };
