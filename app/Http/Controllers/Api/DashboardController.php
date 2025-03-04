@@ -36,8 +36,7 @@ class DashboardController extends Controller
             }
         } else {
             if (!empty($request->device_id)) {
-                $devices = Device::where('device_id', $request->device_id)
-                        ->leftJoin('vehicles','devices.id', '=', 'vehicles.device_id');
+                $devices = Device::where('device_id', $request->device_id);
 
                 if (isset($status) && $status !== 'all') {
                     $devices->where('status', $status);
@@ -64,7 +63,7 @@ class DashboardController extends Controller
 
 
 
-        dd($devices);
+
 
         $locations = $devices->map(function ($device) {
 
