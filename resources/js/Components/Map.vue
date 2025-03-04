@@ -21,7 +21,7 @@
       <div v-if="selectedInfoWindow" class="info-window">
         <div>
           <div class="item-wrap">
-            <div class="item-header">
+            <!-- <div class="item-header">
               <div class="item-wrap-slider">
                 <div class="listing-gallery-wrap">
                   <div class="houzez-listing-carousel">
@@ -34,15 +34,15 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
             <div class="item-body flex-grow-1">
               <div>
                 <h2 class="item-title">
                   {{ selectedInfoWindow.device_name }}
                 </h2>
                 <ul class="list-unstyled item-info">
-                  <li>Message: {{ selectedInfoWindow.message }}</li>
-                  <li>Status: {{ selectedInfoWindow.message_type }}</li>
+                  <!-- <li>Message: {{ selectedInfoWindow.message }}</li>
+                  <li>Status: {{ selectedInfoWindow.message_type }}</li> -->
                   <li>Last Active: {{ selectedInfoWindow.last_active }}</li>
                   <a :href="`/report?deviceId=${selectedInfoWindow.device_id}`" target="_blank">View Details</a>
 

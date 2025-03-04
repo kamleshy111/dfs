@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\AdminDashboardController;
 use App\Http\Controllers\Api\CustomerDeviceController;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\VehicleController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -59,5 +60,10 @@ Route::middleware('auth:sanctum')->group(function(){
 
 #all notification
     Route::get('allNotifications', [NotificationController::class, 'index'])->name('allNotification');
+
+#get-vehicles
+Route::get('/get-vehicles', [VehicleController::class, 'getVehicles']);
+
+
 
 });

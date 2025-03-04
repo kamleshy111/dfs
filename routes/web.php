@@ -58,6 +58,8 @@ Route::middleware(['auth'])->group(function () {
     Route::group(['prefix' => 'report'], function () {
         Route::get('/', [ReportController::class, 'index'])->name('report');
     });
+
+    Route::get('devices/map/{id?}', [DeviceController::class, 'viewMap'])->name('devices.map');
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
@@ -90,7 +92,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::post('/update/{id}', [DeviceController::class, 'update'])->name('devices.update');
         Route::delete('/destroy/{id}', [DeviceController::class, 'destroy'])->name('devices.destroy');
 
-        Route::get('/map/{id?}', [DeviceController::class, 'viewMap'])->name('devices.map');
     });
 
     //VehicleType Routes
@@ -144,8 +145,6 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     # send email Vehicle Renewal
     Route::get('/email/vehicle-renewal',[NotificationController::class, 'sendEmailVehicleRenewal'])->name('email.vehicle-renewal');
 
-
-    Route::get('devices/map/{id?}', [DeviceController::class, 'viewMap'])->name('devices.map');
 });
 
 Route::get('/download-proxy', function (Request $request) {

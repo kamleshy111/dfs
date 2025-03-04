@@ -14,24 +14,24 @@
           aria-expanded="false"
         >
           <li
-            @click="reloadMarkers('all')"
-            class="dropdown-itemse drop-li-down"
+            class="dropdown-itemse drop-li-down" style="list-style: none;"
           >
             <div class="card-summarys-1 card-icons-1">
               <div class="icon-box">
-                <h4>{{ adminStats.all_device_count }}</h4>
+                <!-- <h4>{{ adminStats.all_device_count }}</h4> -->
+                <h4>{{ deviceStatus.deviceCount }}</h4>
                 <p>All Devices</p>
               </div>
-              <div class="selected_class-1 select-card-icn">
+              <!-- <div class="selected_class-1 select-card-icn">
                 <i
                   v-if="selected_filter == 'all'"
                   class="bi bi-chevron-down main-chevron-down"
                 ></i>
-              </div>
+              </div> -->
             </div>
           </li>
         </button>
-        <ul
+        <!-- <ul
           class="dropdown-menu button-menu-drop-1"
           aria-labelledby="dropdownMenuButton"
         >
@@ -41,9 +41,9 @@
                 <h4>{{ adminStats.active_device_count }}</h4>
                 <p>Active Devices</p>
               </div>
-              <!-- <div class="selected_class">
+              <div class="selected_class">
                     <i v-if="selected_filter == 1" class="bi bi-check-circle-fill"></i>
-                </div> -->
+                </div>
             </div>
           </li>
           <li @click="reloadMarkers(0)" class="dropdown-itemse">
@@ -52,9 +52,9 @@
                 <h4>{{ adminStats.inactive_device_count }}</h4>
                 <p>Inactive Devices</p>
               </div>
-              <!-- <div class="selected_class">
+              <div class="selected_class">
                     <i v-if="selected_filter == 0" class="bi bi-check-circle-fill"></i>
-                </div> -->
+                </div>
             </div>
           </li>
           <li @click="reloadMarkers(2)" class="dropdown-itemse">
@@ -63,10 +63,34 @@
                 <h4>{{ adminStats.expired_device_count }}</h4>
                 <p>Expired Devices</p>
               </div>
-              <!-- <div class="selected_class">
+              <div class="selected_class">
                     <i v-if="selected_filter == 2" class="bi bi-check-circle-fill"></i>
-                </div> -->
+                </div>
             </div>
+          </li>
+        </ul> -->
+        <!-- Device Dropdown List -->
+        <ul v-if="deviceStatus.deviceStatus && deviceStatus.deviceStatus.length" class="dropdown-menu button-menu-drop-1" aria-labelledby="dropdownMenuButton">
+          <li v-for="(device, index) in deviceStatus.deviceStatus" :key="index">
+            
+              <span v-if="device.status === 1" class="text-success">
+                <a :href="`/devices/map/${device.deviceId}`" class="text-success">
+                  <strong>Device ID:</strong> <span>{{ device.deviceId }}</span>
+                </a>
+              </span>
+
+
+            <span v-else-if="device.status == 2"  class="text-black main-text-wrap-1">
+              <a :href="`/devices/map/${device.deviceId}`" class="text-black">
+                  <strong>Device ID:</strong> <span>{{ device.deviceId }}</span>
+                </a>
+            </span>
+
+            <span v-else class="text-color-change">
+              <a :href="`/devices/map/${device.deviceId}`" class="text-brown">
+                <strong>Device ID:</strong> <span >{{ device.deviceId }}</span> 
+              </a>
+            </span>
           </li>
         </ul>
       </div>
@@ -86,7 +110,8 @@ import Map from '@/Components/Map.vue';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 
 const locations = ref([]);
-const adminStats = ref({
+const deviceStatus = ref({ deviceCount: 0, deviceStatus: [] });
+/*const adminStats = ref({
     customer_amounts: 0,
     customer_count: 0,
     all_device_count: 0,
@@ -94,22 +119,32 @@ const adminStats = ref({
     expired_device_count: 0,
     inactive_device_count: 0,
 });
-const selected_filter = ref('all');
+const selected_filter = ref('all'); */
+
+// const NotificationCreate = () => {
+//     window.Echo.channel('notification')
+//         .listen('.received.notification', (data) => {
+//             console.log(data);
+//             console.log("hit hua hai");
+//             loadMapData();
+//             getAdminStats();
+//         });
+// };
 
 const NotificationCreate = () => {
-    window.Echo.channel('notification')
-        .listen('.received.notification', (data) => {
-            console.log(data);
-            console.log("hit hua hai");
-            loadMapData();
-            getAdminStats();
-        });
+  console.log("data dashboardLink :");
+
+  window.Echo.channel("notification").listen(
+    ".received.notification",
+    getDeviceStatus(),
+  );
 };
 
 onMounted(() => {
-    loadMapData();
-    getAdminStats();
+    // loadMapData();
+    // getAdminStats();
     NotificationCreate();
+    getDeviceStatus();
     window.onload = () => {
         const dashboardLink = document.querySelector(".sidebar li a");
         if (dashboardLink) {
@@ -119,7 +154,7 @@ onMounted(() => {
     };
 });
 
-const reloadMarkers = (selected) => {
+/*const reloadMarkers = (selected) => {
     selected_filter.value = selected;
     loadMapData();
 }
@@ -139,9 +174,9 @@ const loadMapData = () => {
         .catch((error) => {
             console.error('Error fetching locations:', error);
         });
-}
+}*/
 
-const getAdminStats = () => {
+/*const getAdminStats = () => {
     axios
         .get(import.meta.env.VITE_AJAX_URL + "get-admin-stats")
         .then((response) => {
@@ -152,12 +187,38 @@ const getAdminStats = () => {
         .catch((error) => {
             console.error("There was an error fetching the user devices:", error);
         });
+}; */
+
+const getDeviceStatus = () => {
+  axios
+    .get(import.meta.env.VITE_AJAX_URL + "get-device-status")
+    .then((response) => {
+      if (response.status == 200) {
+        console.log('device status list ',response.data)
+        deviceStatus.value = response.data;
+      }
+    })
+    .catch((error) => {
+      console.error("There was an error fetching the user devices:", error);
+    });
 };
 </script>
 
 <style scoped>
+.button-menu-drop-1 li {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+.text-color-change a {
+    color: brown;
+}
 .filter-div {
     cursor: pointer;
+}
+.main-text-wrap-1 a:hover {
+    color: black !important;
 }
 #filterDropdown {
     cursor: pointer;

@@ -12,9 +12,7 @@
           data-bs-toggle="dropdown"
           aria-expanded="false"
         >
-          <li
-            
-            class="dropdown-itemse drop-li-down"
+          <li class="dropdown-itemse drop-li-down" style="list-style: none;"
           >
             <div class="card-summarys-1 card-icons-1">
               <div class="icon-box">
@@ -80,14 +78,14 @@
                 </span>
 
 
-              <span v-else-if="device.status == 2"  class="text-danger">
-                <a :href="`/devices/map/${device.deviceId}`" class="text-danger">
+              <span v-else-if="device.status == 2"  class="text-black main-text-wrap-1">
+                <a :href="`/devices/map/${device.deviceId}`" class="text-black">
                     <strong>Device ID:</strong> <span>{{ device.deviceId }}</span>
                   </a>
               </span>
 
-              <span v-else class="text-dark">
-                <a :href="`/devices/map/${device.deviceId}`" class="text-dark">
+              <span v-else class="text-color-change">
+                <a :href="`/devices/map/${device.deviceId}`" class="text-brown">
                   <strong>Device ID:</strong> <span >{{ device.deviceId }}</span> 
                 </a>
               </span>
@@ -144,7 +142,7 @@ const NotificationCreate = () => {
 onMounted(() => {
   // loadMapData();
   // getAdminStats();
-  getDeviceStatus()
+  getDeviceStatus();
   NotificationCreate();
   window.onload = () => {
     const dashboardLink = document.querySelector(".sidebar li a");
@@ -216,11 +214,17 @@ const getDeviceStatus = () => {
     margin-bottom: 10px;
     border-radius: 5px;
 }
+.main-text-wrap-1 a:hover {
+    color: black !important;
+}
 .filter-div {
   cursor: pointer;
 }
 .my-custom-class {
   padding: 0;
+}
+.text-color-change a {
+    color: brown;
 }
 .dropdown-toggles-1 {
   background-color: #007bff;

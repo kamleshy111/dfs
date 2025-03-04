@@ -11,6 +11,7 @@ use GuzzleHttp\Client;
 use Illuminate\Support\Facades\DB;
 use App\Models\Notification;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class AdminDashboardController extends Controller
 {
@@ -47,7 +48,13 @@ class AdminDashboardController extends Controller
 
     public function getDeviceStatus(Request $request){
    
-        $devices = Device::select('status', 'device_id', 'date_time')->get();
+        $user = Auth::user();
+
+        $devices = Device::select('status', 'device_id', 'date_time')
+            ->when($user && $user->role === 'user', function ($query) use ($user) {
+                return $query->where('user_id', $user->id);
+            })
+            ->get();
 
         $deviceStatus = $devices->map(function ($device) {
             return [
