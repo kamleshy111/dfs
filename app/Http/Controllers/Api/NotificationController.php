@@ -20,15 +20,15 @@ class NotificationController extends Controller
         $userId = Auth::user()->id;
         $user = Auth::user()->role === 'user';
 
-        $todayCount = Alert::select('alerts.id')
-                        ->when($user, function ($query) use ($userId) {
-                            return $query->leftJoin('devices', 'alerts.device_id', '=', 'devices.device_id')
-                                ->where('devices.user_id', $userId)
-                                ->whereDate('alerts.created_at', today());
-                        }, function ($query) {
-                            return $query->whereDate('alerts.created_at', today());
-                        })
-                        ->count();
+        // $todayCount = Alert::select('alerts.id')
+        //                 ->when($user, function ($query) use ($userId) {
+        //                     return $query->leftJoin('devices', 'alerts.device_id', '=', 'devices.device_id')
+        //                         ->where('devices.user_id', $userId)
+        //                         ->whereDate('alerts.created_at', today());
+        //                 }, function ($query) {
+        //                     return $query->whereDate('alerts.created_at', today());
+        //                 })
+        //                 ->count();
 
 
         $query = Alert::query()->select(
@@ -43,6 +43,26 @@ class NotificationController extends Controller
 
         if ($user) {
             $query->where('customers.user_id', $userId);
+        }
+
+        if($user) {
+            if ( !$request->has('notificationsId') && !$request->filled('vehicleRegisterSearch') && 
+                !$request->filled('device_id') && !$request->filled('customerSearch') && (!$request->filled('startDate') || !$request->filled('endDate'))
+            ) {
+                $query->where('alerts.user_re_un_status', 0);
+            }
+        }
+        
+        if ( !$request->has('notificationsId') && !$request->filled('vehicleRegisterSearch') && 
+            !$request->filled('device_id') && !$request->filled('customerSearch') && (!$request->filled('startDate') || !$request->filled('endDate'))
+        ) {
+            $query->where('alerts.read_unread_status', 0);
+        }
+        
+
+        // Filter by sDevice Id
+        if ($request->notificationsId) {
+            $query->where('alerts.id', $request->notificationsId);
         }
 
         // Filter by search vehicle registerSearch
@@ -114,7 +134,7 @@ class NotificationController extends Controller
         return response()->json([
             'notifications' => $notifications,
             // 'unreadCount' => $unreadCount,
-            'todayCount' => $todayCount,
+            // 'todayCount' => $todayCount,
             'totalCount' => $notifications->total(),
         ]);
 

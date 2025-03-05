@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('devices', function (Blueprint $table) {
-            $table->string('latitude')->after('invoice_photos');
-            $table->string('longitude')->after('latitude');
+            $table->string('latitude')->nullable()->after('invoice_photos');
+            $table->string('longitude')->nullable()->after('latitude');
             $table->timestamp('last_active')->useCurrent()->after('longitude');
         });
     }

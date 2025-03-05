@@ -24,13 +24,15 @@ const openNotificationId = ref(null);
 
 const notifications = ref([]);
 const totalCount = ref(0);
-const todayCount = ref(0);
+// const todayCount = ref(0);
 const vehicleRegister = ref("");
 const customerName = ref("");
 const deviceId = ref(props.deviceId || "");
 const startDate = ref(null);
 const endDate = ref(null);
 const vehicles = ref([]);
+
+const notificationsId = ref(props.notificationsId || "");
 
 const validationErrors = ref({ startDate: "", endDate: "" });
 
@@ -42,7 +44,7 @@ const notificationGetAll = () => {
             const response = await axios.get('/api/allNotifications');
             notifications.value = response.data.notifications;
             totalCount.value = response.data.totalCount || 0;
-            todayCount.value = response.data.todayCount || 0;
+            // todayCount.value = response.data.todayCount || 0;
         } catch (error) {
             console.error('Error fetching notifications:', error);
         }
@@ -103,11 +105,25 @@ const exportDataToCSV = async () => {
 };
 
 const setToday = () => {
-  const today = new Date().toISOString().split("T")[0];
-  startDate.value = today;
-  endDate.value = today;
+  const now = new Date();
+
+  // Get YYYY-MM-DD HH:mm:ss format
+  const formattedDateTime = now.getFullYear() + "-" + 
+    String(now.getMonth() + 1).padStart(2, '0') + "-" + 
+    String(now.getDate()).padStart(2, '0') + " " + 
+    "00:00:00";
+
+  const formattedEndDateTime = now.getFullYear() + "-" + 
+    String(now.getMonth() + 1).padStart(2, '0') + "-" + 
+    String(now.getDate()).padStart(2, '0') + " " + 
+    "23:59:59";
+
+  startDate.value = formattedDateTime;
+  endDate.value = formattedEndDateTime;
+  
   getData();
 };
+
 
 // Validate the date range
 const validateDates = () => {
@@ -125,6 +141,29 @@ const validateDates = () => {
   }
   return true;
 };
+
+const getDeviceId = async () => {
+  try {
+    if (!notificationsId?.value) {
+      console.warn("notificationsId is undefined or empty.");
+      return;
+    }
+
+    const res = await axios.get(`api/allNotifications`, {
+      params: {
+        notificationsId: notificationsId.value,
+      },
+    });
+
+    // Ensure response data is valid before assigning
+    notifications.value = res.data?.notifications ?? [];
+    totalCount.value = res.data.totalCount  || 0;
+
+  } catch (error) {
+    console.error("Error fetching notifications:", error.response?.data || error.message);
+  }
+};
+
 
 const getData = async(page = 1) =>{
 
@@ -147,7 +186,7 @@ const getData = async(page = 1) =>{
 
     notifications.value = res.data.notifications || [];
     totalCount.value = res.data.totalCount  || 0;
-    todayCount.value = res.data.todayCount || 0;
+    // todayCount.value = res.data.todayCount || 0;
   } catch (error) {
     console.error('Error fetching data:', error);
   }
@@ -164,6 +203,7 @@ onMounted(() => {
       openNotificationId.value = props.notificationsId;
     };
     // getData();
+    getDeviceId();
     notificationGetAll();
     getvehicles();
 });

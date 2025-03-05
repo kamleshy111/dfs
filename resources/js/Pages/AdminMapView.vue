@@ -136,7 +136,6 @@ const getDeviceStatus = () => {
 .map-text-list {
     width: 250px;
     position: absolute;
-    z-index: 9999;
     height: 490px;
     
 }
