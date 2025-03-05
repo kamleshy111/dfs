@@ -119,4 +119,10 @@
     max-width: 100%;
     max-height: 100%;
   }
+  @media(max-width: 767px){
+    .info-window {
+    left: 15%;
+    top: 45%;
+  }
+  }
   </style>
