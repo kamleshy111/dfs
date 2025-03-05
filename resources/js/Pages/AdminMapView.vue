@@ -138,7 +138,7 @@ const getDeviceStatus = () => {
     position: absolute;
     z-index: 9999;
     height: 490px;
-    overflow-y: scroll;
+    
 }
 .map-text-list::-webkit-scrollbar {
   width: 0px;

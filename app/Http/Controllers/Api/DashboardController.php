@@ -36,7 +36,11 @@ class DashboardController extends Controller
             }
         } else {
             if (!empty($request->device_id)) {
-                $devices = Device::where('device_id', $request->device_id);
+                // $devices = Device::where('device_id', $request->device_id);
+
+                $devices = Device::select('devices.*', 'vehicles.vehicle_register_number')
+                ->leftJoin('vehicles', 'devices.id', '=', 'vehicles.device_id')
+                ->where('devices.device_id', $request->device_id);
 
                 if (isset($status) && $status !== 'all') {
                     $devices->where('status', $status);
@@ -60,10 +64,6 @@ class DashboardController extends Controller
                 $devices = $devices->get();
             }
         }
-
-
-
-
 
         $locations = $devices->map(function ($device) {
 
@@ -150,6 +150,7 @@ class DashboardController extends Controller
                 "content" => [
                     "device_id" => $device->device_id,
                     'device_name' => 'Device Name ' . $device->device_id,
+                    'vehicle_register_number' => $device->vehicle_register_number ?? "",
                     'message' => $message,
                     'message_type' => $messageType,
                     'background_color' => $backgroundColor,

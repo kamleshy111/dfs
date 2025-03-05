@@ -38,7 +38,8 @@
             <div class="item-body flex-grow-1">
               <div>
                 <h2 class="item-title">
-                  {{ selectedInfoWindow.device_name }}
+                  <!-- {{ selectedInfoWindow.device_name }} -->
+                  Vehicle Register Number: {{ selectedInfoWindow.vehicle_register_number }}
                 </h2>
                 <ul class="list-unstyled item-info">
                   <!-- <li>Message: {{ selectedInfoWindow.message }}</li>
