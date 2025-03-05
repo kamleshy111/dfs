@@ -30,6 +30,7 @@ const customerName = ref("");
 const deviceId = ref(props.deviceId || "");
 const startDate = ref(null);
 const endDate = ref(null);
+const vehicles = ref([]);
 
 const validationErrors = ref({ startDate: "", endDate: "" });
 
@@ -101,6 +102,12 @@ const exportDataToCSV = async () => {
   link.click();
 };
 
+const setToday = () => {
+  const today = new Date().toISOString().split("T")[0];
+  startDate.value = today;
+  endDate.value = today;
+  getData();
+};
 
 // Validate the date range
 const validateDates = () => {
@@ -149,15 +156,16 @@ const getData = async(page = 1) =>{
 // Watchers for date validation
 watch([startDate, endDate], () => {
   validateDates();
-  getData();
+  // getData();
 });
 
 onMounted(() => {
     if (props.notificationsId) {
       openNotificationId.value = props.notificationsId;
     };
-    getData();
+    // getData();
     notificationGetAll();
+    getvehicles();
 });
 
 const toggleNotification = async (id) => {
@@ -196,6 +204,20 @@ const downloadImage = (notification) => {
 const getSecureDownloadURL = (url) => {
     return `/download-proxy?url=${encodeURIComponent(url)}`;
 }
+
+const getvehicles = () => {
+  axios
+    .get(import.meta.env.VITE_AJAX_URL + "get-vehicles")
+    .then((response) => {
+      if (response.status == 200) {
+        console.log('vehicles list ', response.data.vehicles)
+        vehicles.value = response.data.vehicles;
+      }
+    })
+    .catch((error) => {
+      console.error("There was an error fetching the user vehicles:", error);
+    });
+};
 </script>
 <template>
   <Head title="device" />
@@ -223,44 +245,59 @@ const getSecureDownloadURL = (url) => {
         </div>
         <div class="row align-items-center mt-4 notifications-searchbar ">
             <div class="form-group new-form-groop-1 col-md-4">
-              <input v-model="customerName" type="text" class="form-control pe-5" placeholder="" @input="getData" />
+              <input v-model="customerName" type="text" class="form-control pe-5" placeholder="" />
               <label for="customerName" class="form-label">Customer Name</label>
             </div>
 
 
             <div class="form-group new-form-groop-2 col-md-4">
-              <input v-model="deviceId" type="text" class="form-control" placeholder="" @input="getData" />
+              <input v-model="deviceId" type="text" class="form-control" placeholder="" />
               <label for="deviceId" class="form-label">Device Id</label>
             </div>
 
             <div class="form-group name-vechicle-number col-md-4">
-              <input v-model="vehicleRegister" type="text" class="form-control" placeholder="" @input="getData" />
-              <label for="vehicleRegister" class="form-label">Vehicle Register Number</label>
+              <select v-model="vehicleRegister" class="form-control">
+              <option value="" disabled>Select Vehicle Register Number</option>
+              <option v-for="vehicle in vehicles" :key="vehicle.id" :value="vehicle.vehicle_register_number">
+                {{ vehicle.vehicle_register_number }}
+              </option>
+            </select>
             </div>
 
             <div class="form-group new-form-group-3 col-md-4">
             <label for="vehicleRegister" class="form-label">Vehicle Register Number</label>
             <div class="custom-dropdown">
-              <select v-model="vehicleRegister" class="form-control custom-select custom-width" @change="getData">
-                <option value="" disabled selected>Select Vehicle Register Number</option>
-              </select>
+              <select v-model="vehicleRegister" class="form-control">
+              <option value="" disabled>Select Vehicle Register Number</option>
+              <option v-for="vehicle in vehicles" :key="vehicle.id" :value="vehicle.vehicle_register_number">
+                {{ vehicle.vehicle_register_number }}
+              </option>
+            </select>
             </div>
           </div>
         </div>
         <div class="row align-items-center mt-3 notifications-searchbar-border">
           <div class="form-group row align-items-center col-md-8 mx-auto">
             <div class="form-group m-0 col-md-6">
-              <input type="date" v-model="startDate" @input="getData" class="form-control" />
+              <input type="date" v-model="startDate" class="form-control" />
               <label for="startDate" class="form-label">Start Date</label>
               <small v-if="validationErrors.startDate" class="text-danger">{{ validationErrors.startDate }}</small>
             </div>
 
             <div class="form-group m-0 col-md-6 boder-class">
-              <input type="date" v-model="endDate" @input="getData" class="form-control" />
+              <input type="date" v-model="endDate" class="form-control" />
               <label for="endDate" class="form-label">End Date</label>
               <small v-if="validationErrors.endDate" class="text-danger">{{ validationErrors.endDate }}</small>
             </div>
             </div>
+            <div class="d-flex gap-3">
+          <div id="desktopButtons">
+            <button class="btn btn-primary btn-custom" @click="getData">Search</button>
+          </div>
+          <div>
+            <button class="btn btn-primary btn-custom" @click="setToday">Today</button>
+          </div>
+          </div>
         </div>
 
       </div>
@@ -270,7 +307,7 @@ const getSecureDownloadURL = (url) => {
           <!-- Header -->
           <div class="notification-header">
             <h5>Notifications <span class="badge bg-primary">{{ totalCount }}</span></h5>
-            <h5 class="ml-3">Today <span class="badge bg-primary">{{ todayCount }}</span></h5>
+            <!-- <h5 class="ml-3">Today <span class="badge bg-primary">{{ todayCount }}</span></h5> -->
             <span class="mark-all">Mark all as read</span>
           </div>
 

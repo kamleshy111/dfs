@@ -87,7 +87,7 @@ onMounted(() => {
       class="d-flex justify-content-between align-items-center py-3 mb-4 border-bottom"
     >
       <div class="w-50">
-        <p class="header-date new-header-dates">Today is {{ currentDate }}</p>
+        <!-- <p class="header-date new-header-dates">Today is {{ currentDate }}</p> -->
       </div>
       <div class="d-flex align-items-center w-50 justify-content-end">
         <div class="icon-profile">
