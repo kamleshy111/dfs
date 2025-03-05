@@ -9,6 +9,10 @@
             <div class="card-summarys-1 card-icons-1">
               <div class="icon-box">
                 <p> Devices ID: {{ devide_id }}</p>
+                <div class="angle-icon">
+                    <i class="fa fa-angle-right"></i>
+                    <i class="fa fa-angle-down"></i>
+                </div>
               </div>
             </div>
           </li>
@@ -119,19 +123,23 @@ const getDeviceStatus = () => {
 }
 .icon-box {
     border: 2px solid #a5a5a536;
-    padding: 10px 40px;
+    padding: 10px;
     font-weight: 500;
     border-radius: 4px;
     background: white;
     margin-left: 0px !important;
     margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    align-items: center;
 }
 .button-menu-drop-1 li {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     padding: 12px 15px;
     margin-bottom: 10px;
     border-radius: 5px;
-    background: white;
+    background: #2196f324;
 }
 .map-text-list {
     width: 250px;
@@ -150,5 +158,17 @@ const getDeviceStatus = () => {
 .map-text-list::-webkit-scrollbar-thumb {
   background: #888;
   border-radius: 10px;
+}
+.angle-icon .fa-angle-down {
+    display: none;
+}
+.show .angle-icon .fa-angle-down {
+    display: block;
+}
+.show .angle-icon .fa-angle-right {
+    display: none;
+}
+.angle-icon .fa {
+    color: #000;
 }
 </style>
