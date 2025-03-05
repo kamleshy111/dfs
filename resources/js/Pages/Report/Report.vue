@@ -178,8 +178,10 @@ const getData = async(page = 1) =>{
         vehicleRegisterSearch: vehicleRegister.value,
         customerSearch : customerName.value,
         device_id: deviceId.value,
-        startDate: startDate.value,
-        endDate: endDate.value,
+        startDate: startDate.value + " 00:00:00",
+        endDate: endDate.value + " 23:59:59",
+
+
 
       },
     });

@@ -16,11 +16,15 @@
           <li
             class="dropdown-itemse drop-li-down" style="list-style: none;"
           >
-            <div class="card-summarys-1 card-icons-1">
-              <div class="icon-box">
+            <div class="card-icons-1">
+              <div class="icon-box card-summarys-1">
                 <!-- <h4>{{ adminStats.all_device_count }}</h4> -->
                 <h4>{{ deviceStatus.deviceCount }}</h4>
                 <p>All Devices</p>
+              </div>
+              <div class="card-icons-plue-1">
+                <i class="fa fa-plus"></i>
+                <i class="fa fa-angle-down"></i>
               </div>
               <!-- <div class="selected_class-1 select-card-icn">
                 <i
@@ -210,6 +214,7 @@ const getDeviceStatus = () => {
     padding: 12px 15px;
     margin-bottom: 10px;
     border-radius: 5px;
+    background: #2196f324;
 }
 .text-color-change a {
     color: brown;
@@ -307,15 +312,34 @@ const getDeviceStatus = () => {
   transition: background-color 0.3s;
   border-bottom: 1px solid #ddd;
 }
+.card-icons-1 {
+    border: 1px solid #00000094;
+    padding: 12px 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    width: 30%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 .card-summarys-1 {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: none !important;
-  border: 1px solid #00000094;
-  padding: 12px 15px;
-  border-radius: 5px;
-  margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    box-shadow: none !important;
+    gap: 20px;
+    width: 50%;
+}
+.card-icons-plue-1 .fa-angle-down {
+    display: none;
+}
+.show .card-icons-plue-1 .fa-angle-down {
+    display: block;
+}
+.show .card-icons-plue-1 .fa-plus {
+    display: none;
+}
+.card-icons-plue-1 .fa {
+    color: #000;
 }
 #dropdownMenuButton {
   width: 100%;
@@ -324,6 +348,12 @@ const getDeviceStatus = () => {
   margin-left: 10px;
   text-align: left;
   color: black;
+}
+.icon-box.card-summarys-1 {
+    background: transparent;
+    border: unset;
+    padding: 0;
+    margin: 0;
 }
 .main-chevron-down {
   color: black;
