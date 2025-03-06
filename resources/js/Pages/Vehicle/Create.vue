@@ -96,7 +96,6 @@ const submitForm = async () => {
       </button>
     </div>
 
-    <div class="my-3">
       <div class="form-container shadow from-main-design">
         <form @submit.prevent="submitForm">
           <div class="form-row">
@@ -203,7 +202,6 @@ const submitForm = async () => {
           </div>
         </form>
       </div>
-    </div>
   </AuthenticatedLayout>
 </template>
 

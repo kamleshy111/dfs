@@ -24,7 +24,7 @@ const goBack = () => {
       </button>
     </div>
 
-    <div class="container py-5 px-0">
+    <div class="container px-0">
       <div class="client-info-card shadow-lg rounded-lg bg-white p-4">
         <h2 class="section-title">Client Information</h2>
         <div class="row">
