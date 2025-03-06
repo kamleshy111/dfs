@@ -45,18 +45,14 @@ class NotificationController extends Controller
             $query->where('customers.user_id', $userId);
         }
 
-        if($user) {
-            if ( !$request->has('notificationsId') && !$request->filled('vehicleRegisterSearch') && 
-                !$request->filled('device_id') && !$request->filled('customerSearch') && (!$request->filled('startDate') || !$request->filled('endDate'))
-            ) {
-                $query->where('alerts.user_re_un_status', 0);
-            }
-        }
-        
-        if ( !$request->has('notificationsId') && !$request->filled('vehicleRegisterSearch') && 
-            !$request->filled('device_id') && !$request->filled('customerSearch') && (!$request->filled('startDate') || !$request->filled('endDate'))
+        if ( !$request->has('notificationsId') && !$request->filled('vehicleRegisterSearch') && !$request->filled('device_id') && 
+        !$request->filled('customerSearch') && (!$request->filled('startDate') || !$request->filled('endDate'))
         ) {
-            $query->where('alerts.read_unread_status', 0);
+            if($user){
+                $query->where('alerts.user_re_un_status', 0);
+            }else{
+                $query->where('alerts.read_unread_status', 0);
+            }
         }
         
 

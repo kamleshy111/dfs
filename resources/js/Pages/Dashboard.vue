@@ -20,7 +20,7 @@
               <div class="icon-box card-summarys-1">
                 <!-- <h4>{{ adminStats.all_device_count }}</h4> -->
                 <h4>{{ deviceStatus.deviceCount }}</h4>
-                <p>All Devices</p>
+                <p>All Vehicles</p>
               </div>
               <div class="card-icons-plue-1">
                 <i class="fa fa-plus"></i>
@@ -79,20 +79,20 @@
             
               <span v-if="device.status === 1" class="text-success">
                 <a :href="`/devices/map/${device.deviceId}`" class="text-success">
-                  <strong>Device ID:</strong> <span>{{ device.deviceId }}</span>
+                  <strong>Vehicle Number:</strong> <span>{{ device.vehicle_register_number }}</span>
                 </a>
               </span>
 
 
             <span v-else-if="device.status == 2"  class="text-black main-text-wrap-1">
               <a :href="`/devices/map/${device.deviceId}`" class="text-black">
-                  <strong>Device ID:</strong> <span>{{ device.deviceId }}</span>
+                  <strong>Vehicle Number:</strong> <span>{{ device.vehicle_register_number }}</span>
                 </a>
             </span>
 
             <span v-else class="text-color-change">
               <a :href="`/devices/map/${device.deviceId}`" class="text-brown">
-                <strong>Device ID:</strong> <span >{{ device.deviceId }}</span> 
+                <strong>Vehicle Number:</strong> <span >{{ device.vehicle_register_number }}</span> 
               </a>
             </span>
           </li>
@@ -327,7 +327,7 @@ const getDeviceStatus = () => {
     align-items: center;
     box-shadow: none !important;
     gap: 20px;
-    width: 50%;
+    width: 65%;
 }
 .card-icons-plue-1 .fa-angle-down {
     display: none;
@@ -373,7 +373,7 @@ const getDeviceStatus = () => {
   top: -15px !important;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .dropdown-item {
     padding: 10px;
   }
@@ -386,6 +386,9 @@ const getDeviceStatus = () => {
 
   .device-info p {
     font-size: 12px;
+  }
+  .card-icons-1{
+    width: 100%;
   }
 }
 

@@ -79,9 +79,9 @@ const columns = [
             </div>
             </div>
             <div class="text-end">
-              <a :href="route('clients.map')">
+              <a :href="route('dashboard')">
                 <button class="btn btn-primary btn-custom">
-                  <i class="bi bi-geo-alt-fill mr-2"></i>View on Map
+                  Dashboard
                 </button>
               </a>
             </div>

@@ -147,6 +147,7 @@ class DashboardController extends Controller
                     'lng' => floatval($device->longitude ?? 0),
                 ],
                 "title" => $device->device_id,
+                'vehicle_register_number' => $device->vehicle_register_number,
                 "content" => [
                     "device_id" => $device->device_id,
                     'device_name' => 'Device Name ' . $device->device_id,

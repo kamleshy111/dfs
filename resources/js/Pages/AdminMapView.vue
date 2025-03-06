@@ -8,7 +8,14 @@
           <li class="dropdown-itemse drop-li-down" style="list-style: none;">
             <div class="card-summarys-1 card-icons-1">
               <div class="icon-box">
-                <p> Devices ID: {{ devide_id }}</p>
+                 
+                <p v-if="locations.length" v-for="(device, index) in locations" :key="index">
+                    <strong>Vehicle Number:</strong> {{ device.vehicle_register_number }}
+                </p>
+                <p v-else>
+                    <strong>Vehicle Number:</strong>
+                </p>
+
                 <div class="angle-icon">
                     <i class="fa fa-angle-right"></i>
                     <i class="fa fa-angle-down"></i>
@@ -23,19 +30,19 @@
                     
                     <span v-if="device.status === 1" class="text-success">
                         <a :href="`/devices/map/${device.deviceId}`" class="text-success">
-                        <strong>Device ID:</strong> <span>{{ device.deviceId }}</span>
+                        <strong>Vehicle Number:</strong> <span>{{ device.vehicle_register_number }}</span>
                         </a>
                     </span>
                     
                     <span v-else-if="device.status == 2"  class="text-black main-text-wrap-1">
                     <a :href="`/devices/map/${device.deviceId}`" class="text-black">
-                        <strong>Device ID:</strong> <span>{{ device.deviceId }}</span>
+                        <strong>Vehicle Number:</strong> <span>{{ device.vehicle_register_number }}</span>
                         </a>
                     </span>
 
                     <span v-else class="text-color-change">
                     <a :href="`/devices/map/${device.deviceId}`" class="text-brown">
-                        <strong>Device ID:</strong> <span >{{ device.deviceId }}</span> 
+                        <strong>Vehicle Number:</strong> <span >{{ device.vehicle_register_number }}</span> 
                     </a>
                     </span>
                 </li>
@@ -92,6 +99,7 @@ const loadMapData = () => {
     .get(import.meta.env.VITE_AJAX_URL + 'get-devices' + query_string)
     .then((response) => {
         if (response.status === 200) {
+            console.log('vechiels device number',response.data.locations)
             locations.value = response.data.locations;
         }
     })

@@ -115,13 +115,11 @@ const setToday = () => {
   // Get YYYY-MM-DD HH:mm:ss format
   const formattedDateTime = now.getFullYear() + "-" + 
     String(now.getMonth() + 1).padStart(2, '0') + "-" + 
-    String(now.getDate()).padStart(2, '0') + " " + 
-    "00:00:00";
+    String(now.getDate()).padStart(2, '0');
 
   const formattedEndDateTime = now.getFullYear() + "-" + 
     String(now.getMonth() + 1).padStart(2, '0') + "-" + 
-    String(now.getDate()).padStart(2, '0') + " " + 
-    "23:59:59";
+    String(now.getDate()).padStart(2, '0');
 
   startDate.value = formattedDateTime;
   endDate.value = formattedEndDateTime;
@@ -181,8 +179,8 @@ const getData = async (page = 1) => {
         vehicleRegisterSearch: vehicleRegister.value,
         customerSearch: customerName.value,
         device_id: deviceId.value,
-        startDate: startDate.value + " 00:00:00",
-        endDate: endDate.value + " 23:59:59",
+        startDate: startDate.value ? startDate.value + " 00:00:00" : null,
+        endDate: endDate.value ? endDate.value + " 23:59:59" : null,
 
       },
     });

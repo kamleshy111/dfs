@@ -18,7 +18,7 @@
               <div class="icon-box card-summarys-1">
                 <!-- <h4>{{ adminStats.all_device_count }}</h4> -->
                 <h4>{{ deviceStatus.deviceCount }}</h4>
-                <p>All Devices</p>
+                <p>All Vehicles</p>
               </div>
               <div class="card-icons-plue-1">
                 <i class="fa fa-plus"></i>
@@ -77,20 +77,20 @@
               
                 <span v-if="device.status === 1" class="text-success">
                   <a :href="`/devices/map/${device.deviceId}`" class="text-success">
-                    <strong>Device ID:</strong> <span>{{ device.deviceId }}</span>
+                    <strong>Vehicle Number:</strong> <span>{{ device.vehicle_register_number }}</span>
                   </a>
                 </span>
 
 
               <span v-else-if="device.status == 2"  class="text-black main-text-wrap-1">
                 <a :href="`/devices/map/${device.deviceId}`" class="text-black">
-                    <strong>Device ID:</strong> <span>{{ device.deviceId }}</span>
+                    <strong>Vehicle Number:</strong> <span>{{ device.vehicle_register_number }}</span>
                   </a>
               </span>
 
               <span v-else class="text-color-change">
                 <a :href="`/devices/map/${device.deviceId}`" class="text-brown">
-                  <strong>Device ID:</strong> <span >{{ device.deviceId }}</span> 
+                  <strong>Vehicle Number:</strong> <span >{{ device.vehicle_register_number }}</span> 
                 </a>
               </span>
             </li>
