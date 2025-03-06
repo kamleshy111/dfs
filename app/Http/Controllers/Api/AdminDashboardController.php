@@ -50,15 +50,17 @@ class AdminDashboardController extends Controller
    
         $user = Auth::user();
 
-        $devices = Device::select('status', 'device_id', 'date_time')
-            ->when($user && $user->role === 'user', function ($query) use ($user) {
-                return $query->where('user_id', $user->id);
-            })
-            ->get();
+            $devices = Device::select('devices.status', 'devices.device_id','devices.date_time','vehicles.vehicle_register_number')
+                ->rightJoin('vehicles', 'devices.id', '=', 'vehicles.device_id')
+                ->when($user && $user->role === 'user', function ($query) use ($user) {
+                    return $query->where('devices.user_id', $user->id);
+                })
+                ->get();
 
         $deviceStatus = $devices->map(function ($device) {
             return [
                 'deviceId' => $device->device_id,
+                'vehicle_register_number' => $device->vehicle_register_number, '',
                 'status' => $device->status,
                 'dateTime' => $device->date_time,
             ];

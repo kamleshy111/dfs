@@ -205,9 +205,9 @@ $(document).ready(function() {
                   </button>
                  </a>
 
-                <a :href="route('devices.map')">
+                <a :href="route('dashboard')">
                   <button class="btn btn-primary btn-custom">
-                    <i class="bi bi-geo-alt-fill mr-2"></i>View on Map
+                    Dashboard
                   </button>
                 </a>
 
@@ -230,9 +230,9 @@ $(document).ready(function() {
                   </button>
                  </a>
 
-                <a :href="route('devices.map')">
+                <a :href="route('dashboard')">
                   <button class="btn btn-primary btn-custom">
-                    <i class="bi bi-geo-alt-fill mr-2"></i>View on Map
+                    Dashboard
                   </button>
                 </a>
               </div>

@@ -12,7 +12,7 @@
       <AdvancedMarker
         v-for="(location, index) in locations"
         :key="index"
-        :options="{ position: location.position, title: location.title }"
+        :options="{ position: location.position, title: location.vehicle_register_number }"
         :pin-options="getMarkerOptions(location)"
         @click="selectedInfoWindow = selectedInfoWindow ? null : location.content"
       />
