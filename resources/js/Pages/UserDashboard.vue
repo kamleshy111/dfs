@@ -315,4 +315,9 @@ const getDeviceStatus = () => {
 .button-menu-drop-1 {
   top: -15px !important;
 }
+@media(max-width: 767px){
+  .card-icons-1{
+    width: 100%;
+  }
+}
 </style>

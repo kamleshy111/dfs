@@ -68,7 +68,7 @@ const columns = [
               <i class="bi bi-people-fill mr-2"></i>All Billings
             </h4>
             <div class="d-flex justify-content-end">
-            <div class="text-end mr-2">
+            <div class="text-end">
               <div v-if="loading" >
                 <div class="loader"></div>
               </div>

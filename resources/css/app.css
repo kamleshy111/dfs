@@ -967,7 +967,7 @@ p.active-device {
     color: var(--light-color) !important;
 }
 .back-section {
-    margin-bottom: 0;
+    margin-bottom: 50px;
 }
 
 .back-btn-custom {
@@ -1431,6 +1431,7 @@ div.dt-container .dt-paging .dt-paging-button.current:hover {
     }
     .btn-custom {
         margin-top: 5px;
+        font-size: 14px !important;
     }
     .table-container h4 {
         width: 60%;
@@ -1439,7 +1440,7 @@ div.dt-container .dt-paging .dt-paging-button.current:hover {
     .right-box {
         margin: 0 0 50px 0;
         width: 100%;
-        padding: 0;
+        padding: 15px;
     }
 
     .client-info-card {
@@ -1501,10 +1502,6 @@ div.dt-container .dt-paging .dt-paging-button.current:hover {
 
     .responsive-profile {
         flex-wrap: wrap;
-    }
-
-    .min-h-screen {
-        margin: 0 10px;
     }
 
     .custom-muted {
@@ -1580,7 +1577,7 @@ div.dt-container .dt-paging .dt-paging-button.current:hover {
         box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
         border: 0;
         width: 300px !important;
-        transform: translate3d(-170px, 43px, 0px) !important;
+        transform: translate3d(0, 43px, 0px) !important;
     }
     .table-container {
         padding: 15px 15px 15px 15px !important;

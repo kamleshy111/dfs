@@ -78,8 +78,8 @@ const submitForm = async () => {
       <button type="button" class="back-btn-custom" @click="goBack">
         <i class="bi bi-caret-left"></i> Back
       </button>
+    </div>
 
-      <div class="my-3">
         <form @submit.prevent="submitForm" enctype="multipart/form-data">
           <div class="form-row">
             <div class="form-group col-md-6">
@@ -190,7 +190,5 @@ const submitForm = async () => {
             </PrimaryButton>
           </div>
         </form>
-      </div>
-    </div>
   </AuthenticatedLayout>
 </template>
