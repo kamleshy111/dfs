@@ -270,12 +270,8 @@ const getvehicles = () => {
             <h4 class="main-filters-2"><i class="fa fa-filter mr-2"></i>Filters Notifications </h4>
             <!-- <h4 class="main-filters-1"><i class="fa fa-file-alt mr-2"></i>Reports</h4> -->
 
-           <div class="text-end mobile-btn-responsive">
-              <!-- Mobile menu button -->
-              <button class="btn btn-primary btn-custom d-block d-md-none" id="mobilebtn">
-                  <i class="bi bi-three-dots-vertical"></i>
-              </button>
-              <div class="d-none d-md-flex" id="desktopButtons">
+           <div class="text-end">
+              <div id="desktopButtons">
                 <button class="btn btn-primary btn-custom" @click="exportDataToCSV">
                   Report Export
                 </button>

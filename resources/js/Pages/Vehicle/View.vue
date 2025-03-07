@@ -24,7 +24,7 @@ const goBack = () => {
     <div class="back-section"><button type="button" class="back-btn-custom" @click="goBack"><i class="bi bi-caret-left"></i>
         Back</button></div>
 
-<div class="container py-5 px-0">
+<div class="container px-0">
     <div class="client-info-card shadow-lg rounded-lg bg-white p-4">
       <div class="row">
         <div class="mt-2 p-0">

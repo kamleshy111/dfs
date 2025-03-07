@@ -124,7 +124,7 @@ const getDeviceStatus = () => {
 </script>
 <style>
 .text-color-change a {
-    color: brown;
+    color: #808080;
 }
 .main-text-wrap-1 a:hover {
     color: black !important;

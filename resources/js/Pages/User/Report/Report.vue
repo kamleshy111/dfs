@@ -263,25 +263,13 @@ const getvehicles = () => {
         <div class="d-flex justify-content-between align-items-center">
           <h4><i class="fa fa-filter mr-2"></i>Reports</h4>
 
-          <div class="text-end mobile-btn-responsive">
-            <!-- Mobile menu button -->
-            <button class="btn btn-primary btn-custom d-block d-md-none" id="mobilebtn">
-              <i class="bi bi-three-dots-vertical"></i>
-            </button>
-            <div class="d-none d-md-flex" id="desktopButtons">
+          <div class="text-end">
+            <div id="desktopButtons">
               <button class="btn btn-primary btn-custom" @click="exportDataToCSV">
                 Report Export
               </button>
             </div>
 
-            <!-- Popup mobile menu -->
-            <div id="mobileMenu" class="mobile-menu" style="display: none;">
-              <a :href="route('devices.map')">
-                <button class="btn btn-primary btn-custom">
-                  <i class="bi bi-geo-alt-fill mr-2"></i>View on Map
-                </button>
-              </a>
-            </div>
           </div>
 
         </div>

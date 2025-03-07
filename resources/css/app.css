@@ -1577,7 +1577,6 @@ div.dt-container .dt-paging .dt-paging-button.current:hover {
         box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
         border: 0;
         width: 300px !important;
-        transform: translate3d(0, 43px, 0px) !important;
     }
     .table-container {
         padding: 15px 15px 15px 15px !important;

@@ -229,7 +229,7 @@ const getDeviceStatus = () => {
   padding: 0;
 }
 .text-color-change a {
-    color: brown;
+    color: #808080;
 }
 .dropdown-toggles-1 {
   background-color: #007bff;
@@ -260,7 +260,7 @@ const getDeviceStatus = () => {
     padding: 12px 15px;
     border-radius: 5px;
     margin-bottom: 20px;
-    width: 30%;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -315,8 +315,11 @@ const getDeviceStatus = () => {
 .button-menu-drop-1 {
   top: -15px !important;
 }
+.dropdowns-1 {
+    width: 30%;
+}
 @media(max-width: 767px){
-  .card-icons-1{
+  .dropdowns-1{
     width: 100%;
   }
 }

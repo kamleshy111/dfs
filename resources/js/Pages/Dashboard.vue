@@ -23,8 +23,8 @@
                 <p>All Vehicles</p>
               </div>
               <div class="card-icons-plue-1">
-                <i class="fa fa-plus"></i>
                 <i class="fa fa-angle-down"></i>
+                <i class="fa fa-angle-up"></i>
               </div>
               <!-- <div class="selected_class-1 select-card-icn">
                 <i
@@ -217,7 +217,7 @@ const getDeviceStatus = () => {
     background: #2196f324;
 }
 .text-color-change a {
-    color: brown;
+    color: #808080;
 }
 .filter-div {
     cursor: pointer;
@@ -317,7 +317,7 @@ const getDeviceStatus = () => {
     padding: 12px 15px;
     border-radius: 5px;
     margin-bottom: 20px;
-    width: 30%;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -329,13 +329,13 @@ const getDeviceStatus = () => {
     gap: 20px;
     width: 65%;
 }
-.card-icons-plue-1 .fa-angle-down {
+.card-icons-plue-1 .fa-angle-up {
     display: none;
 }
-.show .card-icons-plue-1 .fa-angle-down {
+.show .card-icons-plue-1 .fa-angle-up {
     display: block;
 }
-.show .card-icons-plue-1 .fa-plus {
+.show .card-icons-plue-1 .fa-angle-down {
     display: none;
 }
 .card-icons-plue-1 .fa {
@@ -372,6 +372,9 @@ const getDeviceStatus = () => {
 .button-menu-drop-1 {
   top: -15px !important;
 }
+.dropdowns-1 {
+    width: 30%;
+}
 
 @media (max-width: 767px) {
   .dropdown-item {
@@ -387,7 +390,7 @@ const getDeviceStatus = () => {
   .device-info p {
     font-size: 12px;
   }
-  .card-icons-1{
+  .dropdowns-1{
     width: 100%;
   }
 }

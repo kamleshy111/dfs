@@ -175,7 +175,7 @@ $(document).ready(function() {
 
     // Toggle mobile menu visibility and update localStorage
     $('#mobilebtn').click(function(e) {
-        e.stopPropagation();
+        e.preventDefault();
         const isVisible = $('#mobileMenu').is(':visible');
         $('#mobileMenu').toggle();
         localStorage.setItem('mobileMenuVisible', !isVisible);
